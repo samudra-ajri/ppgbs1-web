@@ -1,47 +1,19 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa'
-import { Link, useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { logout, reset } from '../features/auth/authSlice'
+import { AppBar, Toolbar, Typography } from '@mui/material'
+import { Box } from '@mui/system'
+import AdbIcon from '@mui/icons-material/Adb'
 
 function Header() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.auth)
-
-  const onLogout = () => {
-    dispatch(logout())
-    dispatch(reset())
-    navigate('/')
-  }
-
   return (
-    <header className='header'>
-      <div className='logo'>
-        <Link to='/'>GoalSetter</Link>
-      </div>
-      <ul>
-        {user ? (
-          <li>
-            <button className='btn' onClick={onLogout}>
-              <FaSignOutAlt /> Logout
-            </button>
-          </li>
-        ) : (
-          <>
-            <li>
-              <Link to='/login'>
-                <FaSignInAlt /> Login
-              </Link>
-            </li>
-            <li>
-              <Link to='/register'>
-                <FaUser /> Register
-              </Link>
-            </li>
-          </>
-        )}
-      </ul>
-    </header>
+    <>
+    <Box sx={{ pt: 13 }}>
+      <AppBar>
+        <Toolbar>
+        <AdbIcon />
+        <Typography variant="h6">P I G A R U</Typography>
+        </Toolbar>
+      </AppBar>
+      </Box>
+    </>
   )
 }
 
