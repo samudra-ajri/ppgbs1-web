@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { login, reset } from '../features/auth/authSlice'
 import Spinner from '../components/Spinner'
+import { Button, Card, CardContent, Grid, TextField, Typography } from '@mui/material'
 
 function Login() {
   const [formData, setFormData] = useState({
-    email: '',
+    phoneOrEmail: '',
     password: ''
   })
-  const { email, password } = formData
+  const { phoneOrEmail, password } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -35,12 +36,12 @@ function Login() {
       [e.target.name]: e.target.value
     }))
   }
-  
+
   const onSubmit = (e) => {
     e.preventDefault()
 
     const userData = {
-      userData: email,
+      userData: phoneOrEmail,
       password,
     }
 
@@ -52,41 +53,48 @@ function Login() {
   }
 
   return <>
-    <section className='heading'>
-      <h1>
-        Login
-      </h1>
-    </section>
+    <Typography variant="h4">
+      Login
+    </Typography>
 
-    <section className='form'>
-      <form onSubmit={onSubmit}>
-        <div className='form-group'>
-          <input
-            type='email'
-            className='form-control'
-            id='email'
-            name='email'
-            value={email}
-            placeholder='Email'
-            onChange={onChange}
-          />
-        </div>
-        <div className='form-group'>
-          <input
-            type='password'
-            className='form-control'
-            id='password'
-            name='password'
-            value={password}
-            placeholder='Password'
-            onChange={onChange}
-          />
-        </div>
-        <div className="form-group">
-          <button type="submit" className='btn btn-block'>Daftar</button>
-        </div>
-      </form>
-    </section>
+    <Grid>
+      <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
+        <CardContent>
+          <form onSubmit={onSubmit}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <TextField
+                  name="phoneOrEmail"
+                  label="Nomor HP atau Email"
+                  placeholder="Nomor HP atau Email"
+                  value={phoneOrEmail}
+                  onChange={onChange}
+                  variant="standard"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  name="password"
+                  label="Password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={onChange}
+                  type="password"
+                  variant="standard"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Masuk</Button>
+              </Grid>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+    </Grid>
   </>
 }
 
