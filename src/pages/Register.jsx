@@ -98,7 +98,7 @@ function Register() {
       </Typography>
 
       <Grid>
-        <Card style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
+        <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
           <CardContent>
             <form onSubmit={onSubmit}>
               <Grid container spacing={1}>
