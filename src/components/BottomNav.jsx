@@ -33,11 +33,11 @@ function BottomNav() {
         {user ? (
           <BottomNavigationAction onClick={onLogout} label="Logout" icon={<LogoutIcon />} />
         ) : (
-          <>
-            <BottomNavigationAction component={Link} to="/" label="Recents" icon={<HomeIcon />} />
-            <BottomNavigationAction component={Link} to="/login" label="Login" icon={<LoginIcon />} />
-            <BottomNavigationAction component={Link} to="/register" label="Register" icon={<PersonIcon />} />
-          </>
+          [
+            <BottomNavigationAction key="home" component={Link} to="/" label="Home" icon={<HomeIcon />} />,
+            <BottomNavigationAction key="login" component={Link} to="/login" label="Login" icon={<LoginIcon />} />,
+            <BottomNavigationAction key="register" component={Link} to="/register" label="Register" icon={<PersonIcon />} />
+          ]
         )}
       </BottomNavigation>
     </Paper>
