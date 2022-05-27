@@ -262,7 +262,7 @@ function Register() {
                 <Grid item xs={12}>
                   <TextField
                     name="password"
-                    label="Password"
+                    label="Buat Password"
                     placeholder="Password"
                     value={password}
                     onChange={onChange}
