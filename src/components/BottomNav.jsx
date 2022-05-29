@@ -32,10 +32,12 @@ function BottomNav() {
         }}
       >
         {user ? (
-          <BottomNavigationAction onClick={onLogout} label="Logout" icon={<LogoutIcon />} />
-        ) : (
           [
             <BottomNavigationAction key="home" component={Link} to="/" label="Home" icon={<HomeIcon />} />,
+            <BottomNavigationAction key="logout" onClick={onLogout} label="Logout" icon={<LogoutIcon />} />
+          ]
+        ) : (
+          [
             <BottomNavigationAction key="login" component={Link} to="/login" label="Login" icon={<LoginIcon />} />,
             <BottomNavigationAction key="register" component={Link} to="/register" label="Register" icon={<PersonIcon />} />
           ]
