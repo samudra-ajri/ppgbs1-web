@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import validator from 'email-validator'
 import Spinner from '../components/Spinner'
 import { register, reset } from '../features/auth/authSlice'
+import { getLocations } from '../features/locations/locationSlice'
 import { Button, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material'
 
 function Register() {
@@ -18,26 +19,27 @@ function Register() {
     password2: '',
     sex: '',
     isMuballigh: '',
-    ds: '',
-    klp: ''
   })
-  const { 
-    name, 
-    dayBirth, 
-    monthBirth, 
-    yearBirth, 
-    registerType, 
-    password, 
+  const [ds, setDs] = useState('')
+  const [klp, setKlp] = useState('')
+  const {
+    name,
+    dayBirth,
+    monthBirth,
+    yearBirth,
+    registerType,
+    password,
     password2,
     sex,
     isMuballigh,
-    ds,
-    klp
   } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
+  )
+  const { locations } = useSelector(
+    (state) => state.locations
   )
 
   useEffect(() => {
@@ -49,10 +51,20 @@ function Register() {
       navigate('/')
     }
 
+    dispatch(getLocations())
     dispatch(reset())
   }, [user, isError, isSuccess, message, navigate, dispatch])
 
   const onChange = (e) => {
+    if (e.target.name == 'ds') {
+      setKlp('')
+      setDs(e.target.value)
+    }
+
+    if (e.target.name == 'klp') {
+      setKlp(e.target.value)
+    }
+    
     setFormData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value
@@ -60,7 +72,6 @@ function Register() {
   }
 
   const onSubmit = (e) => {
-    console.log(monthBirth);
     e.preventDefault()
     if (password !== password2) {
       toast.error('Konfirmasi password tidak sesuai')
@@ -87,6 +98,25 @@ function Register() {
     }
   }
 
+  const dsLocationsOptions = (locations) => {
+    if (locations.length != 0) return locations.locations
+    return []
+  }
+
+  const klpLocationsOptions = (locations, ds) => {
+    let klp = []
+    let i = 0
+    if (ds) {
+      while (klp.length == 0) {
+        if (locations.locations[i].ds === ds) {
+          klp = locations.locations[i].klp
+        }
+        i += 1
+      }
+    }
+    return klp
+  }
+
   if (isLoading) {
     return <Spinner />
   }
@@ -102,7 +132,7 @@ function Register() {
           <CardContent>
             <form onSubmit={onSubmit}>
               <Grid container spacing={1}>
-              <Grid item xs={12}>
+                <Grid item xs={12}>
                   <TextField
                     name="name"
                     label="Nama Lengkap"
@@ -139,9 +169,9 @@ function Register() {
                     fullWidth
                     required
                   >
-                    {["Buahbatu", "Margahayu", "Regol", "Riung Bandung", "Tegalega"].map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
+                    {dsLocationsOptions(locations).map((location) => (
+                      <MenuItem key={location.ds} value={location.ds}>
+                        {location.ds}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -158,10 +188,11 @@ function Register() {
                     select
                     fullWidth
                     required
+                    disabled={!ds ?? true}
                   >
-                    {["MRB", "MRU", "MRS"].map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
+                    {klpLocationsOptions(locations, ds).map((klp) => (
+                      <MenuItem key={klp} value={klp}>
+                        {klp}
                       </MenuItem>
                     ))}
                   </TextField>
