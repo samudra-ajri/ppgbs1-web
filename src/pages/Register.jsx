@@ -38,7 +38,7 @@ function Register() {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   )
-  const { locations } = useSelector(
+  const { locations, isLoading: isLoadingLocations  } = useSelector(
     (state) => state.locations
   )
 
@@ -117,7 +117,7 @@ function Register() {
     return klp
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingLocations) {
     return <Spinner />
   }
 
@@ -306,7 +306,7 @@ function Register() {
                 <Grid item xs={12}>
                   <TextField
                     name="password2"
-                    label="Konfirmasi Password"
+                    label="Ulangi Password"
                     placeholder="Password"
                     value={password2}
                     onChange={onChange}
