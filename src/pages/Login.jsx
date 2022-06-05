@@ -53,7 +53,7 @@ function Login() {
   }
 
   return <>
-    <Typography variant="h4">
+    <Typography align='center' variant="h4">
       Login
     </Typography>
 
@@ -88,7 +88,7 @@ function Login() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Masuk</Button>
+                <Button size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Masuk</Button>
               </Grid>
             </Grid>
           </form>

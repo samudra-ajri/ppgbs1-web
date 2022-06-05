@@ -123,7 +123,7 @@ function Register() {
 
   return (
     <>
-      <Typography variant="h4">
+      <Typography align='center' variant="h4">
         Buat Akun
       </Typography>
 
@@ -317,7 +317,7 @@ function Register() {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Daftar</Button>
+                  <Button size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Daftar</Button>
                 </Grid>
               </Grid>
             </form>
