@@ -56,12 +56,12 @@ function Register() {
   }, [user, isError, isSuccess, message, navigate, dispatch])
 
   const onChange = (e) => {
-    if (e.target.name == 'ds') {
+    if (e.target.name === 'ds') {
       setKlp('')
       setDs(e.target.value)
     }
 
-    if (e.target.name == 'klp') {
+    if (e.target.name === 'klp') {
       setKlp(e.target.value)
     }
     
@@ -99,7 +99,7 @@ function Register() {
   }
 
   const dsLocationsOptions = (locations) => {
-    if (locations.length != 0) return locations.locations
+    if (locations.length !== 0) return locations.locations
     return []
   }
 
@@ -107,7 +107,7 @@ function Register() {
     let klp = []
     let i = 0
     if (ds) {
-      while (klp.length == 0) {
+      while (klp.length === 0) {
         if (locations.locations[i].ds === ds) {
           klp = locations.locations[i].klp
         }
