@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import ProfileCard from '../components/ProfileCard'
 import TargetCard from '../components/TargetCard'
+import { Typography } from '@mui/material'
 
 function Profile() {
   const navigate = useNavigate()
@@ -15,6 +16,10 @@ function Profile() {
   return (
     <>
       <ProfileCard user={user} />
+      <Typography variant="h6">
+        <b>Pencapaian</b>
+      </Typography>
+      <TargetCard />
       <TargetCard />
     </>
   )

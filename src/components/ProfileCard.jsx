@@ -11,7 +11,7 @@ function ProfileCard(props) {
   }
   
   return (
-    <Card sx={{ mb: 2 }}>
+    <Card sx={{ mb: 3 }}>
       <CardContent>
         <Typography variant="h5" component="div">
           { props.user.name }
