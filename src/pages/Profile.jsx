@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import ProfileCard from '../components/ProfileCard'
+import TargetCard from '../components/TargetCard'
 
 function Profile() {
   const navigate = useNavigate()
@@ -12,7 +13,10 @@ function Profile() {
   }, [user, navigate])
 
   return (
-    <ProfileCard />
+    <>
+      <ProfileCard user={user} />
+      <TargetCard />
+    </>
   )
 }
 

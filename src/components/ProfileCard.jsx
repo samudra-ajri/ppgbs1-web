@@ -1,29 +1,26 @@
-import { useSelector } from 'react-redux'
 import { Card, CardContent, Typography } from '@mui/material'
 import capitalize from 'capitalize'
 
-function ProfileCard() {
-  const { user } = useSelector((state) => state.auth)
-
+function ProfileCard(props) {
   const adminLabel = () => {
-    if (user.role === 'ADMIN') return user.role
+    if (props.user.role === 'ADMIN') return props.user.role
   }
 
   const muballighLabel = () => {
-    if (user.isMuballigh) return 'Muballigh'
+    if (props.user.isMuballigh) return 'Muballigh'
   }
   
   return (
-    <Card>
+    <Card sx={{ mb: 2 }}>
       <CardContent>
         <Typography variant="h5" component="div">
-          { user.name }
+          { props.user.name }
         </Typography>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          { user.phone ? user.phone : user.email }
+          { props.user.phone ? props.user.phone : props.user.email }
         </Typography>
         <Typography sx={{ fontSize: 12 }} color="text.secondary">
-          { capitalize.words(user.ds + ' - ' + user.klp) }
+          { capitalize.words(props.user.ds + ' - ' + props.user.klp) }
         </Typography>
         <Typography sx={{ fontSize: 12 }} color="text.secondary">
           { muballighLabel() }
