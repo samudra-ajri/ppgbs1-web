@@ -5,7 +5,7 @@ import AdbIcon from '@mui/icons-material/Adb'
 function Header() {
   return (
     <>
-      <Box sx={{ pt: 13 }}>
+      <Box sx={{ pt: 10 }}>
         <AppBar color='transparent'>
           <Toolbar>
             <AdbIcon />
