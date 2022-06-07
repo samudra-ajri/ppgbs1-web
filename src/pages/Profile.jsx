@@ -17,7 +17,7 @@ function Profile() {
     <>
       <ProfileCard user={user} />
       <Typography variant="h6">
-        <b>Pencapaian</b>
+        Target
       </Typography>
       <TargetCard />
       <TargetCard />
