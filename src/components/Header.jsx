@@ -6,7 +6,7 @@ function Header() {
   return (
     <>
       <Box sx={{ pt: 10 }}>
-        <AppBar color='transparent'>
+        <AppBar color='default'>
           <Toolbar>
             <AdbIcon />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

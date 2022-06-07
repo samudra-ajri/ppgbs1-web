@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import subjectService from './subjectService'
 
 const initialState = {
-  subjects: [],
+  subjects: {},
   isError: false,
   isSuccess: false,
   isLoading: false,
