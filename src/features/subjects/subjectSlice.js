@@ -41,7 +41,7 @@ export const subjectSlice = createSlice({
       .addCase(getSubjects.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.locations = action.payload
+        state.subjects = action.payload
       })
       .addCase(getSubjects.rejected, (state, action) => {
         state.isLoading = false
