@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../components/ProfileCard'
 import TargetCard from '../components/TargetCard'
-import { Typography } from '@mui/material'
+import { Card, CardContent, CircularProgress, Grid, Typography } from '@mui/material'
 import { getSubjects } from '../features/subjects/subjectSlice'
+import { getCompletions } from '../features/completions/completionSlice'
 
 function Profile() {
   const dispatch = useDispatch()
@@ -13,10 +14,14 @@ function Profile() {
   const { subjects, isLoading: isLoadingSubjects } = useSelector(
     (state) => state.subjects
   )
+  const { completions, isLoading: isLoadingCompletions } = useSelector(
+    (state) => state.completions
+  )
 
   useEffect(() => {
     if (!user) navigate('/login')
     dispatch(getSubjects())
+    dispatch(getCompletions())
   }, [user, navigate, dispatch])
 
   const listSubjects = (subjects) => {
@@ -24,15 +29,42 @@ function Profile() {
     return []
   }
 
+  const listCompletions = (completions) => {
+    if (Object.keys(completions).length !== 0) return completions.completions
+    return []
+  }
+
+  const getCompletionBySubject = (completions, subjectId) => {
+    return completions.find(({ subject }) => subject === subjectId)
+  }
+
+  const isLoading = () => {
+    if (isLoadingSubjects || isLoadingCompletions) return true
+    return false
+  }
+
+
   return (
     <>
       <ProfileCard user={user} />
       <Typography variant="h6">
         Target
       </Typography>
-      {listSubjects(subjects).map((subject) => (
-        <TargetCard key={subject.name} subject={subject} />
-      ))}
+      {isLoading() ? (
+        <Card align="center">
+          <CardContent>
+            <CircularProgress size="2.3rem" />
+          </CardContent>
+        </Card>
+      ) : (
+        listSubjects(subjects).map((subject) => (
+          <TargetCard
+            key={subject.name}
+            subject={subject}
+            completion={getCompletionBySubject(listCompletions(completions), subject._id)}
+          />
+        ))
+      )}
     </>
   )
 }

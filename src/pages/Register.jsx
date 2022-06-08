@@ -6,7 +6,7 @@ import validator from 'email-validator'
 import Spinner from '../components/Spinner'
 import { register, reset } from '../features/auth/authSlice'
 import { getLocations } from '../features/locations/locationSlice'
-import { Button, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material'
+import { Button, Card, CardContent, CircularProgress, Grid, MenuItem, TextField, Typography } from '@mui/material'
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -38,7 +38,7 @@ function Register() {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   )
-  const { locations, isLoading: isLoadingLocations  } = useSelector(
+  const { locations, isLoading: isLoadingLocations } = useSelector(
     (state) => state.locations
   )
 
@@ -64,7 +64,7 @@ function Register() {
     if (e.target.name === 'klp') {
       setKlp(e.target.value)
     }
-    
+
     setFormData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value
@@ -117,10 +117,6 @@ function Register() {
     return klp
   }
 
-  if (isLoading || isLoadingLocations) {
-    return <Spinner />
-  }
-
   return (
     <>
       <Typography align='center' variant="h4">
@@ -129,199 +125,205 @@ function Register() {
 
       <Grid>
         <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
-          <CardContent>
-            <form onSubmit={onSubmit}>
-              <Grid container spacing={1}>
-                <Grid item xs={12}>
-                  <TextField
-                    name="name"
-                    label="Nama Lengkap"
-                    placeholder="Nama"
-                    value={name}
-                    onChange={onChange}
-                    variant="standard"
-                    fullWidth
-                    required
-                  />
+          {isLoading || isLoadingLocations ? (
+            <Grid align="center" sx={{ pt:5 }}>
+              <CircularProgress />
+            </Grid>
+          ) : (
+            <CardContent>
+              <form onSubmit={onSubmit}>
+                <Grid container spacing={1}>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="name"
+                      label="Nama Lengkap"
+                      placeholder="Nama"
+                      value={name}
+                      onChange={onChange}
+                      variant="standard"
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="registerType"
+                      label="Nomor HP atau Email"
+                      placeholder="Nomor HP atau Email"
+                      value={registerType}
+                      onChange={onChange}
+                      variant="standard"
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                  <Grid xs={12} sm={6} item>
+                    <TextField
+                      name="ds"
+                      placeholder="Ds"
+                      label="Ds"
+                      value={ds}
+                      onChange={onChange}
+                      variant="standard"
+                      align="left"
+                      select
+                      fullWidth
+                      required
+                    >
+                      {dsLocationsOptions(locations).map((location) => (
+                        <MenuItem key={location.ds} value={location.ds}>
+                          {location.ds}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid xs={12} sm={6} item>
+                    <TextField
+                      name="klp"
+                      placeholder="Klp"
+                      label="Klp"
+                      value={klp}
+                      onChange={onChange}
+                      variant="standard"
+                      align="left"
+                      select
+                      fullWidth
+                      required
+                      disabled={!ds ?? true}
+                    >
+                      {klpLocationsOptions(locations, ds).map((klp) => (
+                        <MenuItem key={klp} value={klp}>
+                          {klp}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      name="sex"
+                      label="Gender"
+                      placeholder="Gender"
+                      value={sex}
+                      onChange={onChange}
+                      variant="standard"
+                      align="left"
+                      select
+                      fullWidth
+                      required
+                    >
+                      {[{ value: 'male', label: 'Laki-Laki' }, { value: 'female', label: 'Perempuan' }].map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      name="isMuballigh"
+                      label="Muballigh"
+                      placeholder="Muballigh"
+                      value={isMuballigh}
+                      onChange={onChange}
+                      variant="standard"
+                      align="left"
+                      select
+                      fullWidth
+                      required
+                    >
+                      {[{ value: true, label: 'Sudah' }, { value: false, label: 'Belum' }].map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid xs={12} sm={4} item>
+                    <TextField
+                      name="dayBirth"
+                      placeholder="Tanggal"
+                      label="Tgl Lahir"
+                      value={dayBirth}
+                      onChange={onChange}
+                      variant="standard"
+                      align="left"
+                      select
+                      fullWidth
+                      required
+                    >
+                      {Array.from(Array(31)).map((_, i) => i + 1).map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid xs={12} sm={4} item>
+                    <TextField
+                      name="monthBirth"
+                      placeholder="Bulan"
+                      label="Bulan Lahir"
+                      value={monthBirth}
+                      onChange={onChange}
+                      variant="standard"
+                      align="left"
+                      select
+                      fullWidth
+                      required
+                    >
+                      {Array.from(Array(12)).map((_, i) => i + 1).map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid xs={12} sm={4} item>
+                    <TextField
+                      name="yearBirth"
+                      label="Tahun Lahir"
+                      placeholder="Tahun"
+                      value={yearBirth}
+                      onChange={onChange}
+                      type="number"
+                      variant="standard"
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="password"
+                      label="Buat Password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={onChange}
+                      type="password"
+                      variant="standard"
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="password2"
+                      label="Ulangi Password"
+                      placeholder="Password"
+                      value={password2}
+                      onChange={onChange}
+                      type="password"
+                      variant="standard"
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Daftar</Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name="registerType"
-                    label="Nomor HP atau Email"
-                    placeholder="Nomor HP atau Email"
-                    value={registerType}
-                    onChange={onChange}
-                    variant="standard"
-                    fullWidth
-                    required
-                  />
-                </Grid>
-                <Grid xs={12} sm={6} item>
-                  <TextField
-                    name="ds"
-                    placeholder="Ds"
-                    label="Ds"
-                    value={ds}
-                    onChange={onChange}
-                    variant="standard"
-                    align="left"
-                    select
-                    fullWidth
-                    required
-                  >
-                    {dsLocationsOptions(locations).map((location) => (
-                      <MenuItem key={location.ds} value={location.ds}>
-                        {location.ds}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid xs={12} sm={6} item>
-                  <TextField
-                    name="klp"
-                    placeholder="Klp"
-                    label="Klp"
-                    value={klp}
-                    onChange={onChange}
-                    variant="standard"
-                    align="left"
-                    select
-                    fullWidth
-                    required
-                    disabled={!ds ?? true}
-                  >
-                    {klpLocationsOptions(locations, ds).map((klp) => (
-                      <MenuItem key={klp} value={klp}>
-                        {klp}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    name="sex"
-                    label="Gender"
-                    placeholder="Gender"
-                    value={sex}
-                    onChange={onChange}
-                    variant="standard"
-                    align="left"
-                    select
-                    fullWidth
-                    required
-                  >
-                    {[{ value: 'male', label: 'Laki-Laki' }, { value: 'female', label: 'Perempuan' }].map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    name="isMuballigh"
-                    label="Muballigh"
-                    placeholder="Muballigh"
-                    value={isMuballigh}
-                    onChange={onChange}
-                    variant="standard"
-                    align="left"
-                    select
-                    fullWidth
-                    required
-                  >
-                    {[{ value: true, label: 'Sudah' }, { value: false, label: 'Belum' }].map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid xs={12} sm={4} item>
-                  <TextField
-                    name="dayBirth"
-                    placeholder="Tanggal"
-                    label="Tgl Lahir"
-                    value={dayBirth}
-                    onChange={onChange}
-                    variant="standard"
-                    align="left"
-                    select
-                    fullWidth
-                    required
-                  >
-                    {Array.from(Array(31)).map((_, i) => i + 1).map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid xs={12} sm={4} item>
-                  <TextField
-                    name="monthBirth"
-                    placeholder="Bulan"
-                    label="Bulan Lahir"
-                    value={monthBirth}
-                    onChange={onChange}
-                    variant="standard"
-                    align="left"
-                    select
-                    fullWidth
-                    required
-                  >
-                    {Array.from(Array(12)).map((_, i) => i + 1).map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid xs={12} sm={4} item>
-                  <TextField
-                    name="yearBirth"
-                    label="Tahun Lahir"
-                    placeholder="Tahun"
-                    value={yearBirth}
-                    onChange={onChange}
-                    type="number"
-                    variant="standard"
-                    fullWidth
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name="password"
-                    label="Buat Password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={onChange}
-                    type="password"
-                    variant="standard"
-                    fullWidth
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name="password2"
-                    label="Ulangi Password"
-                    placeholder="Password"
-                    value={password2}
-                    onChange={onChange}
-                    type="password"
-                    variant="standard"
-                    fullWidth
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Daftar</Button>
-                </Grid>
-              </Grid>
-            </form>
-          </CardContent>
+              </form>
+            </CardContent>
+          )}
         </Card>
       </Grid>
     </>
