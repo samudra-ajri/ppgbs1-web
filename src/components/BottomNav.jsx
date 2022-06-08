@@ -3,7 +3,7 @@ import HomeIcon from '@mui/icons-material/HomeRounded'
 import LoginIcon from '@mui/icons-material/LoginRounded'
 import PersonIcon from '@mui/icons-material/PersonRounded'
 import LogoutIcon from '@mui/icons-material/LogoutRounded'
-import ProfileIcon from '@mui/icons-material/AccountCircleRounded';
+import ProfileIcon from '@mui/icons-material/FaceOutlined'
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Box } from "@mui/system"

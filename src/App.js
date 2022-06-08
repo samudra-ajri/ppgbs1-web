@@ -15,6 +15,11 @@ const theme = createTheme({
       'Varela Round', 
       'sans-serif'
     ].join(",")
+  },
+  palette: {
+    gold: {
+      main: '#DBB000',
+    }
   }
 });
 

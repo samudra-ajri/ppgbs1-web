@@ -6,6 +6,7 @@ import TargetCard from '../components/TargetCard'
 import { Card, CardContent, CircularProgress, Grid, Typography } from '@mui/material'
 import { getSubjects } from '../features/subjects/subjectSlice'
 import { getCompletions } from '../features/completions/completionSlice'
+import StatisticsCard from '../components/StatisticsCard'
 
 function Profile() {
   const dispatch = useDispatch()
@@ -43,28 +44,62 @@ function Profile() {
     return false
   }
 
+  const totalTarget = {
+    name: 'Total Pencapaian',
+    totalPoin: (Object.keys(subjects).length !== 0) ? subjects.totalPoin : 0.0001
+  }
+
+  const totalCompletion = {
+    name: 'Total Poin',
+    poin: (Object.keys(completions).length !== 0) ? completions.totalPoin : 0
+  }
 
   return (
     <>
       <ProfileCard user={user} />
-      <Typography variant="h6">
-        Target
-      </Typography>
-      {isLoading() ? (
-        <Card align="center">
-          <CardContent>
-            <CircularProgress size="2.3rem" />
-          </CardContent>
-        </Card>
-      ) : (
-        listSubjects(subjects).map((subject) => (
-          <TargetCard
-            key={subject.name}
-            subject={subject}
-            completion={getCompletionBySubject(listCompletions(completions), subject._id)}
-          />
-        ))
-      )}
+      <Typography variant="h6">Poin Pencapaian</Typography>
+      <Grid container spacing={1} sx={{ mb: 1 }}>
+      <StatisticsCard
+          key={'Total'}
+          poin={(Object.keys(completions).length !== 0) ? completions.totalPoin : 0}
+          name='Total'
+        />
+        <StatisticsCard
+          key={'Alquran'}
+          poin={50}
+          name='Alquran'
+        />
+        <StatisticsCard
+          key={'Hadits'}
+          poin={50}
+          name='Hadits'
+        />
+        <StatisticsCard
+          key={'Rote'}
+          poin={50}
+          name='Hafalan'
+        />
+        <StatisticsCard
+          key={'Support'}
+          poin={80}
+          name='Penunjang'
+        />
+      </Grid>
+        {isLoading() ? (
+          <Card align="center">
+            <CardContent>
+              <CircularProgress size="2.3rem" />
+            </CardContent>
+          </Card>
+        ) : (
+          listSubjects(subjects).map((subject) => (
+            <TargetCard
+              key={subject.name}
+              subject={subject}
+              completion={getCompletionBySubject(listCompletions(completions), subject._id)}
+            />
+          ))
+        )}
     </>
   )
 }
