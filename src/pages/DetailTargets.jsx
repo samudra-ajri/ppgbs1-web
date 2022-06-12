@@ -1,5 +1,5 @@
-import { Typography } from '@mui/material'
 import BackHeader from '../components/BackHeader'
+import LinearProgressWithLabel from '../components/LinearProgressWithLabel'
 
 function DetailTargets(props) {
   const rawTitle = props.path.split('/')
@@ -7,7 +7,7 @@ function DetailTargets(props) {
   return (
     <>
       <BackHeader title={title}/>
-      <Typography align='center' variant='h6' sx={{ mb: 1 }}>Detil Target</Typography>
+      <LinearProgressWithLabel value={67} />
     </>
   )
 }
