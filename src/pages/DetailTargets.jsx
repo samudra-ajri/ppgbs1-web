@@ -1,9 +1,13 @@
 import { Typography } from '@mui/material'
+import BackHeader from '../components/BackHeader'
 
-function DetailTargets() {
+function DetailTargets(props) {
+  const rawTitle = props.path.split('/')
+  const title = rawTitle[rawTitle.length - 1]
   return (
     <>
-      <Typography variant='h6' sx={{ mb: 1 }}>Detil Target</Typography>
+      <BackHeader title={title}/>
+      <Typography align='center' variant='h6' sx={{ mb: 1 }}>Detil Target</Typography>
     </>
   )
 }

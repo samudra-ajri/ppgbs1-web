@@ -1,18 +1,27 @@
-import { AppBar, IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Grid, IconButton, Toolbar, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useNavigate } from "react-router-dom"
-import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded';
+import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded'
+import translate from '../helpers/translateHelper'
+import capitalize from 'capitalize'
 
-function BackHeader() {
+function BackHeader(props) {
   const navigate = useNavigate()
   return (
     <>
       <Box sx={{ pt: 10 }}>
         <AppBar color='default'>
           <Toolbar>
-            <IconButton aria-label="delete" onClick={() => navigate(-1)} >
+            <Grid container>
+              <Grid item xs={2}>
+            <IconButton aria-label="back" onClick={() => navigate(-1)} >
               <BackIcon fontSize='large'/>
             </IconButton>
+            </Grid>
+            <Grid item align="center" pt={2} xs={8}>
+            <Typography color="text.secondary"><b>{capitalize(translate(props.title))}</b></Typography>
+            </Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
       </Box>

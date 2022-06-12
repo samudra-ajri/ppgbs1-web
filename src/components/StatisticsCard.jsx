@@ -5,6 +5,8 @@ import LampIcon from '@mui/icons-material/LightOutlined'
 import SupportIcon from '@mui/icons-material/CatchingPokemonOutlined'
 import IcecreamIcon from '@mui/icons-material/IcecreamOutlined'
 import { Link } from 'react-router-dom'
+import translate from '../helpers/translateHelper'
+import capitalize from 'capitalize'
 
 function StatisticsCard(props) {
   const icon = () => {
@@ -18,10 +20,10 @@ function StatisticsCard(props) {
       case 'Hadits':
         return <LampIcon fontSize="large" color='success' />
 
-      case 'Hafalan':
+      case 'Rote':
         return <IcecreamIcon fontSize="large" color='secondary' />
 
-      case 'Penunjang':
+      case 'Extra':
         return <SupportIcon fontSize="large" color='secondary' />
 
       default:
@@ -32,7 +34,7 @@ function StatisticsCard(props) {
   return (
     <Grid item xs={props.name === 'Total' ? 12 : 6}>
       <Card>
-      <Link to="/c/targets" component={CardActionArea}>
+      <Link to={props.name === 'Total' ? '/profile' : `/c/targets/${props.name.toLowerCase()}`} component={CardActionArea}>
         <CardContent>
           <Grid container>
             <Grid item align="right" xs={5}>
@@ -43,7 +45,7 @@ function StatisticsCard(props) {
                 <b>{props.poin}</b>
               </Typography>
               <Typography variant="p" color="text.secondary">
-                {props.name}
+                {capitalize(translate(props.name.toLowerCase()))}
               </Typography>
             </Grid>
           </Grid>

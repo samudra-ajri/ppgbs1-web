@@ -78,14 +78,14 @@ function Profile() {
             name='Hadits'
           />
           <StatisticsCard
-            key={'Support'}
+            key={'Extra'}
             poin={extraCompletion}
-            name='Penunjang'
+            name='Extra'
           />
           <StatisticsCard
             key={'Rote'}
             poin={roteCompletion}
-            name='Hafalan'
+            name='Rote'
           />
         </Grid>
       )}
