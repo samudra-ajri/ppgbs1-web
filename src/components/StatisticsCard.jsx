@@ -1,9 +1,10 @@
-import { Card, CardContent, Grid, Typography } from '@mui/material'
+import { Card, CardActionArea, CardContent, Grid, Typography } from '@mui/material'
 import TrophyIcon from '@mui/icons-material/EmojiEventsOutlined'
 import BookIcon from '@mui/icons-material/BookmarkBorderOutlined'
 import LampIcon from '@mui/icons-material/LightOutlined'
 import SupportIcon from '@mui/icons-material/CatchingPokemonOutlined'
 import IcecreamIcon from '@mui/icons-material/IcecreamOutlined'
+import { Link } from 'react-router-dom'
 
 function StatisticsCard(props) {
   const icon = () => {
@@ -31,6 +32,7 @@ function StatisticsCard(props) {
   return (
     <Grid item xs={props.name === 'Total' ? 12 : 6}>
       <Card>
+      <Link to="/c/targets" component={CardActionArea}>
         <CardContent>
           <Grid container>
             <Grid item align="right" xs={5}>
@@ -46,6 +48,7 @@ function StatisticsCard(props) {
             </Grid>
           </Grid>
         </CardContent>
+        </Link>
       </Card>
     </Grid>
   )

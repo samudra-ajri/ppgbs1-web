@@ -44,12 +44,15 @@ function Profile() {
     return false
   }
 
-  const totalCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin : 0
-  const alquranCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin : 0
+  const totalCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.total : 0
+  const alquranCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.alquran : 0
+  const haditsCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.hadits : 0
+  const roteCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.rote : 0
+  const extraCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.extra : 0
 
   return (
     <>
-      <ProfileCard user={user} />
+      {user ? <ProfileCard user={user} /> : <></>}
       <Typography variant='h6' sx={{ mb: 1 }}>Poin Pencapaian</Typography>
       {isLoading() ? (
         <Card align="center" sx={{ mb: 1 }}>
@@ -71,17 +74,17 @@ function Profile() {
           />
           <StatisticsCard
             key={'Hadits'}
-            poin={50}
+            poin={haditsCompletion}
             name='Hadits'
           />
           <StatisticsCard
             key={'Support'}
-            poin={50}
+            poin={extraCompletion}
             name='Penunjang'
           />
           <StatisticsCard
             key={'Rote'}
-            poin={80}
+            poin={roteCompletion}
             name='Hafalan'
           />
         </Grid>

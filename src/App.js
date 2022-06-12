@@ -1,13 +1,9 @@
 import { Container, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import BottomNav from './components/BottomNav'
-import Header from './components/Header'
-import Dashboard from './pages/Dashboard'
-import Login from './pages/Login'
-import Profile from './pages/Profile'
-import Register from './pages/Register'
+import ChildLayout from './layouts/ChildLayout'
+import MainLayout from './layouts/MainLayout'
 
 const theme = createTheme({
   typography: {
@@ -30,14 +26,10 @@ function App() {
       <ThemeProvider theme={theme}>
       <CssBaseline />
         <Container maxWidth="sm">
-          <Header />
-          <Routes>
-            <Route path='/' element={<Dashboard />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
+        <Routes>
+          <Route path='*' element={<MainLayout />}/>
+          <Route path='/c/*' element={<ChildLayout />}/>
           </Routes>
-          <BottomNav />
         </Container>
         </ThemeProvider>
       </Router>
