@@ -8,8 +8,15 @@ const getSubjects = async () => {
   return response.data
 }
 
+// Get subjects by category
+const getSubjectsByCategory = async (category) => {
+  const response = await API.get(API_URL + 'categories/' + category)
+  return response.data
+}
+
 const subjectService = {
   getSubjects,
+  getSubjectsByCategory,
 }
 
 export default subjectService

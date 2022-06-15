@@ -13,8 +13,20 @@ const getCompletions = async (token) => {
   return response.data
 }
 
+// Get user completions scores
+const getCompletionsScores = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(API_URL + 'scores', config)
+  return response.data
+}
+
 const completionService = {
   getCompletions,
+  getCompletionsScores
 }
 
 export default completionService

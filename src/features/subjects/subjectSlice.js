@@ -27,6 +27,24 @@ export const getSubjects = createAsyncThunk(
   }
 )
 
+// Get subjects by category
+export const getSubjectsByCategory = createAsyncThunk(
+  'subjects/getAll/categories',
+  async (category, thunkAPI) => {
+    try {
+      return await subjectService.getSubjectsByCategory(category)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const subjectSlice = createSlice({
   name: 'subject',
   initialState,
@@ -44,6 +62,19 @@ export const subjectSlice = createSlice({
         state.subjects = action.payload
       })
       .addCase(getSubjects.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getSubjectsByCategory.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getSubjectsByCategory.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.subjects = action.payload
+      })
+      .addCase(getSubjectsByCategory.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
