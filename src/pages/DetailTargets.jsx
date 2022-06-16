@@ -8,7 +8,6 @@ import { CircularProgress } from '@mui/material'
 import { Box } from '@mui/system'
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel'
 import { getCompletionsByCategory, reset } from '../features/completions/completionSlice'
-import TargetChip from '../components/TargetChip'
 
 function DetailTargets(props) {
   const dispatch = useDispatch()
@@ -62,16 +61,12 @@ function DetailTargets(props) {
           <CircularProgress />
         </Box>
       ) : (
-        listSubjects(subjects).length !== 1 ? (
-          listSubjects(subjects).map((subject) => (
-            <TargetCard
-              key={subject.name}
-              subject={subject}
-            />
-          ))
-        ) : (
-          <TargetChip subject={listSubjects(subjects)[0]} />
-        )
+        listSubjects(subjects).map((subject) => (
+          <TargetCard
+            key={subject.name}
+            subject={subject}
+          />
+        ))
       )}
     </>
   )
