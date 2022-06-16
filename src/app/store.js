@@ -3,12 +3,14 @@ import authReducer from '../features/auth/authSlice'
 import locationReducer from '../features/locations/locationSlice'
 import subjectReducer from '../features/subjects/subjectSlice'
 import completionReducer from '../features/completions/completionSlice'
+import subjectCategoryReducer from '../features/subjectCategories/subjectCategorySlice'
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     locations: locationReducer,
     subjects: subjectReducer,
-    completions: completionReducer
+    completions: completionReducer,
+    subjectCategories: subjectCategoryReducer,
   },
 })

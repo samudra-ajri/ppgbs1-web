@@ -13,6 +13,17 @@ const getCompletions = async (token) => {
   return response.data
 }
 
+// Get completions by category
+const getCompletionsByCategory = async (category, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(API_URL + 'categories/' + category, config)
+  return response.data
+}
+
 // Get user completions scores
 const getCompletionsScores = async (token) => {
   const config = {
@@ -26,7 +37,8 @@ const getCompletionsScores = async (token) => {
 
 const completionService = {
   getCompletions,
-  getCompletionsScores
+  getCompletionsScores,
+  getCompletionsByCategory
 }
 
 export default completionService

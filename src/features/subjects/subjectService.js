@@ -16,7 +16,7 @@ const getSubjectsByCategory = async (category) => {
 
 const subjectService = {
   getSubjects,
-  getSubjectsByCategory,
+  getSubjectsByCategory
 }
 
 export default subjectService

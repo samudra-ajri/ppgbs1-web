@@ -34,7 +34,7 @@ function StatisticsCard(props) {
   return (
     <Grid item xs={props.name === 'Total' ? 12 : 6}>
       <Card>
-      <Link to={props.name === 'Total' ? '/profile' : `/c/targets/${props.name.toLowerCase()}`} component={CardActionArea}>
+      <Link to={props.link} component={CardActionArea}>
         <CardContent>
           <Grid container>
             <Grid item align="right" xs={5}>
