@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../components/ProfileCard'
 import { Card, CardContent, CircularProgress, Grid, Typography } from '@mui/material'
-import { getCompletionsScores } from '../features/completions/completionSlice'
+import { getCompletionsScores, reset } from '../features/completions/completionSlice'
 import { getSubjectCategories } from '../features/subjectCategories/subjectCategorySlice'
 import StatisticsCard from '../components/StatisticsCard'
 
@@ -22,6 +22,7 @@ function Profile() {
     if (!user) navigate('/login')
     dispatch(getCompletionsScores())
     dispatch(getSubjectCategories())
+    dispatch(reset())
   }, [user, navigate, dispatch])
 
   const totalCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.total : 0
@@ -36,7 +37,6 @@ function Profile() {
   }
 
   const generateCategoryLink = (category) => {
-    if (category.count === 1) return `/c/detail/${category._id.toLowerCase()}`
     return `/c/targets/${category._id.toLowerCase()}`
   }
 

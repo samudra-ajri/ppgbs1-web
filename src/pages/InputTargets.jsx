@@ -1,9 +1,11 @@
 import BackHeader from '../components/BackHeader'
 
-function InputTargets() {
+function InputTargets(props) {
+  const rawTitle = props.path.split('/')
+  const title = rawTitle[rawTitle.length - 1]
   return (
     <>
-      <BackHeader title={'Input Targets'} />
+      <BackHeader title={title} />
     </>
   )
 }
