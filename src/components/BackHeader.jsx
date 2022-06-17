@@ -2,7 +2,6 @@ import { AppBar, Grid, IconButton, Toolbar, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useNavigate } from "react-router-dom"
 import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded'
-import CheckIcon from '@mui/icons-material/CheckCircleOutlineRounded'
 import translate from '../helpers/translateHelper'
 import capitalize from 'capitalize'
 
@@ -22,10 +21,10 @@ function BackHeader(props) {
               <Grid item align="center" pt={2} xs={8} sm={10}>
                 <Typography color="text.secondary"><b>{capitalize(translate(props.title))}</b></Typography>
               </Grid>
-              <Grid item align="right">
-              <IconButton aria-label="save">
-                <CheckIcon color='success' fontSize='large' />
-                </IconButton>
+              <Grid item align="right" pt={2}>
+                <Typography color="text.secondary">
+                  simpan
+                </Typography>
               </Grid>
             </Grid>
           </Toolbar>

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import BackHeader from '../components/BackHeader'
 import { getSubjectsByCategory, reset as resetSubject } from '../features/subjects/subjectSlice'
 import TargetCard from '../components/TargetCard'
-import { CircularProgress } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel'
 import { getCompletionsByCategory, reset } from '../features/completions/completionSlice'
@@ -35,6 +35,16 @@ function DetailTargets(props) {
     return []
   }
 
+  const listCompletions = (completions) => {
+    if (Object.keys(completions).length !== 0) return completions.completions
+    return []
+  }
+
+  const getCompletionBySubject = (completions, subjectId) => {
+    if (completions && completions.length !== 0) return completions.find(({ subject }) => subject === subjectId)
+    return {}
+  }
+
   const isLoading = () => {
     if (isLoadingSubjects && isLoadingCompletions) return true
     return false
@@ -52,6 +62,9 @@ function DetailTargets(props) {
     <>
       <BackHeader title={title} />
       <Box mt={1} mb={2}>
+        <Typography variant="h7" component="b">
+          Total
+        </Typography>
         <LinearProgressWithLabel value={
           isLoading() ? 0 : categoryPoin()
         } />
@@ -61,12 +74,15 @@ function DetailTargets(props) {
           <CircularProgress />
         </Box>
       ) : (
-        listSubjects(subjects).map((subject) => (
-          <TargetCard
-            key={subject.name}
-            subject={subject}
-          />
-        ))
+        <Box mb={5}>
+          {listSubjects(subjects).map((subject) => (
+            <TargetCard
+              key={subject.name}
+              subject={subject}
+              completion={getCompletionBySubject(listCompletions(completions), subject._id)}
+            />
+          ))}
+        </Box>
       )}
     </>
   )
