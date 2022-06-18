@@ -22,11 +22,19 @@ function InputTargets(props) {
     dispatch(reset())
   }, [user, subjectId, navigate, dispatch])
 
+  const title = () => {
+    if (
+      (isSuccess && subjectDetails.category === 'ALQURAN') ||
+      (isSuccess && subjectDetails.category === 'HADITS')
+    ) return 'Target Halaman'
+    return 'Target Materi'
+  }
+
   return (
     <>
       <BackHeader title={isSuccess ? subjectDetails.name : ''} />
       <Box mt={1} mb={1}>
-        <Typography variant="h7" component="div">Target Materi</Typography>
+        <Typography variant="h7" component="div">{title()}</Typography>
       </Box>
       {isSuccess ? (
         <TargetChip subject={isSuccess ? subjectDetails : null}/>
