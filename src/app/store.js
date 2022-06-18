@@ -4,6 +4,7 @@ import locationReducer from '../features/locations/locationSlice'
 import subjectReducer from '../features/subjects/subjectSlice'
 import completionReducer from '../features/completions/completionSlice'
 import subjectCategoryReducer from '../features/subjectCategories/subjectCategorySlice'
+import subjectDetailsReducer from '../features/subjectDetails/subjectDetailsSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     subjects: subjectReducer,
     completions: completionReducer,
     subjectCategories: subjectCategoryReducer,
+    subjectDetails: subjectDetailsReducer,
   },
 })

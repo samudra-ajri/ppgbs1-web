@@ -19,7 +19,7 @@ function BackHeader(props) {
                 </IconButton>
               </Grid>
               <Grid item align="center" pt={2} xs={8} sm={10}>
-                <Typography color="text.secondary"><b>{capitalize(translate(props.title))}</b></Typography>
+                <Typography color="text.secondary"><b>{capitalize.words(translate(props.title))}</b></Typography>
               </Grid>
               <Grid item align="right" pt={2}>
                 <Typography color="text.secondary">

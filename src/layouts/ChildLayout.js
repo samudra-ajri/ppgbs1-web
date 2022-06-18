@@ -7,7 +7,7 @@ function ChildLayout() {
   return (
     <>
       <Routes>
-        <Route exact path='/detail/*' element={<InputTargets path={window.location.pathname} />} />
+        <Route exact path='/details/*' element={<InputTargets />} />
         <Route path='/targets/*' element={<DetailTargets path={window.location.pathname} />} />
       </Routes>
     </>

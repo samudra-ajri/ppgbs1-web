@@ -2,14 +2,30 @@ import { Box, Chip } from '@mui/material'
 
 function TargetChip(props) {
   const targets = props.subject.targets
+  const style = () => {
+    if (
+      props.subject.category === 'ALQURAN' ||
+      props.subject.category === 'HADITS'
+    ) return { m: 0.5, width: '15%' }
+    return { m: 0.5}
+  }
+  const align = () => {
+    if (
+      props.subject.category === 'ALQURAN' ||
+      props.subject.category === 'HADITS'
+    ) return 'center'
+    return 'left'
+  }
   return (
-    <Box mb={5} textAlign='center'>
-    {targets.map((target) => (
-      <Chip key={target} sx={{m: 0.5, width: '15%'}}
-      label={target} color="success" />
-    ))}
-  </Box>
+    <>
+      <Box textAlign={align()}>
+        {targets.map((target) => (
+          <Chip variant='outlined' key={target} sx={style()}
+            label={target} color='success' />
+        ))}
+      </Box>
+    </>
   )
 }
-      
+
 export default TargetChip
