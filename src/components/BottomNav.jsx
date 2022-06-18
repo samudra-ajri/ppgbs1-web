@@ -1,5 +1,5 @@
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material"
-import HomeIcon from '@mui/icons-material/HomeRounded'
+// import HomeIcon from '@mui/icons-material/HomeRounded'
 import LoginIcon from '@mui/icons-material/LoginRounded'
 import PersonIcon from '@mui/icons-material/PersonRounded'
 import LogoutIcon from '@mui/icons-material/LogoutRounded'
@@ -34,7 +34,7 @@ function BottomNav() {
       >
         {user ? (
           [
-            <BottomNavigationAction key="home" component={Link} to="/" label="Beranda" icon={<HomeIcon />} />,
+            // <BottomNavigationAction key="home" component={Link} to="/" label="Beranda" icon={<HomeIcon />} />,
             <BottomNavigationAction key="profile" component={Link} to="/profile" label="Akun Saya" icon={<ProfileIcon />} />,
             <BottomNavigationAction key="logout" onClick={onLogout} label="Keluar" icon={<LogoutIcon />} />
           ]
