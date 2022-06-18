@@ -37,7 +37,9 @@ function InputTargets(props) {
         <Typography variant="h7" component="div">{title()}</Typography>
       </Box>
       {isSuccess ? (
+      <Box mb={5}>
         <TargetChip subject={isSuccess ? subjectDetails : null}/>
+        </Box>
       ) : (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <CircularProgress />

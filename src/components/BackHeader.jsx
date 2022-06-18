@@ -7,6 +7,9 @@ import capitalize from 'capitalize'
 
 function BackHeader(props) {
   const navigate = useNavigate()
+  const rawTitle = window.location.pathname.split('/')
+  const title = rawTitle[2]
+
   return (
     <>
       <Box sx={{ pt: 10 }}>
@@ -23,7 +26,7 @@ function BackHeader(props) {
               </Grid>
               <Grid item align="right" pt={2}>
                 <Typography color="text.secondary">
-                  simpan
+                  {title === 'details' ? 'simpan' : ''}
                 </Typography>
               </Grid>
             </Grid>
