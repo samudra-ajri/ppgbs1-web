@@ -43,7 +43,7 @@ function InputTargets(props) {
         <Typography variant="h7" component="div">{title()}</Typography>
       </Box>
       {isSuccess && isSuccesCompletion ? (
-        <Box mb={5}>
+        <Box mb={10}>
           <TargetChip 
             subject={isSuccess ? subjectDetails : null} 
             completion={isSuccesCompletion ? completionDetails : null} 
