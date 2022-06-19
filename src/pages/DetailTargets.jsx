@@ -9,10 +9,10 @@ import { Box } from '@mui/system'
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel'
 import { getCompletionsByCategory, reset } from '../features/completions/completionSlice'
 
-function DetailTargets(props) {
+function DetailTargets() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const rawTitle = props.path.split('/')
+  const rawTitle = window.location.pathname.split('/')
   const title = rawTitle[rawTitle.length - 1]
   const { user } = useSelector((state) => state.auth)
   const { subjects, isLoading: isLoadingSubjects } = useSelector(
