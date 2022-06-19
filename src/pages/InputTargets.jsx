@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import BackHeader from '../components/BackHeader'
 import TargetChip from '../components/TargetChip'
 import { getSubject, reset } from '../features/subjectDetails/subjectDetailsSlice'
+import { getCompletionBySubjectId, reset as resetCompletion } from '../features/completionDetails/completionDetailsSlice'
 
 function InputTargets(props) {
   const dispatch = useDispatch()
@@ -15,11 +16,16 @@ function InputTargets(props) {
   const { subjectDetails, isSuccess } = useSelector(
     (state) => state.subjectDetails
   )
+  const { completionDetails, isSuccess: isSuccesCompletion } = useSelector(
+    (state) => state.completionDetails
+  )
 
   useEffect(() => {
     if (!user) navigate('/login')
     dispatch(getSubject(subjectId))
+    dispatch(getCompletionBySubjectId(subjectId))
     dispatch(reset())
+    dispatch(resetCompletion())
   }, [user, subjectId, navigate, dispatch])
 
   const title = () => {
@@ -36,9 +42,12 @@ function InputTargets(props) {
       <Box mt={1} mb={1}>
         <Typography variant="h7" component="div">{title()}</Typography>
       </Box>
-      {isSuccess ? (
+      {isSuccess && isSuccesCompletion ? (
         <Box mb={5}>
-          <TargetChip subject={isSuccess ? subjectDetails : null} />
+          <TargetChip 
+            subject={isSuccess ? subjectDetails : null} 
+            completion={isSuccesCompletion ? completionDetails : null} 
+          />
         </Box>
       ) : (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>

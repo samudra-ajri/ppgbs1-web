@@ -2,20 +2,20 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import completionDetailsService from './completionDetailsService'
 
 const initialState = {
-  completions: {},
+  completionDetails: {},
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: '',
 }
 
-// Get user completion by id
-export const getCompletionsById = createAsyncThunk(
+// Get user completion by subject id
+export const getCompletionBySubjectId = createAsyncThunk(
   'completions/getById',
-  async (id, thunkAPI) => {
+  async (subjectId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await completionDetailsService.getCompletion(id, token)
+      return await completionDetailsService.getCompletionBySubjectId(subjectId, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -36,15 +36,15 @@ export const completionDetailSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getCompletionsById.pending, (state) => {
+      .addCase(getCompletionBySubjectId.pending, (state) => {
         state.isLoading = true
       })
-      .addCase(getCompletionsById.fulfilled, (state, action) => {
+      .addCase(getCompletionBySubjectId.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.completions = action.payload
+        state.completionDetails = action.payload
       })
-      .addCase(getCompletionsById.rejected, (state, action) => {
+      .addCase(getCompletionBySubjectId.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
