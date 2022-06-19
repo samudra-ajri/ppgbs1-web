@@ -18,10 +18,11 @@ function BackHeader(props) {
             <IconButton
               aria-label="back"
               onClick={() => navigate(-1)}
+              sx={{ mr: 2 }}
             >
               <BackIcon />
             </IconButton>
-            <Typography align="center" variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <b>{capitalize.words(translate(props.title))}</b>
             </Typography>
             <Typography color="text.secondary">
