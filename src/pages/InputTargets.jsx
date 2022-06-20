@@ -37,18 +37,21 @@ function InputTargets() {
 
   return (
     <>
-      <Box mt={11} mb={2}>
-        <Typography variant="h7" component="div">{title()}</Typography>
-      </Box>
+
       {isSuccess && isSuccesCompletion ? (
-        <Box mb={10}>
-          <TargetChip 
-            subject={isSuccess ? subjectDetails : null} 
-            completion={isSuccesCompletion ? completionDetails : null} 
-          />
-        </Box>
+        <>
+          <Box mt={11} mb={2}>
+            <Typography variant="h7" component="div">{title()}</Typography>
+          </Box>
+          <Box mb={10}>
+            <TargetChip
+              subject={isSuccess ? subjectDetails : null}
+              completion={isSuccesCompletion ? completionDetails : null}
+            />
+          </Box>
+        </>
       ) : (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box mt={11} sx={{ display: 'flex', justifyContent: 'center' }}>
           <CircularProgress />
         </Box>
       )}
