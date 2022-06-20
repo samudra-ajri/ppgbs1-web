@@ -12,7 +12,7 @@ function BackHeader(props) {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, pb: 10 }}>
+      <Box sx={{ flexGrow: 1 }}>
         <AppBar color='default'>
           <Toolbar>
             <IconButton

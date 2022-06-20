@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import completionDetailsService from './completionDetailsService'
 
 const initialState = {
-  completionDetails: {},
+  completionDetails: null,
   isError: false,
   isSuccess: false,
   isLoading: false,

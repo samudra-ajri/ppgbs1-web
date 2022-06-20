@@ -2,12 +2,11 @@ import { Box, CircularProgress, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import BackHeader from '../components/BackHeader'
 import TargetChip from '../components/TargetChip'
 import { getSubject, reset } from '../features/subjectDetails/subjectDetailsSlice'
 import { getCompletionBySubjectId, reset as resetCompletion } from '../features/completionDetails/completionDetailsSlice'
 
-function InputTargets(props) {
+function InputTargets() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const rawTitle = window.location.pathname.split('/')
@@ -38,8 +37,7 @@ function InputTargets(props) {
 
   return (
     <>
-      <BackHeader title={isSuccess ? subjectDetails.name : ''} />
-      <Box mt={1} mb={1}>
+      <Box mt={11} mb={2}>
         <Typography variant="h7" component="div">{title()}</Typography>
       </Box>
       {isSuccess && isSuccesCompletion ? (
