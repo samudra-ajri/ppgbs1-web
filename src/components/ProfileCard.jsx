@@ -16,16 +16,16 @@ function ProfileCard(props) {
         <Typography variant="h5" component="div">
           { props.user.name }
         </Typography>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        <Typography variant='body2' color="text.secondary" gutterBottom>
           { props.user.phone ? props.user.phone : props.user.email }
         </Typography>
-        <Typography sx={{ fontSize: 12 }} color="text.secondary">
+        <Typography variant='body2' color="text.secondary">
           { capitalize.words(props.user.ds + ' - ' + props.user.klp) }
         </Typography>
-        <Typography sx={{ fontSize: 12 }} color="text.secondary">
+        <Typography variant='body2' color="text.secondary">
           { muballighLabel() }
         </Typography>
-        <Typography sx={{ fontSize: 12 }} color="text.secondary">
+        <Typography variant='body2' color="text.secondary">
           { adminLabel() }
         </Typography>
       </CardContent>
