@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useNavigate } from "react-router-dom"
 import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded'
@@ -9,6 +9,16 @@ function BackHeader(props) {
   const navigate = useNavigate()
   const rawTitle = window.location.pathname.split('/')
   const title = rawTitle[2]
+
+  const saveButtonText = () => {
+    if (props.isModified) return <b>simpan</b>
+    return 'simpan'
+  }
+
+  const saveButtonColor = () => {
+    if (props.isModified) return 'primary'
+    return 'inherit'
+  }
 
   return (
     <>
@@ -25,9 +35,7 @@ function BackHeader(props) {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <b>{capitalize.words(translate(props.title))}</b>
             </Typography>
-            <Typography color="text.secondary">
-              {title === 'details' ? 'simpan' : ''}
-            </Typography>
+            <Button color={saveButtonColor()}>{title === 'details' ? saveButtonText() : ''}</Button>
           </Toolbar>
         </AppBar>
       </Box>
