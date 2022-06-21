@@ -7,6 +7,7 @@ function TargetChip(props) {
   const [completed, setCompleted] = useState(
     props.completion ? props.completion.completed : []
   )
+  const [isModified, setIsModified] = useState(false)
 
   const style = () => {
     if (
@@ -29,8 +30,10 @@ function TargetChip(props) {
 
     if (target && !isCompleted(target)) {
       setCompleted(prevState => [...prevState, target])
-    } else {
+      setIsModified(true)
+    } else if (target && isCompleted(target)) {
       setCompleted(completed.filter(completed => completed !== target))
+      setIsModified(true)
     }
   }
 
@@ -40,7 +43,7 @@ function TargetChip(props) {
 
   return (
     <>
-      <BackHeader title={props.subject.name} isModified={false} />
+      <BackHeader title={props.subject.name} isModified={isModified} />
       <Box textAlign={align()}>
         {targets.map((target) => (
           <Chip 

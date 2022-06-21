@@ -35,7 +35,7 @@ function BackHeader(props) {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <b>{capitalize.words(translate(props.title))}</b>
             </Typography>
-            <Button color={saveButtonColor()}>{title === 'details' ? saveButtonText() : ''}</Button>
+            <Button disabled={!props.isModified} color={saveButtonColor()}>{title === 'details' ? saveButtonText() : ''}</Button>
           </Toolbar>
         </AppBar>
       </Box>
