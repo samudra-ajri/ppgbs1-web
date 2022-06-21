@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import TargetChip from '../components/TargetChip'
 import { getSubject, reset } from '../features/subjectDetails/subjectDetailsSlice'
 import { getCompletionBySubjectId, reset as resetCompletion } from '../features/completionDetails/completionDetailsSlice'
-import BackHeader from '../components/BackHeader'
 
 function InputTargets() {
   const dispatch = useDispatch()
