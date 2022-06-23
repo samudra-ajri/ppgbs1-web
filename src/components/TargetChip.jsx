@@ -77,7 +77,7 @@ function TargetChip(props) {
         ))}
       </Box>
       <Pagination 
-        size='large' 
+        size='medium' 
         count={Math.ceil(targets.length/chunkSize)}
         onChange={handleChange}
         sx={{ 
