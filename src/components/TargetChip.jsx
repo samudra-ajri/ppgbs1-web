@@ -8,6 +8,22 @@ function TargetChip(props) {
   const initCompleted = props.completion ? props.completion.completed : []
   const [completed, setCompleted] = useState(initCompleted)
 
+  const isCompleted = (completed, target) => {
+    return completed.find(element => element === target);
+  }
+
+  const generateTargetsCompleted = () => {
+    const targetCompleted = {}
+    targets.map((target) => (
+      targetCompleted[target] = isCompleted(initCompleted, target) ? true : false
+    ))
+
+    return targetCompleted
+  }
+
+  const initTargetCompleted = generateTargetsCompleted()
+  const [targetCompleted, setTargetCompleted] = useState(initTargetCompleted)
+
   const style = () => {
     if (
       props.subject.category === 'ALQURAN' ||
@@ -27,15 +43,19 @@ function TargetChip(props) {
   const handleClick = (e) => {
     const target = e.target.innerText
 
-    if (target && !isCompleted(target)) {
+    if (!targetCompleted[target]) {
+      setTargetCompleted((prevState) => ({
+        ...prevState,
+        [target]: true
+      }))
       setCompleted(prevState => [...prevState, target])
-    } else if (target && isCompleted(target)) {
+    } else {
+      setTargetCompleted((prevState) => ({
+        ...prevState,
+        [target]: false
+      }))
       setCompleted(completed.filter(completed => completed !== target))
     }
-  }
-
-  const isCompleted = (target) => {
-    return completed.find(element => element === target);
   }
 
   return (
@@ -44,7 +64,7 @@ function TargetChip(props) {
       <Box textAlign={align()}>
         {targets.map((target) => (
           <Chip 
-            variant={isCompleted(target) ? 'solid' : 'outlined'} 
+            variant={targetCompleted[target] ? 'solid' : 'outlined'} 
             key={target} 
             sx={style()}
             label={target} 
