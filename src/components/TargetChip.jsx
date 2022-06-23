@@ -1,4 +1,4 @@
-import { Box, Chip, Pagination } from '@mui/material'
+import { Box, Chip, Pagination, Typography } from '@mui/material'
 import { useState } from 'react'
 import equalArray from '../helpers/equalArray'
 import BackHeader from './BackHeader'
@@ -69,7 +69,7 @@ function TargetChip(props) {
             variant={targetCompleted[target] ? 'solid' : 'outlined'} 
             key={target} 
             sx={style()}
-            label={target} 
+            label={<Typography sx={{ fontSize: 10 }}> {target} </Typography>} 
             name={target} 
             color='success' 
             onClick={handleClick} 
@@ -83,7 +83,7 @@ function TargetChip(props) {
         sx={{ 
           justifyContent:'center', 
           display:'flex', 
-          marginTop:10
+          marginTop:2
         }}
       />
     </>
