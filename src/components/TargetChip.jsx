@@ -25,7 +25,7 @@ function TargetChip(props) {
   }
 
   const handleClick = (e) => {
-    const target = e.target.childNodes[0].data
+    const target = e.target.innerText
 
     if (target && !isCompleted(target)) {
       setCompleted(prevState => [...prevState, target])
@@ -48,6 +48,7 @@ function TargetChip(props) {
             key={target} 
             sx={style()}
             label={target} 
+            name={target} 
             color='success' 
             onClick={handleClick} 
           />
