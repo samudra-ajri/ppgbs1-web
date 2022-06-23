@@ -35,7 +35,7 @@ function TargetChip(props) {
   }
 
   const isCompleted = (target) => {
-    return completed.includes(target)
+    return completed.find(element => element === target);
   }
 
   return (
