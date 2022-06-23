@@ -37,7 +37,7 @@ function InputTargets() {
 
   const generateTargetsCompleted = () => {
     const targetCompleted = {}
-    const initCompleted = completionDetails.completed || []
+    const initCompleted = completionDetails?.completed || []
 
     const isCompleted = (completed, target) => {
       return completed.find(element => element === target);
