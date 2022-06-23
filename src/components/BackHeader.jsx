@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Button, CircularProgress, IconButton, Toolbar, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useNavigate } from "react-router-dom"
 import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded'
@@ -12,10 +12,8 @@ function BackHeader(props) {
   const dispatch = useDispatch()
   const rawTitle = window.location.pathname.split('/')
   const title    = rawTitle[2]
-  const subject  = props.subject ? props.subject : null
 
-
-  const { isSuccess } = useSelector(
+  const { isLoading } = useSelector(
     (state) => state.completionDetails
   )
 
@@ -54,7 +52,9 @@ function BackHeader(props) {
             <Button
               onClick={handleClick}
               disabled={!props.isModified} 
-              color={saveButtonColor()}>{title === 'details' ? saveButtonText() : ''}
+              color={saveButtonColor()}
+            >
+              {isLoading ? <CircularProgress size={20} /> : (title === 'details' ? saveButtonText() : '')}
             </Button>
           </Toolbar>
         </AppBar>

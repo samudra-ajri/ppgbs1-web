@@ -1,13 +1,12 @@
 import { Box, Chip } from '@mui/material'
 import { useState } from 'react'
+import equalArray from '../helpers/equalArray'
 import BackHeader from './BackHeader'
 
 function TargetChip(props) {
   const targets = props.subject.targets
-  const [completed, setCompleted] = useState(
-    props.completion ? props.completion.completed : []
-  )
-  const [isModified, setIsModified] = useState(false)
+  const initCompleted = props.completion ? props.completion.completed : []
+  const [completed, setCompleted] = useState(initCompleted)
 
   const style = () => {
     if (
@@ -30,10 +29,8 @@ function TargetChip(props) {
 
     if (target && !isCompleted(target)) {
       setCompleted(prevState => [...prevState, target])
-      setIsModified(true)
     } else if (target && isCompleted(target)) {
       setCompleted(completed.filter(completed => completed !== target))
-      setIsModified(true)
     }
   }
 
@@ -43,7 +40,7 @@ function TargetChip(props) {
 
   return (
     <>
-      <BackHeader title={props.subject.name} subject={props.subject} isModified={isModified} completed={completed} />
+      <BackHeader title={props.subject.name} subject={props.subject} isModified={!equalArray(completed, initCompleted)} completed={completed} />
       <Box textAlign={align()}>
         {targets.map((target) => (
           <Chip 
