@@ -35,6 +35,21 @@ function InputTargets() {
     return 'Target Materi'
   }
 
+  const generateTargetsCompleted = () => {
+    const targetCompleted = {}
+    const initCompleted = completionDetails.completed || []
+
+    const isCompleted = (completed, target) => {
+      return completed.find(element => element === target);
+    }
+    
+    subjectDetails.targets.map((target) => (
+      targetCompleted[target] = isCompleted(initCompleted, target) ? true : false
+    ))
+
+    return targetCompleted
+  }
+
   return (
     <>
       {isSuccess && isSuccesCompletion ? (
@@ -46,6 +61,7 @@ function InputTargets() {
             <TargetChip
               subject={isSuccess ? subjectDetails : null}
               completion={isSuccesCompletion ? completionDetails : null}
+              targetCompleted={generateTargetsCompleted()}
             />
           </Box>
         </>

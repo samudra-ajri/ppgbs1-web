@@ -1,28 +1,28 @@
-import { Box, Chip } from '@mui/material'
+import { Box, Chip, Pagination } from '@mui/material'
 import { useState } from 'react'
 import equalArray from '../helpers/equalArray'
 import BackHeader from './BackHeader'
 
+const shard = (targets, chunkSize) => {
+  const sharded = {}
+  let i = 0
+  while (targets.length > 0) {
+    const chunk = targets.splice(0, chunkSize)
+    sharded[i] = chunk
+    i ++
+  }
+  return sharded
+}
+
 function TargetChip(props) {
   const targets = props.subject.targets
+  const targetsForShard = [...targets]
+  const chunkSize = 50
+  const shardTargets = shard(targetsForShard, chunkSize)
   const initCompleted = props.completion ? props.completion.completed : []
   const [completed, setCompleted] = useState(initCompleted)
-
-  const isCompleted = (completed, target) => {
-    return completed.find(element => element === target);
-  }
-
-  const generateTargetsCompleted = () => {
-    const targetCompleted = {}
-    targets.map((target) => (
-      targetCompleted[target] = isCompleted(initCompleted, target) ? true : false
-    ))
-
-    return targetCompleted
-  }
-
-  const initTargetCompleted = generateTargetsCompleted()
-  const [targetCompleted, setTargetCompleted] = useState(initTargetCompleted)
+  const targetCompleted = props.targetCompleted
+  const [page, setPage] = useState(1)
 
   const style = () => {
     if (
@@ -42,27 +42,29 @@ function TargetChip(props) {
 
   const handleClick = (e) => {
     const target = e.target.innerText
-
     if (!targetCompleted[target]) {
-      setTargetCompleted((prevState) => ({
-        ...prevState,
-        [target]: true
-      }))
+      targetCompleted[target] = true
       setCompleted(prevState => [...prevState, target])
     } else {
-      setTargetCompleted((prevState) => ({
-        ...prevState,
-        [target]: false
-      }))
+      targetCompleted[target] = false
       setCompleted(completed.filter(completed => completed !== target))
     }
   }
 
+  const handleChange = (event, value) => {
+    setPage(value)
+  }
+
   return (
     <>
-      <BackHeader title={props.subject.name} subject={props.subject} isModified={!equalArray(completed, initCompleted)} completed={completed} />
+      <BackHeader 
+        title={props.subject.name} 
+        subject={props.subject} 
+        isModified={!equalArray(completed, initCompleted)} 
+        completed={completed} 
+      />
       <Box textAlign={align()}>
-        {targets.map((target) => (
+        {shardTargets[page-1].map((target) => (
           <Chip 
             variant={targetCompleted[target] ? 'solid' : 'outlined'} 
             key={target} 
@@ -74,6 +76,16 @@ function TargetChip(props) {
           />
         ))}
       </Box>
+      <Pagination 
+        size='large' 
+        count={Math.ceil(targets.length/chunkSize)}
+        onChange={handleChange}
+        sx={{ 
+          justifyContent:'center', 
+          display:'flex', 
+          marginTop:10
+        }}
+      />
     </>
   )
 }
