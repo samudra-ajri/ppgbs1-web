@@ -3,13 +3,13 @@ import API from '../../api'
 const API_URL = '/api/completions/'
 
 // Create completion
-const createCompletion = async (token) => {
+const createCompletion = async (completionData, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL, config)
+  const response = await API.post(API_URL, completionData, config)
   return response.data
 }
 

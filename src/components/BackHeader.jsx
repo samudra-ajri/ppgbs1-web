@@ -1,14 +1,23 @@
+import { useSelector, useDispatch } from 'react-redux'
 import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useNavigate } from "react-router-dom"
 import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded'
 import translate from '../helpers/translateHelper'
 import capitalize from 'capitalize'
+import { createCompletion } from '../features/completionDetails/completionDetailsSlice'
 
 function BackHeader(props) {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const rawTitle = window.location.pathname.split('/')
-  const title = rawTitle[2]
+  const title    = rawTitle[2]
+  const subject  = props.subject ? props.subject : null
+
+
+  const { isSuccess } = useSelector(
+    (state) => state.completionDetails
+  )
 
   const saveButtonText = () => {
     if (props.isModified) return <b>simpan</b>
@@ -18,6 +27,13 @@ function BackHeader(props) {
   const saveButtonColor = () => {
     if (props.isModified) return 'primary'
     return 'inherit'
+  }
+
+  const handleClick = (e) => {
+    dispatch(createCompletion({
+      subjectId: props.subject._id,
+      completed: props.completed
+    }))
   }
 
   return (
@@ -35,7 +51,11 @@ function BackHeader(props) {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <b>{capitalize.words(translate(props.title))}</b>
             </Typography>
-            <Button disabled={!props.isModified} color={saveButtonColor()}>{title === 'details' ? saveButtonText() : ''}</Button>
+            <Button
+              onClick={handleClick}
+              disabled={!props.isModified} 
+              color={saveButtonColor()}>{title === 'details' ? saveButtonText() : ''}
+            </Button>
           </Toolbar>
         </AppBar>
       </Box>

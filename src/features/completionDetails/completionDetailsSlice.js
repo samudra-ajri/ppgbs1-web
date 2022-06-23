@@ -12,10 +12,10 @@ const initialState = {
 // Create completion
 export const createCompletion = createAsyncThunk(
   'completions/create',
-  async (thunkAPI) => {
+  async (completionData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await completionDetailsService.createCompletion(token)
+      return await completionDetailsService.createCompletion(completionData, token)
     } catch (error) {
       const message =
         (error.response &&

@@ -43,7 +43,7 @@ function TargetChip(props) {
 
   return (
     <>
-      <BackHeader title={props.subject.name} isModified={isModified} />
+      <BackHeader title={props.subject.name} subject={props.subject} isModified={isModified} completed={completed} />
       <Box textAlign={align()}>
         {targets.map((target) => (
           <Chip 
