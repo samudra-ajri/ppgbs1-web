@@ -1,12 +1,30 @@
 import { Typography } from '@mui/material'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import PeopleCard from '../components/PeopleCard'
+import { getUsers } from '../features/users/userSlice'
 
 function Generus() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.auth)
+  const { users } = useSelector((state) => state.users)
+
+  useEffect(() => {
+    if (!user) navigate('/login')
+    dispatch(getUsers())
+  }, [user, navigate, dispatch])
+
   return (
     <>
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar Generus</Typography>
-      <PeopleCard />
-      <PeopleCard />
+      {users.map(user => 
+        <PeopleCard 
+          key={user._id}
+          user={user}
+        />
+      )}
     </>
   )
 }
