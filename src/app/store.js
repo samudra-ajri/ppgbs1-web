@@ -6,6 +6,7 @@ import completionReducer from '../features/completions/completionSlice'
 import subjectCategoryReducer from '../features/subjectCategories/subjectCategorySlice'
 import subjectDetailsReducer from '../features/subjectDetails/subjectDetailsSlice'
 import completionDetailsReducer from '../features/completionDetails/completionDetailsSlice'
+import userReducer from '../features/users/userSlice'
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     subjectCategories: subjectCategoryReducer,
     subjectDetails: subjectDetailsReducer,
     completionDetails: completionDetailsReducer,
+    users: userReducer,
   },
 })
