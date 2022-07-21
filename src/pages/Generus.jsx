@@ -2,7 +2,7 @@ import { CircularProgress, Grid, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroll-component"
 import PeopleCard from '../components/PeopleCard'
 import { getUsersPaginate, reset } from '../features/users/userSlice'
 
@@ -21,9 +21,7 @@ function Generus() {
   }, [user, navigate, dispatch])
 
   const loadMoreUsers = () => {
-    if (users.length % 10 !== 0) {
-      setHasmore(false);
-    }
+    if (users.length % 10 !== 0) setHasmore(false)
     dispatch(getUsersPaginate(page))
     setpage(page + 1)
   }
