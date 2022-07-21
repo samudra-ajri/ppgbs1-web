@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import PeopleCard from '../components/PeopleCard'
@@ -10,11 +10,12 @@ function Generus() {
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
   const { users } = useSelector((state) => state.users)
+  const [filters, setFilters] = useState({ page: 1, limit: 20 })
 
   useEffect(() => {
     if (!user) navigate('/login')
-    dispatch(getUsers())
-  }, [user, navigate, dispatch])
+    dispatch(getUsers(filters))
+  }, [user, filters, navigate, dispatch])
 
   return (
     <>

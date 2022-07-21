@@ -13,10 +13,10 @@ const initialState = {
 // Get users list
 export const getUsers = createAsyncThunk(
   'users/getAll',
-  async (_, thunkAPI) => {
+  async (filters, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await userService.getUsers(token)
+      return await userService.getUsers(token, filters)
     } catch (error) {
       const message =
         (error.response &&
