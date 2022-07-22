@@ -10,7 +10,7 @@ const getUsers = async (token, page=1) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + `?page=${page}&limit=10`, config)
+  const response = await API.get(API_URL + `?page=${page}&limit=20`, config)
   return response.data
 }
 
