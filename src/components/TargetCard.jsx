@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import LinearProgressWithLabel from './LinearProgressWithLabel'
 
 function TargetCard(props) {
-  const completionPoin  = props.completion ? props.completion.poin : 0
+  const completionPoin  = props.completion?.poin ?? 0
   const targetPoin      = props.subject.totalPoin
   const poin            = completionPoin / targetPoin * 100
 
