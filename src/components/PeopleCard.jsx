@@ -1,10 +1,8 @@
 import { Card, CardContent, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/DeleteOutlineRounded'
-import CircleIcon from '@mui/icons-material/FiberManualRecordRounded'
 import capitalize from 'capitalize'
 
 function PeopleCard(props) {
-  //F9CEEE CCF3EE
   const user = props.user
 
   const onClick = () => {
@@ -27,14 +25,9 @@ function PeopleCard(props) {
                 {user.name}
               </Typography>
               </Grid>
-              <Grid item>
-              <Tooltip title={user.sex === 'male' ? 'laki-laki' : 'perempuan'}>
-                <CircleIcon fontSize='small' sx={{ color: user.sex === 'male' ?' #CCF3EE' : '#F9CEEE' }} />
-              </Tooltip>
-              </Grid>
-
             </Grid>
-            <Typography variant='caption' color='text.secondary'>{ capitalize.words(user.ds + ' - ' + user.klp) }</Typography>
+            <Typography fontSize={10} component='p' color='text.secondary'>{ capitalize.words(user.ds + ', ' + user.klp) }</Typography>
+            <Typography fontSize={10} component='p' color='text.secondary'>{ user.sex === 'male' ? 'Laki-laki' : 'Perempuan' }</Typography>
           </Grid>
           <Grid item>
             <Tooltip title='hapus user'>
