@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import ProfileCard from '../components/ProfileCard'
 import { Card, CardContent, CircularProgress, Grid, Typography } from '@mui/material'
-import { getCompletionsScores, reset } from '../features/completions/completionSlice'
+import { getCompletionsScores, getCompletionsScoresByUserId, reset } from '../features/completions/completionSlice'
 import { getSubjectCategories } from '../features/subjectCategories/subjectCategorySlice'
 import { getUserById, reset as resetUser } from '../features/persons/personSlice'
 import StatisticsCard from '../components/StatisticsCard'
@@ -25,8 +25,12 @@ function Profile() {
 
   useEffect(() => {
     if (!user) navigate('/login')
-    if (userId) dispatch(getUserById(userId))
-    dispatch(getCompletionsScores())
+    if (userId) {
+      dispatch(getUserById(userId))
+      dispatch(getCompletionsScoresByUserId(userId))
+    } else {
+      dispatch(getCompletionsScores())
+    }
     dispatch(getSubjectCategories())
     dispatch(reset())
     dispatch(resetUser())
