@@ -85,6 +85,25 @@ export const getCompletionsScoresByUserId = createAsyncThunk(
   }
 )
 
+// Get user completions by user id
+export const getCompletionsByUserId = createAsyncThunk(
+  'completions/userId',
+  async (userId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await completionService.getCompletionsByUserId(token, userId)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const completionSlice = createSlice({
   name: 'completion',
   initialState,
@@ -141,6 +160,19 @@ export const completionSlice = createSlice({
         state.completions = action.payload
       })
       .addCase(getCompletionsByCategory.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getCompletionsByUserId.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getCompletionsByUserId.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.completions = action.payload
+      })
+      .addCase(getCompletionsByUserId.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

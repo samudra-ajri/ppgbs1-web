@@ -46,11 +46,23 @@ const getCompletionsScoresByUserId = async (token, userId) => {
   return response.data
 }
 
+// Get user completions by user id
+const getCompletionsByUserId = async (token, userId) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(API_URL + 'user/' + userId, config)
+  return response.data
+}
+
 const completionService = {
   getCompletions,
   getCompletionsScores,
   getCompletionsByCategory,
-  getCompletionsScoresByUserId
+  getCompletionsScoresByUserId,
+  getCompletionsByUserId
 }
 
 export default completionService
