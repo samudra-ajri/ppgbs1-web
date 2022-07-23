@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
+import BackHeader from '../components/BackHeader'
 import Footer from '../components/Footer'
 import DetailTargets from '../pages/DetailTargets'
 import InputTargets from '../pages/InputTargets'
@@ -11,7 +12,7 @@ function ChildLayout() {
       <Routes>
         <Route exact path='/details/*' element={<InputTargets />} />
         <Route path='/targets/*' element={<DetailTargets />} />
-        <Route path='/profile/*' element={<Profile />} />
+        <Route path='/profile/*' element={<><BackHeader title='Profile Generus' /><Profile /></>} />
       </Routes>
       <Footer />
     </>

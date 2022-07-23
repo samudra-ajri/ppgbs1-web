@@ -56,7 +56,7 @@ function Profile() {
             key={'Total'}
             poin={totalCompletion}
             name='Total'
-            link='/profile'
+            link='#'
           />
           <StatisticsCard
             key={'Alquran'}

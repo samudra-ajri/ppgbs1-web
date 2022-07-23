@@ -1,7 +1,8 @@
-import { Card, CardContent, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+import { Card, CardActionArea, CardContent, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/DeleteOutlineRounded'
 import capitalize from 'capitalize'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 function PeopleCard(props) {
   const user = props.user
@@ -20,16 +21,18 @@ function PeopleCard(props) {
         }
       }}>
         <Grid container>
-          <Grid item xs={10} md={11} onClick={onClick}>
-            <Grid container>
-              <Grid item>
-              <Typography variant='body1'>
-                {user.name}
-              </Typography>
+          <Grid item xs={10} md={11}>
+            <Link to={'/c/profile'} component={CardActionArea}>
+              <Grid container>
+                <Grid item>
+                  <Typography variant='body1'>
+                    {user.name}
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
-            <Typography fontSize={10} component='p' color='text.secondary'>{ capitalize.words(user.ds + ', ' + user.klp) }</Typography>
-            <Typography fontSize={10} component='p' color='text.secondary'>{ (user.sex === 'male, ' ? 'Laki-laki' : 'Perempuan, ') + birthdate + ' thn'}</Typography>
+              <Typography fontSize={10} component='p' color='text.secondary'>{capitalize.words(user.ds + ', ' + user.klp)}</Typography>
+              <Typography fontSize={10} component='p' color='text.secondary'>{(user.sex === 'male, ' ? 'Laki-laki' : 'Perempuan, ') + birthdate + ' thn'}</Typography>
+            </Link>
           </Grid>
           <Grid item>
             <Tooltip title='hapus user'>
