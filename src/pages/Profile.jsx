@@ -13,7 +13,7 @@ function Profile() {
   const navigate = useNavigate()
   const userId = window.location.pathname.split('/')[3]
   const { user } = useSelector((state) => state.auth)
-  const { user: person, isLoading, isSuccess: isSuccessPerson } = useSelector(
+  const { user: person, isSuccess: isSuccessPerson } = useSelector(
     (state) => state.persons
   )
   const { completions } = useSelector(
@@ -32,11 +32,11 @@ function Profile() {
     dispatch(resetUser())
   }, [user, userId, navigate, dispatch])
 
-  const totalCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.total : 0
-  const alquranCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.alquran : 0
-  const haditsCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.hadits : 0
-  const roteCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.rote : 0
-  const extraCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.extra : 0
+  const totalCompletion = completions?.totalPoin?.total ?? 0
+  const alquranCompletion = completions?.totalPoin?.alquran ?? 0
+  const haditsCompletion = completions?.totalPoin?.hadits ?? 0
+  const roteCompletion = completions?.totalPoin?.rote ?? 0
+  const extraCompletion = completions?.totalPoin?.extra ?? 0
 
   const searchCategory = (categoryName) => {
     if (!isSuccess) return {}

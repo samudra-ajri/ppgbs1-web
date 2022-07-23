@@ -12,7 +12,7 @@ function ChildLayout() {
       <Routes>
         <Route exact path='/details/*' element={<InputTargets />} />
         <Route path='/targets/*' element={<DetailTargets />} />
-        <Route path='/profile/*' element={<><BackHeader title='Profile Generus' /><Profile /></>} />
+        <Route path='/profile/*' element={<><BackHeader title='Profil Generus' /><Profile /></>} />
       </Routes>
       <Footer />
     </>
