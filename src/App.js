@@ -25,7 +25,7 @@ function App() {
       <Router>
       <ThemeProvider theme={theme}>
       <CssBaseline />
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" sx={{ pt: 11 }}>
         <Routes>
           <Route path='*' element={<MainLayout />}/>
           <Route path='/c/*' element={<ChildLayout />}/>

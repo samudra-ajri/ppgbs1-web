@@ -3,6 +3,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Footer from '../components/Footer'
 import DetailTargets from '../pages/DetailTargets'
 import InputTargets from '../pages/InputTargets'
+import Profile from '../pages/Profile'
 
 function ChildLayout() {
   return (
@@ -10,6 +11,7 @@ function ChildLayout() {
       <Routes>
         <Route exact path='/details/*' element={<InputTargets />} />
         <Route path='/targets/*' element={<DetailTargets />} />
+        <Route path='/profile/*' element={<Profile />} />
       </Routes>
       <Footer />
     </>

@@ -61,7 +61,7 @@ function DetailTargets() {
   return (
     <>
       <BackHeader title={title} />
-      <Box mt={11} mb={2}>
+      <Box mb={2}>
         <Typography variant="h7" component="b">
           Total
         </Typography>

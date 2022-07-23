@@ -54,7 +54,7 @@ function InputTargets() {
     <>
       {isSuccess && isSuccesCompletion ? (
         <>
-          <Box mt={11} mb={2}>
+          <Box mb={2}>
             <Typography variant="h7" component="div">{title()}</Typography>
           </Box>
           <Box mb={5}>
