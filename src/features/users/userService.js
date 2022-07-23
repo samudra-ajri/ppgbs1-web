@@ -14,8 +14,8 @@ const getUsers = async (token, page=1) => {
   return response.data
 }
 
-const completionService = {
+const userService = {
   getUsers,
 }
 
-export default completionService
+export default userService
