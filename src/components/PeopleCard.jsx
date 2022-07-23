@@ -1,9 +1,11 @@
 import { Card, CardContent, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/DeleteOutlineRounded'
 import capitalize from 'capitalize'
+import moment from 'moment'
 
 function PeopleCard(props) {
   const user = props.user
+  const birthdate = moment(user.birthdate).fromNow().split(' ')[0]
 
   const onClick = () => {
     console.log(123);
@@ -27,7 +29,7 @@ function PeopleCard(props) {
               </Grid>
             </Grid>
             <Typography fontSize={10} component='p' color='text.secondary'>{ capitalize.words(user.ds + ', ' + user.klp) }</Typography>
-            <Typography fontSize={10} component='p' color='text.secondary'>{ user.sex === 'male' ? 'Laki-laki' : 'Perempuan' }</Typography>
+            <Typography fontSize={10} component='p' color='text.secondary'>{ (user.sex === 'male, ' ? 'Laki-laki' : 'Perempuan, ') + birthdate + ' thn'}</Typography>
           </Grid>
           <Grid item>
             <Tooltip title='hapus user'>
