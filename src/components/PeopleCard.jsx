@@ -22,7 +22,7 @@ function PeopleCard(props) {
       }}>
         <Grid container>
           <Grid item xs={10} md={11}>
-            <Link to={'/c/profile'} component={CardActionArea}>
+            <Link to={`/c/profile/${user._id}`} component={CardActionArea}>
               <Grid container>
                 <Grid item>
                   <Typography variant='body1'>

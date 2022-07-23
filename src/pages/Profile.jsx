@@ -5,12 +5,17 @@ import ProfileCard from '../components/ProfileCard'
 import { Card, CardContent, CircularProgress, Grid, Typography } from '@mui/material'
 import { getCompletionsScores, reset } from '../features/completions/completionSlice'
 import { getSubjectCategories } from '../features/subjectCategories/subjectCategorySlice'
+import { getUserById, reset as resetUser } from '../features/persons/personSlice'
 import StatisticsCard from '../components/StatisticsCard'
 
 function Profile() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const userId = window.location.pathname.split('/')[3]
   const { user } = useSelector((state) => state.auth)
+  const { user: person, isLoading, isSuccess: isSuccessPerson } = useSelector(
+    (state) => state.persons
+  )
   const { completions } = useSelector(
     (state) => state.completions
   )
@@ -20,10 +25,12 @@ function Profile() {
 
   useEffect(() => {
     if (!user) navigate('/login')
+    if (userId) dispatch(getUserById(userId))
     dispatch(getCompletionsScores())
     dispatch(getSubjectCategories())
     dispatch(reset())
-  }, [user, navigate, dispatch])
+    dispatch(resetUser())
+  }, [user, userId, navigate, dispatch])
 
   const totalCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.total : 0
   const alquranCompletion = Object.keys(completions).length !== 0 ? completions.totalPoin.alquran : 0
@@ -40,9 +47,15 @@ function Profile() {
     return `/c/targets/${category._id.toLowerCase()}`
   }
 
+  if (userId && !isSuccessPerson) return (
+    <Grid align="center" sx={{ pt: 1.5 }}>
+      <CircularProgress size={20} />
+    </Grid>
+  )
+
   return (
     <>
-      {user ? <ProfileCard user={user} /> : <></>}
+      {user ? <ProfileCard user={userId ? person : user} /> : <></>}
       <Typography variant='h6' sx={{ mb: 1 }}>Poin Pencapaian</Typography>
       {!isSuccess ? (
         <Card align="center" sx={{ mb: 1 }}>

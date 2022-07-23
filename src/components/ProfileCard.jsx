@@ -2,25 +2,27 @@ import { Card, CardContent, Typography } from '@mui/material'
 import capitalize from 'capitalize'
 
 function ProfileCard(props) {
+  const user = props.user
+
   const adminLabel = () => {
-    if (props.user.role === 'ADMIN') return props.user.role
+    if (user.role === 'ADMIN') return user.role
   }
 
   const muballighLabel = () => {
-    if (props.user.isMuballigh) return 'Muballigh'
+    if (user.isMuballigh) return 'Muballigh'
   }
   
   return (
     <Card sx={{ mb: 3 }}>
       <CardContent>
         <Typography variant="h5" component="div">
-          { props.user.name }
+          { user.name }
         </Typography>
         <Typography variant='body2' color="text.secondary" gutterBottom>
-          { props.user.phone ? props.user.phone : props.user.email }
+          { user.phone ? user.phone : user.email }
         </Typography>
         <Typography variant='body2' color="text.secondary">
-          { capitalize.words(props.user.ds + ' - ' + props.user.klp) }
+          { capitalize.words(user.ds + ' - ' + user.klp) }
         </Typography>
         <Typography variant='body2' color="text.secondary">
           { muballighLabel() }
