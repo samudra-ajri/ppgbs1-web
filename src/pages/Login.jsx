@@ -24,7 +24,11 @@ function Login() {
     }
 
     if (isSuccess || user) {
-      navigate('/')
+      if (user.role === 'GENERUS') {
+        navigate('/profile')
+      } else {
+        navigate('/')
+      }
     }
 
     dispatch(reset())

@@ -47,7 +47,11 @@ function Register() {
     }
 
     if (isSuccess || user) {
-      navigate('/')
+      if (user.role === 'GENERUS') {
+        navigate('/profile')
+      } else {
+        navigate('/')
+      }
     }
 
     dispatch(getLocations())
