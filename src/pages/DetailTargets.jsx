@@ -83,6 +83,7 @@ function DetailTargets() {
           {listSubjects(subjects).map((subject) => (
             <TargetCard
               key={subject.name}
+              userId={userId}
               subject={subject}
               completion={getCompletionBySubject(listCompletions(completions), subject._id)}
             />

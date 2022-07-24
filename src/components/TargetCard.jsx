@@ -4,16 +4,23 @@ import { Link } from 'react-router-dom'
 import LinearProgressWithLabel from './LinearProgressWithLabel'
 
 function TargetCard(props) {
+  const userId          = props.userId
+  const subject         = props.subject
   const completionPoin  = props.completion?.poin ?? 0
   const targetPoin      = props.subject.totalPoin
   const poin            = completionPoin / targetPoin * 100
 
+  const generatePath = () => {
+    if (userId) return `/c/details/${subject._id}/${userId}`
+    return `/c/details/${subject._id}`
+  }
+
   return (
     <Card sx={{ mb: 1 }}>
-      <Link to={`/c/details/${props.subject._id}`} component={CardActionArea}>
+      <Link to={generatePath()} component={CardActionArea}>
         <CardContent>
           <Typography variant="h7" component="div">
-            {capitalize.words(props.subject.name)}
+            {capitalize.words(subject.name)}
           </Typography>
           <LinearProgressWithLabel value={poin} />
         </CardContent>

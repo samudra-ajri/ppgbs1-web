@@ -47,6 +47,25 @@ export const getCompletionBySubjectId = createAsyncThunk(
   }
 )
 
+// Get user completion by subject id and user id
+export const getUserCompletionBySubjectId = createAsyncThunk(
+  'completions/getById/user',
+  async ({ subjectId, userId }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await completionDetailsService.getUserCompletionBySubjectId(subjectId, userId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const completionDetailSlice = createSlice({
   name: 'completionDetail',
   initialState,
@@ -77,6 +96,19 @@ export const completionDetailSlice = createSlice({
         state.completionDetails = action.payload
       })
       .addCase(getCompletionBySubjectId.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getUserCompletionBySubjectId.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getUserCompletionBySubjectId.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.completionDetails = action.payload
+      })
+      .addCase(getUserCompletionBySubjectId.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

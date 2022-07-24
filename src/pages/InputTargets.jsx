@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import TargetChip from '../components/TargetChip'
 import { getSubject, reset } from '../features/subjectDetails/subjectDetailsSlice'
-import { getCompletionBySubjectId, reset as resetCompletion } from '../features/completionDetails/completionDetailsSlice'
+import { getCompletionBySubjectId, getUserCompletionBySubjectId,reset as resetCompletion } from '../features/completionDetails/completionDetailsSlice'
 
 function InputTargets() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const rawTitle = window.location.pathname.split('/')
-  const subjectId = rawTitle[rawTitle.length - 1]
+  const subjectId = rawTitle[3]
+  const userId = rawTitle[4]
   const { user } = useSelector((state) => state.auth)
   const { subjectDetails, isSuccess } = useSelector(
     (state) => state.subjectDetails
@@ -21,11 +22,15 @@ function InputTargets() {
 
   useEffect(() => {
     if (!user) navigate('/login')
+    if (userId) {
+      dispatch(getUserCompletionBySubjectId({ subjectId, userId }))
+    } else {
+      dispatch(getCompletionBySubjectId(subjectId))
+    }
     dispatch(getSubject(subjectId))
-    dispatch(getCompletionBySubjectId(subjectId))
     dispatch(reset())
     dispatch(resetCompletion())
-  }, [user, subjectId, navigate, dispatch])
+  }, [user, subjectId, userId, navigate, dispatch])
 
   const title = () => {
     if (

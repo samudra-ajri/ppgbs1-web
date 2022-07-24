@@ -24,9 +24,21 @@ const getCompletionBySubjectId = async (subjectId, token) => {
   return response.data
 }
 
+// Get user completion by subject id
+const getUserCompletionBySubjectId = async (subjectId, userId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(API_URL + 'subjects/' + subjectId + '/users/' + userId, config)
+  return response.data
+}
+
 const completionDetailsService = {
   createCompletion,
-  getCompletionBySubjectId
+  getCompletionBySubjectId,
+  getUserCompletionBySubjectId
 }
 
 export default completionDetailsService
