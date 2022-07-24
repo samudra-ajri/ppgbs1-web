@@ -14,8 +14,20 @@ const getUsers = async (token, page=1) => {
   return response.data
 }
 
+// Delete a user
+const deleteUser = async (token, userId) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(API_URL + userId)
+  return response.data
+}
+
 const userService = {
   getUsers,
+  deleteUser
 }
 
 export default userService

@@ -29,13 +29,32 @@ export const getUsers = createAsyncThunk(
   }
 )
 
-// Get users list
+// Get users list with paginate
 export const getUsersPaginate = createAsyncThunk(
   'users/getPaginate',
   async (page, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
       return await userService.getUsers(token, page)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Delete user
+export const deleteUser = createAsyncThunk(
+  'users/delete',
+  async (userId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await userService.deleteUser(token, userId)
     } catch (error) {
       const message =
         (error.response &&
@@ -78,6 +97,21 @@ export const userSlice = createSlice({
         state.users = [...state.users, ...action.payload.users]
       })
       .addCase(getUsersPaginate.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.users = state.users.filter(
+          (user) => user._id !== action.payload.id
+        )
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
