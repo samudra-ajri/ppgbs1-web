@@ -62,7 +62,8 @@ function TargetChip(props) {
         title={props.subject.name} 
         subject={props.subject} 
         isModified={!equalArray(completed, initCompleted)} 
-        completed={completed} 
+        completed={completed}
+        canSave={userId ? false : true}
       />
       <Box textAlign={align()}>
         {shardTargets[page-1].map((target) => (

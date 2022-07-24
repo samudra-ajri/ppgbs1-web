@@ -54,7 +54,7 @@ function BackHeader(props) {
               disabled={!props.isModified} 
               color={saveButtonColor()}
             >
-              {isLoading ? <CircularProgress size={20} /> : (title === 'details' ? saveButtonText() : '')}
+              {isLoading ? <CircularProgress size={20} /> : (title === 'details' && props.canSave ? saveButtonText() : '')}
             </Button>
           </Toolbar>
         </AppBar>
