@@ -7,13 +7,14 @@ import TargetCard from '../components/TargetCard'
 import { CircularProgress, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel'
-import { getCompletionsByCategory, reset } from '../features/completions/completionSlice'
+import { getCompletionsByCategory, getUserCompletionsByCategory, reset } from '../features/completions/completionSlice'
 
 function DetailTargets() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const rawTitle = window.location.pathname.split('/')
-  const title = rawTitle[rawTitle.length - 1]
+  const title = rawTitle[3]
+  const userId = rawTitle[4]
   const { user } = useSelector((state) => state.auth)
   const { subjects, isLoading: isLoadingSubjects } = useSelector(
     (state) => state.subjects
@@ -24,11 +25,15 @@ function DetailTargets() {
 
   useEffect(() => {
     if (!user) navigate('/login')
+    if (userId) {
+      dispatch(getUserCompletionsByCategory({ title, userId }))
+    } else {
+      dispatch(getCompletionsByCategory(title))
+    }
     dispatch(getSubjectsByCategory(title))
-    dispatch(getCompletionsByCategory(title))
     dispatch(reset())
     dispatch(resetSubject())
-  }, [user, title, navigate, dispatch])
+  }, [user, title, userId, navigate, dispatch])
 
   const listSubjects = (subjects) => {
     if (Object.keys(subjects).length !== 0) return subjects.subjects

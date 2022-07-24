@@ -48,6 +48,7 @@ function Profile() {
   }
 
   const generateCategoryLink = (category) => {
+    if (userId) return `/c/targets/${category._id.toLowerCase()}/${userId}`
     return `/c/targets/${category._id.toLowerCase()}`
   }
 
