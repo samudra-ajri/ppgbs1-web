@@ -15,6 +15,7 @@ const shard = (targets, chunkSize) => {
 }
 
 function TargetChip(props) {
+  const userId = window.location.pathname.split('/')[4]
   const targets = props.subject.targets
   const targetsForShard = [...targets]
   const chunkSize = 50
@@ -72,7 +73,7 @@ function TargetChip(props) {
             label={<Typography sx={{ fontSize: 10 }}> {target} </Typography>} 
             name={target} 
             color='success' 
-            onClick={handleClick} 
+            onClick={userId ? undefined : handleClick}
           />
         ))}
       </Box>
