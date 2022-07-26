@@ -3,13 +3,17 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlineRounded'
 import capitalize from 'capitalize'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteUser } from '../features/users/userSlice'
 
 function PeopleCard(props) {
+  const dispatch = useDispatch()
   const user = props.user
   const age = moment(user.birthdate).fromNow().split(' ')[0]
+  const { isLoading } = useSelector((state) => state.users)
 
   const onClick = () => {
-    console.log(123);
+    dispatch(deleteUser(user._id))
   }
 
   return (

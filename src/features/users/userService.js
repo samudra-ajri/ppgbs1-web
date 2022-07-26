@@ -21,7 +21,7 @@ const deleteUser = async (token, userId) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + userId)
+  const response = await API.delete(API_URL + userId, config)
   return response.data
 }
 
