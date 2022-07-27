@@ -42,7 +42,7 @@ function Generus() {
 
       <form onSubmit={onSubmit}>
         <Grid container justifyContent='center' padding={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <TextField
               name='search'
               placeholder='Cari generus...'
