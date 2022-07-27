@@ -70,7 +70,6 @@ function PeopleCard(props) {
               <Button variant='outlined' color='error' onClick={onClickRemove}>Hapus</Button>
               <Button variant='contained' onClick={() => setOpenPopup(false)}>Batal</Button>
             </Stack>
-
           )}
         </Box>
       </PopDialog>
