@@ -1,10 +1,10 @@
-import { CircularProgress, Grid, Typography } from '@mui/material'
+import { CircularProgress, Grid, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import InfiniteScroll from "react-infinite-scroll-component"
 import PeopleCard from '../components/PeopleCard'
-import { getUsersPaginate, reset } from '../features/users/userSlice'
+import { getUsers, getUsersPaginate, reset } from '../features/users/userSlice'
 
 function Generus() {
   const dispatch = useDispatch()
@@ -12,23 +12,50 @@ function Generus() {
   const { user } = useSelector((state) => state.auth)
   const { users, isLoading } = useSelector((state) => state.users)
   const [page, setpage] = useState(2)
+  const [search, setSearch] = useState('')
   const [hasmore, setHasmore] = useState(true)
 
   useEffect(() => {
     if (!user) navigate('/login')
-    dispatch(getUsersPaginate(1))
+    dispatch(getUsers({ page: 1, search }))
     dispatch(reset())
-  }, [user, navigate, dispatch])
+  }, [user, search, navigate, dispatch])
 
   const loadMoreUsers = () => {
     if (!isLoading) setHasmore(false)
-    dispatch(getUsersPaginate(page))
+    dispatch(getUsersPaginate({ page, search }))
     setpage(page + 1)
+  }
+
+  const onChange = (e) => {
+    setSearch(e.target.value)
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    dispatch(getUsersPaginate({ page, search }))
   }
 
   return (
     <>
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar Generus</Typography>
+
+      <form onSubmit={onSubmit}>
+        <Grid container justifyContent='center' padding={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              name='search'
+              placeholder='Cari generus...'
+              variant='standard'
+              value={search}
+              onChange={onChange}
+              fullWidth
+              required
+            />
+          </Grid>
+        </Grid>
+      </form>
+
       <InfiniteScroll
         dataLength={users.length}
         next={loadMoreUsers}
