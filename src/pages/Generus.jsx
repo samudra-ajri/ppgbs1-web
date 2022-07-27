@@ -13,7 +13,7 @@ function Generus() {
   const { users, isLoading } = useSelector((state) => state.users)
   const [page, setpage] = useState(2)
   const [search, setSearch] = useState('')
-  const [hasmore, setHasmore] = useState(true)
+  const [hasmore, setHasmore] = useState(false)
 
   useEffect(() => {
     if (!user) navigate('/login')
@@ -64,6 +64,11 @@ function Generus() {
           <Grid align="center" sx={{ pt: 1.5 }}>
             <CircularProgress size={20} />
           </Grid>
+        }
+        endMessage={
+          <Typography align='center' p={3} color='text.secondary' variant='body2'>
+            {users.length === 0 && 'Tidak ditemukan'}
+          </Typography>
         }
       >
         {users.map(user =>
