@@ -70,12 +70,16 @@ function TargetChip(props) {
     navigate('#')
   }
 
+  const isModified = () => {
+    return equalArray(completed, initCompleted)
+  }
+
   return (
     <>
       <BackHeader
         title={props.subject.name}
         subject={props.subject}
-        isModified={!equalArray(completed, initCompleted)}
+        isModified={!isModified()}
         completed={completed}
         canSave={userId ? false : true}
       />
@@ -83,7 +87,7 @@ function TargetChip(props) {
       {!userId && (
         <Stack spacing={1} direction='row' pb={2}>
           <Button sx={{ fontSize: 10 }} variant='contained' onClick={clickFinish}>Pilih Semua</Button>
-          <Button sx={{ fontSize: 10 }} variant='outlined' onClick={clickReset}>Reset pilihan</Button>
+          <Button disabled={isModified()} sx={{ fontSize: 10 }} variant='outlined' onClick={clickReset}>Reset pilihan</Button>
         </Stack>
       )}
 </Box>
