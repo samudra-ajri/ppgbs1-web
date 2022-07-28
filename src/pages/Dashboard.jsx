@@ -8,7 +8,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (!user) navigate('/login')
-    if (user.role === 'GENERUS') navigate('/profile')
+    if (user?.role === 'GENERUS') navigate('/profile')
   }, [user, navigate])
   
   return (
