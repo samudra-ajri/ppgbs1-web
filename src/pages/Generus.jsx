@@ -13,7 +13,7 @@ function Generus() {
   const { users, isLoading } = useSelector((state) => state.users)
   const [page, setpage] = useState(2)
   const [search, setSearch] = useState('')
-  const [hasmore, setHasmore] = useState(false)
+  const [hasmore, setHasmore] = useState(true)
 
   useEffect(() => {
     if (!user) navigate('/login')
@@ -22,8 +22,8 @@ function Generus() {
   }, [user, search, navigate, dispatch])
 
   const loadMoreUsers = () => {
-    if (!isLoading) setHasmore(false)
     dispatch(getUsersPaginate({ page, search }))
+    if (!isLoading) setHasmore(false)
     setpage(page + 1)
   }
 
