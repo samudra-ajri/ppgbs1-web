@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { Typography } from '@mui/material'
 
 function Dashboard() {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ function Dashboard() {
   
   return (
   <>
-    <div>Dashboard</div>
+    <Typography variant='h6' align='center' sx={{ mb: 1 }}>Dashboard</Typography>
   </>
   )
 }

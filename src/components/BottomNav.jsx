@@ -27,7 +27,7 @@ function BottomNav() {
           {user ? (
               user.role !== 'GENERUS' ? [
                 <BottomNavigationAction key="dashboard" component={Link} to="/" label="Dashboard" value="dashboard" icon={<DashboardIcon />} />,
-                <BottomNavigationAction key="progress" component={Link} to="/" label="Materi" value="progress" icon={<BarIcon />} />,
+                <BottomNavigationAction key="progress" component={Link} to="/completion" label="Materi" value="progress" icon={<BarIcon />} />,
                 <BottomNavigationAction key="generus" component={Link} to="/generus" label="Generus" value="generus" icon={<PeopleListIcon />} />,
               ] : [
                 <BottomNavigationAction key="profile" component={Link} to="/profile" label="Akun Saya" value="profile" icon={<ProfileIcon />} />,
