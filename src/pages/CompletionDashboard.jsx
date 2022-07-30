@@ -16,12 +16,18 @@ function CompletionDashboard() {
   const { completions, isLoading } = useSelector((state) => state.completions)
   const { countList } = useSelector((state) => state.usersCounter)
   const { locations } = useSelector((state) => state.locations)
-  const [focusDs, setFocusDs] = useState('SEMUA DS')
-  const [focusKlp, setFocusKlp] = useState('SEMUA KLP')
+  const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
+  const [focusKlp, setFocusKlp] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' || user?.role === 'PPD'? 'SEMUA KLP' : user?.klp)
 
   useEffect(() => {
     if (!user) navigate('/login')
-    dispatch(getAllCompletionsScores({ ds: '', klp: '' }))
+    if (user?.role === 'PPG' || user?.role === 'ADMIN') {
+      dispatch(getAllCompletionsScores({ ds: '', klp: '' }))
+    } else if (user?.role === 'PPD') {
+      dispatch(getAllCompletionsScores({ ds: user.ds, klp: '' }))
+    } else if (user?.role === 'PPK') {
+      dispatch(getAllCompletionsScores({ ds: user.ds, klp: user.klp }))
+    }
     dispatch(getRolesCounter())
     dispatch(getLocations())
     dispatch(reset())
@@ -116,11 +122,11 @@ function CompletionDashboard() {
         </Box>
       }
       <Grid container align='center' spacing={1}>
-        <CircularProgressWithLabel value={totalScore / (2297 * generusCount) * 100} title='Total' isloading={isLoading.toString()}/>
-        <CircularProgressWithLabel value={alquranScore / (605 * generusCount) * 100} title='Alquran' />
-        <CircularProgressWithLabel value={haditsScore / (1604 * generusCount) * 100} title='Alhadits' />
-        <CircularProgressWithLabel value={extraScore / (14 * generusCount) * 100} title='Penunjang' />
-        <CircularProgressWithLabel value={roteScore / (74 * generusCount) * 100} title='Hafalan' />
+        <CircularProgressWithLabel value={totalScore / (2297 * generusCount) * 100} title='Total' isloading={isLoading.toString()} />
+        <CircularProgressWithLabel value={alquranScore / (605 * generusCount) * 100} title='Alquran' isloading={isLoading.toString()} />
+        <CircularProgressWithLabel value={haditsScore / (1604 * generusCount) * 100} title='Alhadits' isloading={isLoading.toString()} />
+        <CircularProgressWithLabel value={extraScore / (14 * generusCount) * 100} title='Penunjang' isloading={isLoading.toString()} />
+        <CircularProgressWithLabel value={roteScore / (74 * generusCount) * 100} title='Hafalan' isloading={isLoading.toString()} />
       </Grid>
     </>
   )
