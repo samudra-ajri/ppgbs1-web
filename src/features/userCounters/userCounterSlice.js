@@ -13,10 +13,10 @@ const initialState = {
 // Get roles counter list
 export const getRolesCounter = createAsyncThunk(
   'users/roles',
-  async (_, thunkAPI) => {
+  async ({ ds, klp }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await userCounterService.getRolesCounter(token)
+      return await userCounterService.getRolesCounter(ds, klp, token)
     } catch (error) {
       const message =
         (error.response &&

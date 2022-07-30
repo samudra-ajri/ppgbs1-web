@@ -14,21 +14,25 @@ function CompletionDashboard() {
 
   const { user } = useSelector((state) => state.auth)
   const { completions, isLoading } = useSelector((state) => state.completions)
-  const { countList } = useSelector((state) => state.usersCounter)
+  const { countList, isLoading: isLoadingUserCounter  } = useSelector((state) => state.usersCounter)
   const { locations } = useSelector((state) => state.locations)
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
-  const [focusKlp, setFocusKlp] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' || user?.role === 'PPD'? 'SEMUA KLP' : user?.klp)
+  const [focusKlp, setFocusKlp] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' || user?.role === 'PPD' ? 'SEMUA KLP' : user?.klp)
 
   useEffect(() => {
     if (!user) navigate('/login')
     if (user?.role === 'PPG' || user?.role === 'ADMIN') {
       dispatch(getAllCompletionsScores({ ds: '', klp: '' }))
+      dispatch(getRolesCounter({ ds: '', klp: '' }))
+
     } else if (user?.role === 'PPD') {
       dispatch(getAllCompletionsScores({ ds: user.ds, klp: '' }))
+      dispatch(getRolesCounter({ ds: user.ds, klp: '' }))
+
     } else if (user?.role === 'PPK') {
       dispatch(getAllCompletionsScores({ ds: user.ds, klp: user.klp }))
+      dispatch(getRolesCounter({ ds: user.ds, klp: user.klp }))
     }
-    dispatch(getRolesCounter())
     dispatch(getLocations())
     dispatch(reset())
   }, [user, navigate, dispatch])
@@ -48,31 +52,35 @@ function CompletionDashboard() {
   }
 
   const onClickDs = (e) => {
-    const filters = e.target.innerText === 'SEMUA DS' 
-      ? { ds: '', klp: '' } 
+    const filters = e.target.innerText === 'SEMUA DS'
+      ? { ds: '', klp: '' }
       : { ds: e.target.innerText, klp: '' }
 
     setFocusDs(e.target.innerText)
     setFocusKlp('SEMUA KLP')
     dispatch(getAllCompletionsScores(filters))
+    dispatch(getRolesCounter(filters))
   }
 
   const onClickKlp = (e) => {
-    const filters = e.target.innerText === 'SEMUA KLP' 
-      ? { ds: focusDs, klp: '' } 
+    const filters = e.target.innerText === 'SEMUA KLP'
+      ? { ds: focusDs, klp: '' }
       : { ds: focusDs, klp: e.target.innerText }
 
     setFocusKlp(e.target.innerText)
     dispatch(getAllCompletionsScores(filters))
+    dispatch(getRolesCounter(filters))
   }
 
+  const loading = isLoading && isLoadingUserCounter
   const totalPoins = completions?.totalPoin ?? null
-  const alquranScore = (totalPoins?.find(o => o._id === 'ALQURAN'))?.total ?? 0
-  const haditsScore = (totalPoins?.find(o => o._id === 'HADITS'))?.total ?? 0
-  const roteScore = (totalPoins?.find(o => o._id === 'ROTE'))?.total ?? 0
-  const extraScore = (totalPoins?.find(o => o._id === 'EXTRA'))?.total ?? 0
-  const totalScore = alquranScore + haditsScore + roteScore + extraScore
-  const generusCount = countList?.countRoles?.find(o => o._id === 'GENERUS').total ?? 0.001
+  const generusCount = (countList?.countRoles?.find(o => o._id === 'GENERUS'))?.total ?? 100000
+
+  const alquranPercentage = ((totalPoins?.find(o => o._id === 'ALQURAN'))?.total ?? 0) / (605 * generusCount) * 100
+  const haditsPercentage = ((totalPoins?.find(o => o._id === 'HADITS'))?.total ?? 0) / (1604 * generusCount) * 100
+  const rotePercentage = ((totalPoins?.find(o => o._id === 'ROTE'))?.total ?? 0) / (74 * generusCount) * 100
+  const extraPercentage = ((totalPoins?.find(o => o._id === 'EXTRA'))?.total ?? 0) / (14 * generusCount) * 100
+  const totalPercentage = (alquranPercentage + haditsPercentage + rotePercentage + extraPercentage) / 4
 
   return (
     <>
@@ -122,11 +130,11 @@ function CompletionDashboard() {
         </Box>
       }
       <Grid container align='center' spacing={1}>
-        <CircularProgressWithLabel value={totalScore / (2297 * generusCount) * 100} title='Total' isloading={isLoading.toString()} />
-        <CircularProgressWithLabel value={alquranScore / (605 * generusCount) * 100} title='Alquran' isloading={isLoading.toString()} />
-        <CircularProgressWithLabel value={haditsScore / (1604 * generusCount) * 100} title='Alhadits' isloading={isLoading.toString()} />
-        <CircularProgressWithLabel value={extraScore / (14 * generusCount) * 100} title='Penunjang' isloading={isLoading.toString()} />
-        <CircularProgressWithLabel value={roteScore / (74 * generusCount) * 100} title='Hafalan' isloading={isLoading.toString()} />
+        <CircularProgressWithLabel value={totalPercentage} title='Total' isloading={loading.toString()} />
+        <CircularProgressWithLabel value={alquranPercentage} title='Alquran' isloading={loading.toString()} />
+        <CircularProgressWithLabel value={haditsPercentage} title='Alhadits' isloading={loading.toString()} />
+        <CircularProgressWithLabel value={extraPercentage} title='Penunjang' isloading={loading.toString()} />
+        <CircularProgressWithLabel value={rotePercentage} title='Hafalan' isloading={loading.toString()} />
       </Grid>
     </>
   )
