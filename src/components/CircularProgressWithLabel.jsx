@@ -5,7 +5,7 @@ import Box from '@mui/material/Box'
 import { Card, Grid } from '@mui/material'
 
 function CircularProgressWithLabel(props) {
-  const { value, title} = props
+  const { value, title, isloading } = props
 
   const color = () => {
     if (value < 50) return 'inherit'
@@ -17,12 +17,12 @@ function CircularProgressWithLabel(props) {
     if (title === 'Total') return 120
     return 100
   }
-
+  
   return (
     <Grid item xs={title === 'Total' ? 12 : 6}>
       <Card sx={{ padding: 1, justifyItems: 'center' }}>
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-          <CircularProgress color={color()} size={size()} variant="determinate" {...props} />
+          <CircularProgress color={color()} size={size()} variant="determinate" value={isloading === 'true' ? 0 : value} />
           <Box
             sx={{
               top: 0,
@@ -36,7 +36,13 @@ function CircularProgressWithLabel(props) {
             }}
           >
             <Typography align='center' variant="caption" color="text.secondary">
-              <b>{`${Math.round(value)}%`}</b><br />
+              {isloading === 'true' ? (
+                <Grid align="center">
+                  <CircularProgress size={15} />
+                </Grid>
+              ) : (
+                <b>{`${Math.round(value)}%`}<br /></b>
+              )}
               {title}
             </Typography>
           </Box>

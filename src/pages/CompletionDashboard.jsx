@@ -13,7 +13,7 @@ function CompletionDashboard() {
   const navigate = useNavigate()
 
   const { user } = useSelector((state) => state.auth)
-  const { completions } = useSelector((state) => state.completions)
+  const { completions, isLoading } = useSelector((state) => state.completions)
   const { countList } = useSelector((state) => state.usersCounter)
   const { locations } = useSelector((state) => state.locations)
   const [focusDs, setFocusDs] = useState('SEMUA DS')
@@ -116,7 +116,7 @@ function CompletionDashboard() {
         </Box>
       }
       <Grid container align='center' spacing={1}>
-        <CircularProgressWithLabel value={totalScore / (2297 * generusCount) * 100} title='Total' />
+        <CircularProgressWithLabel value={totalScore / (2297 * generusCount) * 100} title='Total' isloading={isLoading.toString()}/>
         <CircularProgressWithLabel value={alquranScore / (605 * generusCount) * 100} title='Alquran' />
         <CircularProgressWithLabel value={haditsScore / (1604 * generusCount) * 100} title='Alhadits' />
         <CircularProgressWithLabel value={extraScore / (14 * generusCount) * 100} title='Penunjang' />
