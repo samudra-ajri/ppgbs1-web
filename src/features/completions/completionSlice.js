@@ -88,10 +88,10 @@ export const getCompletionsScores = createAsyncThunk(
 // Get all users completions scores
 export const getAllCompletionsScores = createAsyncThunk(
   'completions/scores/all',
-  async (_, thunkAPI) => {
+  async ({ds, klp}, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await completionService.getAllCompletionsScores(token)
+      return await completionService.getAllCompletionsScores(ds, klp, token)
     } catch (error) {
       const message =
         (error.response &&

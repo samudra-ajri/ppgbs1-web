@@ -16,12 +16,12 @@ function CompletionDashboard() {
   const { completions } = useSelector((state) => state.completions)
   const { countList } = useSelector((state) => state.usersCounter)
   const { locations } = useSelector((state) => state.locations)
-  const [focusDs, setFocusDs] = useState('')
-  const [focusKlp, setFocusKlp] = useState('')
+  const [focusDs, setFocusDs] = useState('SEMUA DS')
+  const [focusKlp, setFocusKlp] = useState('SEMUA KLP')
 
   useEffect(() => {
     if (!user) navigate('/login')
-    dispatch(getAllCompletionsScores())
+    dispatch(getAllCompletionsScores({ ds: '', klp: '' }))
     dispatch(getRolesCounter())
     dispatch(getLocations())
     dispatch(reset())
@@ -42,18 +42,29 @@ function CompletionDashboard() {
   }
 
   const onClickDs = (e) => {
+    const filters = e.target.innerText === 'SEMUA DS' 
+      ? { ds: '', klp: '' } 
+      : { ds: e.target.innerText, klp: '' }
+
     setFocusDs(e.target.innerText)
+    setFocusKlp('SEMUA KLP')
+    dispatch(getAllCompletionsScores(filters))
   }
 
   const onClickKlp = (e) => {
+    const filters = e.target.innerText === 'SEMUA KLP' 
+      ? { ds: focusDs, klp: '' } 
+      : { ds: focusDs, klp: e.target.innerText }
+
     setFocusKlp(e.target.innerText)
+    dispatch(getAllCompletionsScores(filters))
   }
 
   const totalPoins = completions?.totalPoin ?? null
-  const alquranScore = totalPoins?.find(o => o._id === 'ALQURAN').total ?? 0
-  const haditsScore = totalPoins?.find(o => o._id === 'HADITS').total ?? 0
-  const roteScore = totalPoins?.find(o => o._id === 'ROTE').total ?? 0
-  const extraScore = totalPoins?.find(o => o._id === 'EXTRA').total ?? 0
+  const alquranScore = (totalPoins?.find(o => o._id === 'ALQURAN'))?.total ?? 0
+  const haditsScore = (totalPoins?.find(o => o._id === 'HADITS'))?.total ?? 0
+  const roteScore = (totalPoins?.find(o => o._id === 'ROTE'))?.total ?? 0
+  const extraScore = (totalPoins?.find(o => o._id === 'EXTRA'))?.total ?? 0
   const totalScore = alquranScore + haditsScore + roteScore + extraScore
   const generusCount = countList?.countRoles?.find(o => o._id === 'GENERUS').total ?? 0.001
 
@@ -82,17 +93,17 @@ function CompletionDashboard() {
           />)}
         </Box>
       }
-      {(user.role === 'ADMIN' || user.role === 'PPG' || user.role === 'PPD') &&
+      {((user.role === 'ADMIN' || user.role === 'PPG' || user.role === 'PPD') && focusDs !== 'SEMUA DS') &&
         <Box pb={1}>
           <Typography variant='body2'>Filter Klp</Typography>
-          {klpList().length !== 0 && <Chip
+          <Chip
             variant={'SEMUA KLP' === focusKlp ? 'solid' : 'outlined'}
             label={<Typography sx={{ fontSize: 10 }}> SEMUA KLP </Typography>}
             name='SEMUA KLP'
             color='info'
             sx={{ m: 0.25 }}
             onClick={onClickKlp}
-          />}
+          />
           {klpList().map(klp => <Chip
             variant={klp === focusKlp ? 'solid' : 'outlined'}
             key={klp}

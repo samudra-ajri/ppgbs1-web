@@ -47,13 +47,13 @@ const getCompletionsScores = async (token) => {
 }
 
 // Get all users completions scores
-const getAllCompletionsScores = async (token) => {
+const getAllCompletionsScores = async (ds, klp, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + 'scores/all', config)
+  const response = await API.get(API_URL + `scores/all?ds=${ds}&klp=${klp}`, config)
   return response.data
 }
 
