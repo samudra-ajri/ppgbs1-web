@@ -2,7 +2,7 @@ import { CircularProgress, Grid, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import InfiniteScroll from "react-infinite-scroll-component"
+import InfiniteScroll from 'react-infinite-scroll-component'
 import PeopleCard from '../components/PeopleCard'
 import { getUsers, getUsersPaginate, reset } from '../features/users/userSlice'
 
@@ -38,7 +38,7 @@ function Generus() {
 
   return (
     <>
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar Generus</Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar {user.role === 'ADMIN' ? 'Pengguna' : 'Generus'}</Typography>
 
       <form onSubmit={onSubmit}>
         <Grid container justifyContent='center' padding={2}>
@@ -61,7 +61,7 @@ function Generus() {
         next={loadMoreUsers}
         hasMore={hasmore}
         loader={
-          <Grid align="center" sx={{ pt: 1.5 }}>
+          <Grid align='center' sx={{ pt: 1.5 }}>
             <CircularProgress size={20} />
           </Grid>
         }
