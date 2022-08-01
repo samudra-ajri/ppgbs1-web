@@ -9,6 +9,7 @@ import completionDetailsReducer from '../features/completionDetails/completionDe
 import userReducer from '../features/users/userSlice'
 import userCounterReducer from '../features/userCounters/userCounterSlice'
 import personReducer from '../features/persons/personSlice'
+import completedTargetReducer from '../features/targetCompleted/targetCompletedSlice'
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
     users: userReducer,
     usersCounter: userCounterReducer,
     persons: personReducer,
+    completedTargets: completedTargetReducer,
   },
 })
