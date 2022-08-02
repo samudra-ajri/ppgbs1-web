@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import CircularProgressWithLabel from '../components/CircularProgressWithLabel'
-import { getAllCompletionsScores, reset } from '../features/completions/completionSlice'
+import { getAllCompletionsScores, reset } from '../features/completionScores/completionScoreSlice'
 import { getRolesCounter } from '../features/userCounters/userCounterSlice'
 import { getLocations } from '../features/locations/locationSlice'
 import { useState } from 'react'
@@ -13,7 +13,7 @@ function CompletionDashboard() {
   const navigate = useNavigate()
 
   const { user } = useSelector((state) => state.auth)
-  const { completions, isLoading } = useSelector((state) => state.completions)
+  const { completionScores, isLoading } = useSelector((state) => state.completionScores)
   const { countList, isLoading: isLoadingUserCounter  } = useSelector((state) => state.usersCounter)
   const { locations } = useSelector((state) => state.locations)
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
@@ -73,7 +73,7 @@ function CompletionDashboard() {
   }
 
   const loading = isLoading && isLoadingUserCounter
-  const totalPoins = completions?.totalPoin ?? null
+  const totalPoins = completionScores?.totalPoin ?? null
   const generusCount = (countList?.countRoles?.find(o => o._id === 'GENERUS'))?.total ?? 100000
 
   const alquranPercentage = ((totalPoins?.find(o => o._id === 'ALQURAN'))?.total ?? 0) / (605 * generusCount) * 100

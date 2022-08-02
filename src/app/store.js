@@ -6,6 +6,7 @@ import completionReducer from '../features/completions/completionSlice'
 import subjectCategoryReducer from '../features/subjectCategories/subjectCategorySlice'
 import subjectDetailsReducer from '../features/subjectDetails/subjectDetailsSlice'
 import completionDetailsReducer from '../features/completionDetails/completionDetailsSlice'
+import completionScoresReducer from '../features/completionScores/completionScoreSlice'
 import userReducer from '../features/users/userSlice'
 import userCounterReducer from '../features/userCounters/userCounterSlice'
 import personReducer from '../features/persons/personSlice'
@@ -20,6 +21,7 @@ export const store = configureStore({
     subjectCategories: subjectCategoryReducer,
     subjectDetails: subjectDetailsReducer,
     completionDetails: completionDetailsReducer,
+    completionScores: completionScoresReducer,
     users: userReducer,
     usersCounter: userCounterReducer,
     persons: personReducer,
