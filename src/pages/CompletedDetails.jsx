@@ -10,10 +10,16 @@ import { getSubject } from '../features/subjectDetails/subjectDetailsSlice'
 import { getRolesCounter } from '../features/userCounters/userCounterSlice'
 import { Box } from '@mui/system'
 import chroma from "chroma-js"
+import { useState } from 'react'
 
 function CompletedDetails() {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
+
+	const [onClick, setOnClick] = useState('')
+	const handleClick = (e) => {
+		setOnClick(e.target.innerText)
+	}
 
 	const path = window.location.pathname.split('/')
 	const params = window.location.search.split('?')[1].split('&')
@@ -42,9 +48,13 @@ function CompletedDetails() {
 	const { countList } = useSelector((state) => state.usersCounter)
 	const subjectTargets = subjectDetails?.targets || []
 
+	const generusCount = (countList?.countRoles?.find(o => o._id === 'GENERUS'))?.total || 0.0001
+	const findCompleterCount = (target) => {
+		return (completedTargets?.targetsCompleted?.find(o => o.target === target))?.count || 0
+	}
+
 	const style = (target) => {
-		const completedCount = (completedTargets?.targetsCompleted?.find(o => o.target === target))?.count || 0
-		const generusCount = (countList?.countRoles?.find(o => o._id === 'GENERUS'))?.total || 0.0001
+		const completedCount = findCompleterCount(target)
 		const title = path[3]
 		const scale = completedCount/generusCount
 
@@ -89,8 +99,9 @@ function CompletedDetails() {
 							variant='solid'
 							key={target}
 							sx={style(target)}
-							label={<Typography sx={{ fontSize: 10 }}> {target} </Typography>}
+							label={<Typography sx={{ fontSize: 10 }}> { target === onClick ? (findCompleterCount(target)/generusCount*100).toFixed(1) + '%' : target } </Typography>}
 							name={target}
+							onClick={handleClick}
 						/>
 					))
 				)}
