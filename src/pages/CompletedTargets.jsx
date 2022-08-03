@@ -8,6 +8,7 @@ import CircularProgressWithLabel from '../components/CircularProgressWithLabel'
 import { getSubjectsByCategory, reset } from '../features/subjects/subjectSlice'
 import { getRolesCounter } from '../features/userCounters/userCounterSlice'
 import { getAllCompletionsScores, reset as resetScores } from '../features/completionScores/completionScoreSlice'
+import translate from '../helpers/translateHelper'
 
 function CompletedTargets() {
 	const dispatch = useDispatch()
@@ -38,8 +39,8 @@ function CompletedTargets() {
 
 	return (
 		<>
-			<BackHeader title='Detail Capaian' />
-			<Typography sx={{ mb: 1 }} variant="h7" component="div">Materi {capitalize.words(title)}</Typography>
+			<BackHeader title='Capaian Materi' />
+			<Typography sx={{ mb: 1 }} variant="h7" component="div">Materi {capitalize.words(translate(title))}</Typography>
 			<Stack direction="row" spacing={0.5}>
 				<Chip
 					variant={'solid'}
@@ -58,10 +59,10 @@ function CompletedTargets() {
 						<CircularProgressWithLabel
 							key={subject.name}
 							value={((completionScores?.totalPoin?.find(o => o._id === subject.name))?.total ?? 0) / (subject.totalPoin * generusCount) * 100}
-							title={capitalize.words(subject.name)}
+							title={capitalize.words(translate(subject.name.toLowerCase()))}
 							isloading={isLoading || isLoadingUserCounter || isLoadingScores}
 							sizePosition={(subjects?.subjects?.length === 1) ? 'top' : undefined}
-							link={`/c/details-completed/${subject._id}`}
+							link={`/c/details-completed/${title}/${subject._id}/${((subject.name.split('. ')[1]) ?? subject.name).toLowerCase().replace(' ', '-')}`}
 						/>
 					))}
 				</Grid>)
