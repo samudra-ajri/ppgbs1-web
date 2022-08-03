@@ -21,8 +21,8 @@ function CircularProgressWithLabel(props) {
 
   return (
     <Grid item xs={sizePosition === 'top' ? 12 : 6}>
-        <Link to={link} component={CardActionArea}>
-      <Card sx={{ padding: 1, justifyItems: 'center' }}>
+      <Link to={link} component={CardActionArea}>
+        <Card sx={{ padding: 1, justifyItems: 'center' }}>
           <Box sx={{ position: 'relative', display: 'inline-flex' }}>
             <CircularProgress color={color()} size={size()} variant="determinate" value={isloading === 'true' ? 0 : value} />
             <Box
@@ -49,8 +49,8 @@ function CircularProgressWithLabel(props) {
               </Typography>
             </Box>
           </Box>
-      </Card>
-        </Link>
+        </Card>
+      </Link>
     </Grid>
   )
 }

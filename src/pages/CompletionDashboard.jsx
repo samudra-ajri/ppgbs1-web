@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Typography } from '@mui/material'
+import { Box, Card, Chip, Grid, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -14,7 +14,7 @@ function CompletionDashboard() {
 
   const { user } = useSelector((state) => state.auth)
   const { completionScores, isLoading } = useSelector((state) => state.completionScores)
-  const { countList, isLoading: isLoadingUserCounter  } = useSelector((state) => state.usersCounter)
+  const { countList, isLoading: isLoadingUserCounter } = useSelector((state) => state.usersCounter)
   const { locations } = useSelector((state) => state.locations)
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
   const [focusKlp, setFocusKlp] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' || user?.role === 'PPD' ? 'SEMUA KLP' : user?.klp)
@@ -74,12 +74,12 @@ function CompletionDashboard() {
 
   const loading = isLoading || isLoadingUserCounter
   const totalPoins = completionScores?.totalPoin ?? null
-  const generusCount = (countList?.countRoles?.find(o => o._id === 'GENERUS'))?.total ?? 100000
+  const generusCount = (countList?.countRoles?.find(o => o._id === 'GENERUS'))?.total
 
-  const alquranPercentage = ((totalPoins?.find(o => o._id === 'ALQURAN'))?.total ?? 0) / (605 * generusCount) * 100
-  const haditsPercentage = ((totalPoins?.find(o => o._id === 'HADITS'))?.total ?? 0) / (1604 * generusCount) * 100
-  const rotePercentage = ((totalPoins?.find(o => o._id === 'ROTE'))?.total ?? 0) / (74 * generusCount) * 100
-  const extraPercentage = ((totalPoins?.find(o => o._id === 'EXTRA'))?.total ?? 0) / (14 * generusCount) * 100
+  const alquranPercentage = ((totalPoins?.find(o => o._id === 'ALQURAN'))?.total ?? 0) / (605 * (generusCount ?? 100000)) * 100
+  const haditsPercentage = ((totalPoins?.find(o => o._id === 'HADITS'))?.total ?? 0) / (1604 * (generusCount ?? 100000)) * 100
+  const rotePercentage = ((totalPoins?.find(o => o._id === 'ROTE'))?.total ?? 0) / (74 * (generusCount ?? 100000)) * 100
+  const extraPercentage = ((totalPoins?.find(o => o._id === 'EXTRA'))?.total ?? 0) / (14 * (generusCount ?? 100000)) * 100
   const totalPercentage = (alquranPercentage + haditsPercentage + rotePercentage + extraPercentage) / 4
 
   const queryParams = `ds=${focusDs.toLowerCase().replace(" ", "-")}&klp=${focusKlp.toLowerCase().replace(" ", "-")}`
@@ -132,31 +132,39 @@ function CompletionDashboard() {
         </Box>
       }
       <Grid container align='center' spacing={1}>
-        <CircularProgressWithLabel 
-          value={totalPercentage} 
-          title='Total' 
-          isloading={loading.toString()} 
-          sizePosition='top' 
-          link='#'/>
-        <CircularProgressWithLabel 
-          value={alquranPercentage} 
-          title='Alquran' 
-          isloading={loading.toString()} 
+        <Grid item xs={12}>
+          <Card sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box sx={{ position: 'relative' }}>
+              <Typography align='center' variant="h6" color="text.secondary">{generusCount ?? 0}</Typography>
+              <Typography align='center' variant="caption" color="text.secondary">Generus</Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <CircularProgressWithLabel
+          value={totalPercentage}
+          title='Total'
+          isloading={loading.toString()}
+          sizePosition='top'
+          link='#' />
+        <CircularProgressWithLabel
+          value={alquranPercentage}
+          title='Alquran'
+          isloading={loading.toString()}
           link={`/c/targets-completed/alquran?${queryParams}`} />
-        <CircularProgressWithLabel 
-          value={haditsPercentage} 
-          title='Alhadits' 
-          isloading={loading.toString()} 
+        <CircularProgressWithLabel
+          value={haditsPercentage}
+          title='Alhadits'
+          isloading={loading.toString()}
           link={`/c/targets-completed/hadits?${queryParams}`} />
-        <CircularProgressWithLabel 
-          value={extraPercentage} 
-          title='Penunjang' 
-          isloading={loading.toString()} 
+        <CircularProgressWithLabel
+          value={extraPercentage}
+          title='Penunjang'
+          isloading={loading.toString()}
           link={`/c/targets-completed/extra?${queryParams}`} />
-        <CircularProgressWithLabel 
-          value={rotePercentage} 
-          title='Hafalan' 
-          isloading={loading.toString()} 
+        <CircularProgressWithLabel
+          value={rotePercentage}
+          title='Hafalan'
+          isloading={loading.toString()}
           link={`/c/targets-completed/rote?${queryParams}`} />
       </Grid>
     </>
