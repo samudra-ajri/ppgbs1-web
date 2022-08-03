@@ -3,13 +3,14 @@ import API from '../../api'
 const API_URL = '/api/completions/'
 
 // Get all users completions scores
-const getAllCompletionsScores = async (ds, klp, token) => {
+const getAllCompletionsScores = async (filters, token) => {
+  const { ds='', klp='', field='', category='' } = filters
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + `scores/all?ds=${ds}&klp=${klp}`, config)
+  const response = await API.get(API_URL + `scores/all?ds=${ds}&klp=${klp}&field=${field}&category=${category}`, config)
   return response.data
 }
 

@@ -15,7 +15,7 @@ export const getAllCompletionsSubjectScores = createAsyncThunk(
   async ({ subjectId, ds, klp }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await targetCompletedService.getAllCompletionsSubjectScores(subjectId, ds, klp, token)
+      return await targetCompletedService.getCompletionsSubjectScoresDetails(subjectId, ds, klp, token)
     } catch (error) {
       const message =
         (error.response &&
