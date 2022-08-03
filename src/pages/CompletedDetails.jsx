@@ -7,11 +7,14 @@ import BackHeader from '../components/BackHeader'
 import translate from '../helpers/translateHelper'
 import { getAllCompletionsSubjectScores } from '../features/targetCompleted/targetCompletedSlice'
 import { getSubject } from '../features/subjectDetails/subjectDetailsSlice'
+import { getRolesCounter } from '../features/userCounters/userCounterSlice'
 import { Box } from '@mui/system'
+import chroma from "chroma-js"
 
 function CompletedDetails() {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
+
 	const path = window.location.pathname.split('/')
 	const params = window.location.search.split('?')[1].split('&')
 	const ds = params[0].split('=')[1].replace('-', ' ')
@@ -31,24 +34,33 @@ function CompletedDetails() {
 		return 'left'
 	}
 
-	const style = () => {
-		const title = path[3]
-		if (
-			title === 'alquran' || title === 'hadits'
-		) return { m: 0.5, width: '15%' }
-		return { m: 0.5 }
-	}
+	const colorScale = chroma.scale(['#f8bbd0', '#2e7d32']);
 
 	const { user } = useSelector((state) => state.auth)
-	// const { completedTargets } = useSelector((state) => state.completedTargets)
+	const { completedTargets } = useSelector((state) => state.completedTargets)
 	const { subjectDetails, isLoading: isLoadingSubject } = useSelector((state) => state.subjectDetails)
-
+	const { countList } = useSelector((state) => state.usersCounter)
 	const subjectTargets = subjectDetails?.targets || []
+
+	const style = (target) => {
+		const completedCount = (completedTargets?.targetsCompleted?.find(o => o.target === target))?.count || 0
+		const generusCount = (countList?.countRoles?.find(o => o._id === 'GENERUS'))?.total || 0.0001
+		const title = path[3]
+		const scale = completedCount/generusCount
+
+		let style = { m: 0.5 }
+		if (title === 'alquran' || title === 'hadits') style.width = '15%'
+		style.backgroundColor = colorScale(scale).hex()
+		style.color = scale <= 0.1 ? 'black' : 'white'
+
+		return style
+	}
 
 	useEffect(() => {
 		if (!user) navigate('/login')
 		dispatch(getAllCompletionsSubjectScores({ subjectId, ds, klp }))
 		dispatch(getSubject(subjectId))
+		dispatch(getRolesCounter({ ds, klp }))
 	}, [user, subjectId, ds, klp, navigate, dispatch])
 
 	return (
@@ -76,10 +88,9 @@ function CompletedDetails() {
 						<Chip
 							variant='solid'
 							key={target}
-							sx={style()}
+							sx={style(target)}
 							label={<Typography sx={{ fontSize: 10 }}> {target} </Typography>}
 							name={target}
-							color='success'
 						/>
 					))
 				)}
