@@ -12,7 +12,7 @@ const initialState = {
 // Get all completions subject scores
 export const getAllCompletionsSubjectScores = createAsyncThunk(
   'completedTargets/subject',
-  async ({ subjectId, ds, klp }, thunkAPI) => {
+  async ({ subjectId, ds='', klp='' }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
       return await targetCompletedService.getCompletionsSubjectScoresDetails(subjectId, ds, klp, token)

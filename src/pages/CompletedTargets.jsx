@@ -26,6 +26,8 @@ function CompletedTargets() {
 	const { countList, isLoading: isLoadingUserCounter } = useSelector((state) => state.usersCounter)
 	const { completionScores, isLoading: isLoadingScores } = useSelector((state) => state.completionScores)
 
+	const queryParams = `ds=${ds.replace(" ", "-")}&klp=${klp.replace(" ", "-")}`
+
 	useEffect(() => {
 		if (!user) navigate('/login')
 		dispatch(getSubjectsByCategory(title))
@@ -62,7 +64,7 @@ function CompletedTargets() {
 							title={capitalize.words(translate(subject.name.toLowerCase()))}
 							isloading={isLoading || isLoadingUserCounter || isLoadingScores}
 							sizePosition={(subjects?.subjects?.length === 1) ? 'top' : undefined}
-							link={`/c/details-completed/${title}/${subject._id}/${((subject.name.split('. ')[1]) ?? subject.name).toLowerCase().replace(' ', '-')}`}
+							link={`/c/details-completed/${title}/${subject._id}/${((subject.name.split('. ')[1]) ?? subject.name).toLowerCase().replace(' ', '-')}?${queryParams}`}
 						/>
 					))}
 				</Grid>)
