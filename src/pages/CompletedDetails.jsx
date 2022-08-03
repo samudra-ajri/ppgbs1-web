@@ -62,8 +62,8 @@ function CompletedDetails() {
 
 		let style = { m: 0.5 }
 		if (title === 'alquran' || title === 'hadits') style.width = '15%'
-		style.backgroundColor = colorScale(scale).hex()
-		style.color = scale <= 0.1 ? 'black' : 'white'
+		style.backgroundColor = onClick === target ? 'grey' : colorScale(scale).hex()
+		style.color = (scale <= 0.1 || onClick === target) ? 'black' : 'white'
 
 		return style
 	}
