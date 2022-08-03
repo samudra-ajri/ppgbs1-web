@@ -1,4 +1,4 @@
-import { Chip, CircularProgress, Grid, Stack, Typography } from '@mui/material'
+import { Chip, CircularProgress, Grid, Pagination, Stack, Typography } from '@mui/material'
 import capitalize from 'capitalize'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,6 +26,8 @@ function CompletedDetails() {
 	const ds = params[0].split('=')[1].replace('-', ' ')
 	const klp = params[1].split('=')[1].replace('-', ' ')
 	const subjectId = path[4]
+  const [page, setPage] = useState(1)
+  const chunkSize = 50
 
 	const title = () => {
 		if (path[3] !== path[5]) return `${translate(path[3])} ${path[5]}`
@@ -49,12 +51,12 @@ function CompletedDetails() {
 	const subjectTargets = subjectDetails?.targets || []
 
 	const generusCount = (countList?.countRoles?.find(o => o._id === 'GENERUS'))?.total || 0.0001
-	const findCompleterCount = (target) => {
+	const findCompleteCount = (target) => {
 		return (completedTargets?.targetsCompleted?.find(o => o.target === target))?.count || 0
 	}
 
 	const style = (target) => {
-		const completedCount = findCompleterCount(target)
+		const completedCount = findCompleteCount(target)
 		const title = path[3]
 		const scale = completedCount/generusCount
 
@@ -65,6 +67,10 @@ function CompletedDetails() {
 
 		return style
 	}
+
+	const handleChange = (event, value) => {
+    setPage(value)
+  }
 
 	useEffect(() => {
 		if (!user) navigate('/login')
@@ -94,18 +100,28 @@ function CompletedDetails() {
 					<Grid align="center" sx={{ pt: 1.5 }}>
 						<CircularProgress size={20} />
 					</Grid>) : (
-					subjectTargets.map((target) => (
+					subjectTargets.slice(chunkSize*(page-1), chunkSize*page).map((target) => (
 						<Chip
 							variant='solid'
 							key={target}
 							sx={style(target)}
-							label={<Typography sx={{ fontSize: 10 }}> { target === onClick ? (findCompleterCount(target)/generusCount*100).toFixed(1) + '%' : target } </Typography>}
+							label={<Typography sx={{ fontSize: 10 }}> { target === onClick ? (findCompleteCount(target)/generusCount*100).toFixed(1) + '%' : target } </Typography>}
 							name={target}
 							onClick={handleClick}
 						/>
 					))
 				)}
 			</Box>
+			<Pagination
+        size='medium'
+        count={Math.ceil((subjectDetails?.totalPoin || 0) / chunkSize)}
+        onChange={handleChange}
+        sx={{
+          justifyContent: 'center',
+          display: 'flex',
+          marginTop: 2
+        }}
+      />
 		</>
 	)
 }
