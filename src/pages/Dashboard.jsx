@@ -260,6 +260,23 @@ function Dashboard() {
             </Box>
           </Card>
         </Grid>
+        <Grid item xs={12}>
+          <Card sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h4"
+                color="text.secondary"
+              >{((dashboardData?.scores?.total || 0) / ((dashboardData?.users?.generus || 0.0001) * 2297)).toFixed(2)+'%'}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body2"
+                color="text.secondary">Capaian Generus
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
       </Grid>
     </>
   )
