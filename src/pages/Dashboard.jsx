@@ -82,7 +82,7 @@ function Dashboard() {
     <>
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>Dashboard</Typography>
 
-      {(user.role === 'ADMIN' || user.role === 'PPG') &&
+      {(user?.role === 'ADMIN' || user?.role === 'PPG') &&
         <Box pb={1}>
           <Typography variant='body2'>Filter Ds</Typography>
           <Chip
@@ -104,7 +104,7 @@ function Dashboard() {
           />)}
         </Box>
       }
-      {((user.role === 'ADMIN' || user.role === 'PPG' || user.role === 'PPD') && focusDs !== 'SEMUA DS') &&
+      {((user?.role === 'ADMIN' || user?.role === 'PPG' || user?.role === 'PPD') && focusDs !== 'SEMUA DS') &&
         <Box pb={1}>
           <Typography variant='body2'>Filter Klp</Typography>
           <Chip
