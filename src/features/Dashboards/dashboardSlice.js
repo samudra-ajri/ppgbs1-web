@@ -13,10 +13,10 @@ const initialState = {
 // Get dashboard
 export const getDashboard = createAsyncThunk(
   'dashboard',
-  async (_, thunkAPI) => {
+  async (filters={}, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await dashboardService.getDashboard(token)
+      return await dashboardService.getDashboard(filters, token)
     } catch (error) {
       const message =
         (error.response &&

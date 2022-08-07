@@ -11,8 +11,9 @@ function Dashboard() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { dashboardData } = useSelector(state => state.dashboard)
+  const { dashboardData, isLoading } = useSelector(state => state.dashboard)
   const { locations } = useSelector((state) => state.locations)
+  const [filters, setFilters] = useState({})
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
   const [focusKlp, setFocusKlp] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' || user?.role === 'PPD' ? 'SEMUA KLP' : user?.klp)
 
@@ -20,8 +21,8 @@ function Dashboard() {
     if (!user) navigate('/login')
     if (user?.role === 'GENERUS') navigate('/profile')
     dispatch(getLocations())
-    dispatch(getDashboard())
-  }, [user, navigate, dispatch])
+    dispatch(getDashboard(filters))
+  }, [user, filters, navigate, dispatch])
 
   const dsList = () => {
     const ds = []
@@ -38,19 +39,31 @@ function Dashboard() {
   }
 
   const onClickDs = (e) => {
-    // const filters = e.target.innerText === 'SEMUA DS'
-    //   ? { ds: '', klp: '' }
-    //   : { ds: e.target.innerText, klp: '' }
-
+    delete filters.klp
+    if (e.target.innerText === 'SEMUA DS') {
+      delete filters.ds
+    } else {
+      setFilters((prevState) => ({
+        ...prevState,
+        ds: e.target.innerText
+      }))
+    }
+    dispatch(getDashboard(filters))
     setFocusDs(e.target.innerText)
     setFocusKlp('SEMUA KLP')
   }
 
-  const onClickKlp = (e) => {
-    // const filters = e.target.innerText === 'SEMUA KLP'
-    //   ? { ds: focusDs, klp: '' }
-    //   : { ds: focusDs, klp: e.target.innerText }
 
+  const onClickKlp = (e) => {
+    if (e.target.innerText === 'SEMUA KLP') {
+      delete filters.klp
+    } else {
+      setFilters((prevState) => ({
+        ...prevState,
+        klp: e.target.innerText
+      }))
+    }
+    dispatch(getDashboard(filters))
     setFocusKlp(e.target.innerText)
   }
 
@@ -104,14 +117,14 @@ function Dashboard() {
       }
 
       <Grid container align='center' spacing={1}>
-        <CounterCard title='Generus' value={dashboardData?.users?.generus} />
-        <CounterCard title='Pengajar' value={dashboardData?.users?.pengajar} />
-        <CounterCard title='Pra Remaja' value={dashboardData?.users?.preteenAge} size='small' />
-        <CounterCard title='Remaja' value={dashboardData?.users?.teenAge} size='small' />
-        <CounterCard title='Pra Nikah' value={dashboardData?.users?.premarriedAge} size='small' />
-        <CounterCard title='Laki-laki' value={dashboardData?.users?.male}/>
-        <CounterCard title='Perempuan' value={dashboardData?.users?.female}/>
-        <CounterCard title='Total Capaian Materi' value={dashboardData?.scores?.total} size='large'/>
+        <CounterCard title='Generus' value={dashboardData?.users?.generus} isLoading={isLoading.toString()}/>
+        <CounterCard title='Pengajar' value={dashboardData?.users?.pengajar} isLoading={isLoading.toString()}/>
+        <CounterCard title='Pra Remaja' value={dashboardData?.users?.preteenAge} size='small' isLoading={isLoading.toString()}/>
+        <CounterCard title='Remaja' value={dashboardData?.users?.teenAge} size='small' isLoading={isLoading.toString()}/>
+        <CounterCard title='Pra Nikah' value={dashboardData?.users?.premarriedAge} size='small' isLoading={isLoading.toString()}/>
+        <CounterCard title='Laki-laki' value={dashboardData?.users?.male} isLoading={isLoading.toString()}/>
+        <CounterCard title='Perempuan' value={dashboardData?.users?.female} isLoading={isLoading.toString()}/>
+        <CounterCard title='Total Capaian Materi' value={dashboardData?.scores?.total} size='large' isLoading={isLoading.toString()}/>
       </Grid>
     </>
   )
