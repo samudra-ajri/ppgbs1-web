@@ -1,6 +1,12 @@
 const words = {
     extra: 'penunjang',
-    rote: 'hafalan'
+    rote: 'hafalan',
+    preteenage: 'pra remaja',
+    teenage: 'remaja',
+    premarriedage: 'pra nikah',
+    male: 'laki-laki',
+    female: 'perempuan',
+    teacher: 'pengajar',
 }
 
 function translate(word) {

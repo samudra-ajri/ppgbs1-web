@@ -1,17 +1,17 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, Chip, Grid, Typography } from '@mui/material'
+import { Box, Card, Chip, Grid, Typography } from '@mui/material'
 import { getDashboard } from '../features/Dashboards/dashboardSlice'
 import { useState } from 'react'
 import { getLocations } from '../features/locations/locationSlice'
-import CounterCard from '../components/CounterCard'
+import translate from '../helpers/translateHelper'
 
 function Dashboard() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { dashboardData, isLoading } = useSelector(state => state.dashboard)
+  const { dashboardData } = useSelector(state => state.dashboard)
   const { locations } = useSelector((state) => state.locations)
   const [filters, setFilters] = useState({})
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
@@ -53,7 +53,6 @@ function Dashboard() {
     setFocusKlp('SEMUA KLP')
   }
 
-
   const onClickKlp = (e) => {
     if (e.target.innerText === 'SEMUA KLP') {
       delete filters.klp
@@ -65,6 +64,18 @@ function Dashboard() {
     }
     dispatch(getDashboard(filters))
     setFocusKlp(e.target.innerText)
+  }
+
+  const handleClick = (e, props) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      ...props
+    }))
+  }
+
+  const handleClickRemove = (e, props) => {
+    delete filters[props]
+    dispatch(getDashboard(filters))
   }
 
   return (
@@ -108,23 +119,147 @@ function Dashboard() {
             variant={klp === focusKlp ? 'solid' : 'outlined'}
             key={klp}
             label={<Typography sx={{ fontSize: 10 }}> {klp} </Typography>}
-            name={klp}
             color='info'
+            name={klp}
             sx={{ m: 0.25 }}
             onClick={onClickKlp}
           />)}
         </Box>
       }
 
+      <Box pb={1}>
+        {Object.keys(filters).map(filter => (
+          (filter !== 'ds' && filter !== 'klp') &&
+          <Chip
+            key={filter}
+            variant='solid'
+            label={<Typography sx={{ fontSize: 10 }}>{translate(filters[filter].toLowerCase())}</Typography>}
+            sx={{ m: 0.25 }}
+            onClick={e => { handleClickRemove(e, filter) }}
+          />
+        ))}
+      </Box>
+
       <Grid container align='center' spacing={1}>
-        <CounterCard title='Generus' value={dashboardData?.users?.generus} isLoading={isLoading.toString()}/>
-        <CounterCard title='Pengajar' value={dashboardData?.users?.pengajar} isLoading={isLoading.toString()}/>
-        <CounterCard title='Pra Remaja' value={dashboardData?.users?.preteenAge} size='small' isLoading={isLoading.toString()}/>
-        <CounterCard title='Remaja' value={dashboardData?.users?.teenAge} size='small' isLoading={isLoading.toString()}/>
-        <CounterCard title='Pra Nikah' value={dashboardData?.users?.premarriedAge} size='small' isLoading={isLoading.toString()}/>
-        <CounterCard title='Laki-laki' value={dashboardData?.users?.male} isLoading={isLoading.toString()}/>
-        <CounterCard title='Perempuan' value={dashboardData?.users?.female} isLoading={isLoading.toString()}/>
-        <CounterCard title='Total Capaian Materi' value={dashboardData?.scores?.total} size='large' isLoading={isLoading.toString()}/>
+        <Grid item xs={6}>
+          <Card onClick={e => { handleClick(e, { role: 'GENERUS' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h5"
+                color="text.secondary"
+              >{dashboardData?.users?.generus || 0}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body2"
+                color="text.secondary">Generus
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card onClick={e => { handleClick(e, { role: 'TEACHER' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h5"
+                color="text.secondary"
+              >{dashboardData?.users?.teacher || 0}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body2"
+                color="text.secondary">Pengajar
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card onClick={e => { handleClick(e, { age: 'preteenAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h5"
+                color="text.secondary"
+              >{dashboardData?.users?.preteenAge || 0}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body2"
+                color="text.secondary">Pra Remaja
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card onClick={e => { handleClick(e, { age: 'teenAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h5"
+                color="text.secondary"
+              >{dashboardData?.users?.teenAge || 0}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body2"
+                color="text.secondary">Remaja
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card onClick={e => { handleClick(e, { age: 'premarriedAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h5"
+                color="text.secondary"
+              >{dashboardData?.users?.premarriedAge || 0}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body2"
+                color="text.secondary">Pra Nikah
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card onClick={e => { handleClick(e, { sex: 'male' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h5"
+                color="text.secondary"
+              >{dashboardData?.users?.male || 0}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body2"
+                color="text.secondary">Laki-Laki
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={6}>
+          <Card onClick={e => { handleClick(e, { sex: 'female' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h5"
+                color="text.secondary"
+              >{dashboardData?.users?.female || 0}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body2"
+                color="text.secondary">Perempuan
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
       </Grid>
     </>
   )

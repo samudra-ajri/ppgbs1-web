@@ -1,5 +1,5 @@
-
 import API from '../../api'
+import serialize from '../../helpers/serializeFilter'
 
 const API_URL = '/api/dashboard/'
 
@@ -18,16 +18,6 @@ const getDashboard = async (filters, token) => {
 
 const dashboardService = {
   getDashboard
-}
-
-// Serialize object filters into query params
-const serialize = (obj) => {
-  var str = [];
-  for (var p in obj)
-    if (obj.hasOwnProperty(p)) {
-      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-    }
-  return str.join("&");
 }
 
 export default dashboardService

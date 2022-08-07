@@ -1,7 +1,8 @@
-import { Box, Card, Grid, Typography } from '@mui/material'
+import { Box, Card, CardActionArea, Grid, Typography } from '@mui/material'
+import { Link } from 'react-router-dom'
 
 function CounterCard(props) {
-  const { title, size = 'medium', value = 0, isLoading } = props
+  const { title, size = 'medium', value = 0, isLoading, link } = props
 
   const sizeStyle = (size) => {
     if (size === 'small') return 4
@@ -17,12 +18,14 @@ function CounterCard(props) {
 
   return (
     <Grid item xs={sizeStyle(size)}>
-      <Card sx={{ padding: 1, justifyItems: 'center' }}>
-        <Box sx={{ position: 'relative' }}>
-          <Typography align='center' variant={fontVariant(size)} color="text.secondary">{isLoading === 'true' ? 0 : value}</Typography>
-          <Typography align='center' variant="body2" color="text.secondary">{title}</Typography>
-        </Box>
-      </Card>
+      <Link to={link} component={CardActionArea}>
+        <Card sx={{ padding: 1, justifyItems: 'center' }}>
+          <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+            <Typography align='center' variant={fontVariant(size)} color="text.secondary">{isLoading === 'true' ? 0 : value}</Typography>
+            <Typography align='center' variant="body2" color="text.secondary">{title}</Typography>
+          </Box>
+        </Card>
+      </Link>
     </Grid>
   )
 }
