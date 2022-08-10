@@ -80,7 +80,8 @@ function CompletionDashboard() {
   const haditsPercentage = ((totalPoins?.find(o => o._id === 'HADITS'))?.total ?? 0) / (1604 * (generusCount ?? 100000)) * 100
   const rotePercentage = ((totalPoins?.find(o => o._id === 'ROTE'))?.total ?? 0) / (74 * (generusCount ?? 100000)) * 100
   const extraPercentage = ((totalPoins?.find(o => o._id === 'EXTRA'))?.total ?? 0) / (14 * (generusCount ?? 100000)) * 100
-  const totalPercentage = (alquranPercentage + haditsPercentage + rotePercentage + extraPercentage) / 4
+  const total = totalPoins?.reduce((acc, curr) => acc + curr?.total, 0) || 0
+  const totalPercentage = total / (2297 * (generusCount ?? 100000)) * 100
 
   const queryParams = `ds=${focusDs.toLowerCase().replace(" ", "-")}&klp=${focusKlp.toLowerCase().replace(" ", "-")}`
 
@@ -142,7 +143,7 @@ function CompletionDashboard() {
         </Grid>
         <CircularProgressWithLabel
           value={totalPercentage}
-          title='Total'
+          title='Seluruh Materi'
           isloading={loading.toString()}
           sizePosition='top'
           link='#' />

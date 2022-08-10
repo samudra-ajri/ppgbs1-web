@@ -10,7 +10,7 @@ function Generus() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { users, isLoading } = useSelector((state) => state.users)
+  const { users } = useSelector((state) => state.users)
   const [page, setpage] = useState(2)
   const [search, setSearch] = useState('')
   const [hasmore, setHasmore] = useState(true)
@@ -23,9 +23,10 @@ function Generus() {
 
   const loadMoreUsers = () => {
     dispatch(getUsersPaginate({ page, search }))
-    if (!isLoading) setHasmore(false)
+    if (users.length%20 !== 0) setHasmore(false)
     setpage(page + 1)
   }
+
 
   const onChange = (e) => {
     setSearch(e.target.value)

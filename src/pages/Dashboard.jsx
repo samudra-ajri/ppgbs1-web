@@ -141,7 +141,7 @@ function Dashboard() {
       </Box>
 
       <Grid container align='center' spacing={1}>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Card onClick={e => { handleClick(e, { role: 'GENERUS' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
@@ -152,25 +152,42 @@ function Dashboard() {
               </Typography>
               <Typography
                 align='center'
-                variant="body2"
+                variant="body1"
                 color="text.secondary">Generus
               </Typography>
             </Box>
           </Card>
         </Grid>
-        <Grid item xs={6}>
-          <Card onClick={e => { handleClick(e, { role: 'TEACHER' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+        <Grid item xs={4}>
+          <Card onClick={e => { handleClick(e, { role: 'MT' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
                 variant="h5"
                 color="text.secondary"
-              >{dashboardData?.users?.teacher || 0}
+              >{dashboardData?.users?.mt || 0}
               </Typography>
               <Typography
                 align='center'
-                variant="body2"
-                color="text.secondary">Pengajar
+                variant="body1"
+                color="text.secondary">MT
+              </Typography>
+            </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card onClick={e => { handleClick(e, { role: 'MS' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+            <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
+              <Typography
+                align='center'
+                variant="h5"
+                color="text.secondary"
+              >{dashboardData?.users?.ms || 0}
+              </Typography>
+              <Typography
+                align='center'
+                variant="body1"
+                color="text.secondary">MS
               </Typography>
             </Box>
           </Card>
@@ -267,7 +284,7 @@ function Dashboard() {
                 align='center'
                 variant="h4"
                 color="text.secondary"
-              >{((dashboardData?.scores?.total || 0) / ((dashboardData?.users?.generus || 0.0001) * 2297)).toFixed(2)+'%'}
+              >{((dashboardData?.scores?.total || 0) / ((dashboardData?.users?.generus || 0.0001) * 2297) * 100).toFixed(2)+'%'}
               </Typography>
               <Typography
                 align='center'

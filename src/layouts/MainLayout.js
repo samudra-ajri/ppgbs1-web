@@ -16,7 +16,7 @@ function MainLayout() {
       <Routes>
         <Route path='/' element={<Dashboard />} />
         <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/generus' element={<Generus />} />
+        <Route path='/users' element={<Generus />} />
         <Route path='/completion' element={<CompletionDashboard />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/login' element={<Login />} />

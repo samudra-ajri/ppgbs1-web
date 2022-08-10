@@ -43,7 +43,7 @@ function CircularProgressWithLabel(props) {
                     <CircularProgress size={15} />
                   </Grid>
                 ) : (
-                  <b>{`${Math.round(value)}%`}<br /></b>
+                  <b>{`${value.toFixed(2)}%`}<br /></b>
                 )}
                 {title}
               </Typography>
