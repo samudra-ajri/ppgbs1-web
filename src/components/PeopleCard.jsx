@@ -43,7 +43,8 @@ function PeopleCard(props) {
                   </Grid>
                 </Grid>
                 <Typography fontSize={10} component='p' color='text.secondary'>{capitalize.words(user.ds + ', ' + user.klp)}</Typography>
-                <Typography fontSize={10} component='p' color='text.secondary'>{(user.sex === 'male, ' ? 'Laki-laki' : 'Perempuan, ') + age + ' thn'}</Typography>
+                <Typography fontSize={10} component='p' color='text.secondary'>{(user.role === 'MT') ? 'Muballigh Tugasan' : (user.role === 'MS') ? 'Muballigh Setempat' : '' }</Typography>
+                <Typography fontSize={10} component='p' color='text.secondary'>{(user.sex === 'male' ? 'Laki-laki' : 'Perempuan') + `${user.role === 'GENERUS' ? ', ' + age + ' tahun' : ''}`}</Typography>
               </Link>
             </Grid>
             <Grid item>

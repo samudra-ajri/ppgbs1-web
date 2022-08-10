@@ -61,6 +61,7 @@ function Profile() {
   return (
     <>
       {user ? <ProfileCard user={userId ? person : user} /> : <></>}
+      {(!userId || (person?.role === 'GENERUS')) && <>
       <Typography variant='h6' sx={{ mb: 1 }}>Poin Pencapaian</Typography>
       {!isSuccess ? (
         <Card align="center" sx={{ mb: 1 }}>
@@ -102,6 +103,7 @@ function Profile() {
           />
         </Grid>
       )}
+      </>}
     </>
   )
 }
