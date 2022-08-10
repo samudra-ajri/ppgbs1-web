@@ -97,10 +97,11 @@ function Generus() {
           </Typography>
         }
       >
-        {users.map(user =>
+        {users.map(u =>
           <PeopleCard
-            key={user._id}
-            user={user}
+            key={u._id}
+            user={u}
+            canDelete={(user?.role !== 'MT' && user?.role !== 'MS')}
           />
         )}
       </InfiniteScroll>

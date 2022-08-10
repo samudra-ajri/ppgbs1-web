@@ -10,7 +10,7 @@ import { deleteUser } from '../features/users/userSlice'
 
 function PeopleCard(props) {
   const dispatch = useDispatch()
-  const user = props.user
+  const {user, canDelete} = props
   const age = moment(user.birthdate).fromNow().split(' ')[0]
   const [openPopup, setOpenPopup] = useState(false)
   const { isLoading } = useSelector((state) => state.users)
@@ -47,7 +47,7 @@ function PeopleCard(props) {
                 <Typography fontSize={10} component='p' color='text.secondary'>{(user.sex === 'male' ? 'Laki-laki' : 'Perempuan') + `${user.role === 'GENERUS' ? ', ' + age + ' tahun' : ''}`}</Typography>
               </Link>
             </Grid>
-            {(user?.role === 'ADMIN' || user?.role === 'PPG' || user?.role === 'PPK') &&
+            {canDelete &&
             <Grid item>
               <Tooltip title='hapus user'>
                 <IconButton align='right' onClick={onClick}>
