@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, TextField, Typography } from '@mui/material'
+import { Box, Chip, CircularProgress, Grid, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -13,20 +13,20 @@ function Generus() {
   const { users } = useSelector((state) => state.users)
   const [page, setpage] = useState(2)
   const [search, setSearch] = useState('')
+  const [role, setRole] = useState('GENERUS')
   const [hasmore, setHasmore] = useState(true)
 
   useEffect(() => {
     if (!user) navigate('/login')
-    dispatch(getUsers({ page: 1, search }))
+    dispatch(getUsers({ page: 1, search, role }))
     dispatch(reset())
-  }, [user, search, navigate, dispatch])
+  }, [user, search, role, navigate, dispatch])
 
   const loadMoreUsers = () => {
-    dispatch(getUsersPaginate({ page, search }))
+    dispatch(getUsersPaginate({ page, search, role }))
     if (users.length%20 !== 0) setHasmore(false)
     setpage(page + 1)
   }
-
 
   const onChange = (e) => {
     setSearch(e.target.value)
@@ -34,19 +34,24 @@ function Generus() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    dispatch(getUsersPaginate({ page, search }))
+    dispatch(getUsersPaginate({ page, search, role }))
+  }
+
+  const handleClick = (e) => {
+    setRole(e.target.innerText)
+    dispatch(getUsersPaginate({ page, search, role }))
   }
 
   return (
     <>
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar {user.role === 'ADMIN' ? 'Pengguna' : 'Generus'}</Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar Pengguna</Typography>
 
       <form onSubmit={onSubmit}>
         <Grid container justifyContent='center' padding={2}>
           <Grid item xs={12}>
             <TextField
               name='search'
-              placeholder='Cari generus...'
+              placeholder={`Cari ${role.toLowerCase()}...`}
               variant='standard'
               value={search}
               onChange={onChange}
@@ -57,6 +62,26 @@ function Generus() {
         </Grid>
       </form>
 
+      {(user?.role !== 'MT' && user?.role !== 'MS') &&
+      <Box pb={1}>
+          <Chip
+            variant={role === 'GENERUS' ? 'solid' : 'outlined'}
+            label={<Typography sx={{ fontSize: 10 }}>GENERUS</Typography>}
+            name='SEMUA KLP'
+            color='info'
+            sx={{ m: 0.25 }}
+            onClick={handleClick}
+          />
+          <Chip
+            variant={role === 'MUBALLIGH' ? 'solid' : 'outlined'}
+            label={<Typography sx={{ fontSize: 10 }}>MUBALLIGH</Typography>}
+            name='SEMUA KLP'
+            color='info'
+            sx={{ m: 0.25 }}
+            onClick={handleClick}
+          />
+        </Box>
+      }
       <InfiniteScroll
         dataLength={users.length}
         next={loadMoreUsers}

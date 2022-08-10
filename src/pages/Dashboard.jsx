@@ -13,9 +13,9 @@ function Dashboard() {
   const { user } = useSelector((state) => state.auth)
   const { dashboardData } = useSelector(state => state.dashboard)
   const { locations } = useSelector((state) => state.locations)
-  const [filters, setFilters] = useState({})
+  const [filters, setFilters] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? {} : (user?.role !== 'PPK' ? {ds: user?.ds} : {klp: user?.klp}))
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
-  const [focusKlp, setFocusKlp] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' || user?.role === 'PPD' ? 'SEMUA KLP' : user?.klp)
+  const [focusKlp, setFocusKlp] = useState(user?.role !== 'PPK' ? 'SEMUA KLP' : user?.klp)
 
   useEffect(() => {
     if (!user) navigate('/login')
@@ -56,6 +56,10 @@ function Dashboard() {
   const onClickKlp = (e) => {
     if (e.target.innerText === 'SEMUA KLP') {
       delete filters.klp
+      setFilters((prevState) => ({
+        ...prevState,
+        ds: focusDs
+      }))
     } else {
       setFilters((prevState) => ({
         ...prevState,
@@ -104,7 +108,7 @@ function Dashboard() {
           />)}
         </Box>
       }
-      {((user?.role === 'ADMIN' || user?.role === 'PPG' || user?.role === 'PPD') && focusDs !== 'SEMUA DS') &&
+      {((user?.role !== 'PPK') && focusDs !== 'SEMUA DS') &&
         <Box pb={1}>
           <Typography variant='body2'>Filter Klp</Typography>
           <Chip

@@ -47,6 +47,7 @@ function PeopleCard(props) {
                 <Typography fontSize={10} component='p' color='text.secondary'>{(user.sex === 'male' ? 'Laki-laki' : 'Perempuan') + `${user.role === 'GENERUS' ? ', ' + age + ' tahun' : ''}`}</Typography>
               </Link>
             </Grid>
+            {(user?.role === 'ADMIN' || user?.role === 'PPG' || user?.role === 'PPK') &&
             <Grid item>
               <Tooltip title='hapus user'>
                 <IconButton align='right' onClick={onClick}>
@@ -54,6 +55,7 @@ function PeopleCard(props) {
                 </IconButton>
               </Tooltip>
             </Grid>
+            }
           </Grid>
         </CardContent>
       </Card>

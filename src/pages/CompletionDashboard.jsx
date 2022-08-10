@@ -17,7 +17,7 @@ function CompletionDashboard() {
   const { countList, isLoading: isLoadingUserCounter } = useSelector((state) => state.usersCounter)
   const { locations } = useSelector((state) => state.locations)
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
-  const [focusKlp, setFocusKlp] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' || user?.role === 'PPD' ? 'SEMUA KLP' : user?.klp)
+  const [focusKlp, setFocusKlp] = useState(user?.role !== 'PPK' ? 'SEMUA KLP' : user?.klp)
 
   useEffect(() => {
     if (!user) navigate('/login')
@@ -25,7 +25,7 @@ function CompletionDashboard() {
       dispatch(getAllCompletionsScores({ ds: '', klp: '' }))
       dispatch(getRolesCounter({ ds: '', klp: '' }))
 
-    } else if (user?.role === 'PPD') {
+    } else if (user?.role === 'PPD' || user?.role === 'MT' || user?.role === 'MS') {
       dispatch(getAllCompletionsScores({ ds: user.ds, klp: '' }))
       dispatch(getRolesCounter({ ds: user.ds, klp: '' }))
 
@@ -110,7 +110,7 @@ function CompletionDashboard() {
           />)}
         </Box>
       }
-      {((user.role === 'ADMIN' || user.role === 'PPG' || user.role === 'PPD') && focusDs !== 'SEMUA DS') &&
+      {((user?.role !== 'PPK' ) && focusDs !== 'SEMUA DS') &&
         <Box pb={1}>
           <Typography variant='body2'>Filter Klp</Typography>
           <Chip
