@@ -5,9 +5,14 @@ import { toast } from 'react-toastify'
 import validator from 'email-validator'
 import { register, reset } from '../features/auth/authSlice'
 import { getLocations } from '../features/locations/locationSlice'
-import { Button, Card, CardContent, CircularProgress, Grid, MenuItem, TextField, Typography } from '@mui/material'
+import { Button, Card, CardContent, Checkbox, CircularProgress, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material'
+import BackHeader from '../components/BackHeader'
+import capitalize from 'capitalize'
 
 function Register() {
+  const path = window.location.pathname.split('/')
+  const title = path[3]
+
   const [formData, setFormData] = useState({
     name: '',
     dayBirth: '',
@@ -18,9 +23,19 @@ function Register() {
     password2: '',
     sex: '',
     isMuballigh: '',
+    // Addition for muballigh data
+    hometown: '',
+    isMarried: '',
+    pondok: '',
+    kertosonoYear: '',
+    firstDutyYear: '',
+    timesDuties: '',
+    education: '',
+    role: ''
   })
   const [ds, setDs] = useState('')
   const [klp, setKlp] = useState('')
+  const [greatHadiths, setGreatHadiths] = useState([]);
   const {
     name,
     dayBirth,
@@ -31,6 +46,15 @@ function Register() {
     password2,
     sex,
     isMuballigh,
+    // Addition for muballigh data
+    hometown,
+    isMarried,
+    pondok,
+    kertosonoYear,
+    firstDutyYear,
+    timesDuties,
+    education,
+    role
   } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -74,6 +98,15 @@ function Register() {
     }))
   }
 
+  const onSelect = (e) => {
+    let hadiths = greatHadiths
+    if (!hadiths.includes(e.target.name)) {
+      setGreatHadiths((prev => [...prev, e.target.name]))
+    } else {
+      setGreatHadiths(hadiths.filter(hadith => hadith !== e.target.name))
+    }
+  }
+
   const onSubmit = (e) => {
     e.preventDefault()
     if (password !== password2) {
@@ -89,6 +122,21 @@ function Register() {
         isMuballigh,
         ds,
         klp
+      }
+
+      if (title !== 'generus') {
+        Object.assign(userData, {
+          isMuballigh: true,
+          hometown,
+          isMarried,
+          pondok,
+          kertosonoYear,
+          firstDutyYear,
+          timesDuties,
+          greatHadiths,
+          education,
+          role
+        });
       }
 
       if (validator.validate(registerType)) {
@@ -120,8 +168,18 @@ function Register() {
     return klp
   }
 
+  const hadiths = [
+    'BUKHORI',
+    'MUSLIM',
+    'ABUDAWUD',
+    'NASAI',
+    'TIRMIDZI',
+    'IBNUMAJAH'
+  ];
+
   return (
     <>
+      <BackHeader title={'Registrasi ' + title} />
       <Typography align='center' variant="h4">
         Buat Akun
       </Typography>
@@ -129,7 +187,7 @@ function Register() {
       <Grid>
         <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
           {isLoading || isLoadingLocations ? (
-            <Grid align="center" sx={{ pt:5 }}>
+            <Grid align="center" sx={{ pt: 5 }}>
               <CircularProgress />
             </Grid>
           ) : (
@@ -221,26 +279,49 @@ function Register() {
                       ))}
                     </TextField>
                   </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      name="isMuballigh"
-                      label="Muballigh"
-                      placeholder="Muballigh"
-                      value={isMuballigh}
-                      onChange={onChange}
-                      variant="standard"
-                      align="left"
-                      select
-                      fullWidth
-                      required
-                    >
-                      {[{ value: true, label: 'Sudah' }, { value: false, label: 'Belum' }].map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
+                  {title !== 'muballigh' ?
+                    <Grid item xs={6}>
+                      <TextField
+                        name="isMuballigh"
+                        label="Muballigh"
+                        placeholder="Muballigh"
+                        value={isMuballigh}
+                        onChange={onChange}
+                        variant="standard"
+                        align="left"
+                        select
+                        fullWidth
+                        required
+                      >
+                        {[{ value: true, label: 'Sudah' }, { value: false, label: 'Belum' }].map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid> :
+                    <Grid item xs={6}>
+                      <TextField
+                        name="isMarried"
+                        label="Menikah"
+                        placeholder="Menikah"
+                        value={isMarried}
+                        onChange={onChange}
+                        variant="standard"
+                        align="left"
+                        select
+                        fullWidth
+                        required
+                      >
+                        {[{ value: true, label: 'Sudah' }, { value: false, label: 'Belum' }].map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                  }
+
                   <Grid xs={12} sm={4} item>
                     <TextField
                       name="dayBirth"
@@ -294,6 +375,122 @@ function Register() {
                       required
                     />
                   </Grid>
+                  {title === 'muballigh' && (<>
+                    <Grid item xs={12}>
+                      <TextField
+                        name="hometown"
+                        label="Kampung Halaman"
+                        placeholder="Kampung Halaman"
+                        value={hometown}
+                        onChange={onChange}
+                        variant="standard"
+                        fullWidth
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        name="role"
+                        label="Kemubaliighan"
+                        placeholder="Status"
+                        value={role}
+                        onChange={onChange}
+                        variant="standard"
+                        align="left"
+                        select
+                        fullWidth
+                        required
+                      >
+                        {['MT', 'MS'].map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {'Muballigh ' + (option === 'MT' ? 'Tugasan' : 'Setempat')}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        name="pondok"
+                        label="Pondok"
+                        placeholder="Asal Pondok"
+                        value={pondok}
+                        onChange={onChange}
+                        variant="standard"
+                        fullWidth
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        name="kertosonoYear"
+                        label="Lulus Kertosono"
+                        placeholder="Tahun"
+                        value={kertosonoYear}
+                        onChange={onChange}
+                        type="number"
+                        variant="standard"
+                        fullWidth
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <TextField
+                        name="firstDutyYear"
+                        label="Pertama Tugas"
+                        placeholder="Tahun"
+                        value={firstDutyYear}
+                        onChange={onChange}
+                        type="number"
+                        variant="standard"
+                        fullWidth
+                        required
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        name="education"
+                        label="Pendidikan Formal"
+                        placeholder="Pendidikan Formal Terakhir"
+                        value={education}
+                        onChange={onChange}
+                        variant="standard"
+                        align="left"
+                        select
+                        fullWidth
+                        required
+                      >
+                        {['SD', 'SMP', 'SMA', 'SMK', 'DIPLOMA', 'S1', 'S2', 'S3'].map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12}>
+                    <TextField
+                      name="greatHadiths"
+                      label="Hadits Besar *"
+                      value={greatHadiths}
+                      variant="standard"
+                      align="left"
+                      fullWidth
+                      disabled
+                    />
+                      {hadiths.map(hadith => (
+                        <FormControlLabel 
+                          key={hadith}
+                          control={
+                            <Checkbox 
+                              name={hadith}
+                              checked={greatHadiths.includes(hadith)}
+                              onChange={onSelect}
+                            />
+                          } 
+                          label={capitalize(hadith)}
+                        />
+                      ))}
+                    </Grid>
+                  </>)}
                   <Grid item xs={12}>
                     <TextField
                       name="password"

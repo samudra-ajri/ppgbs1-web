@@ -7,6 +7,7 @@ import CompletedTargets from '../pages/CompletedTargets'
 import DetailTargets from '../pages/DetailTargets'
 import InputTargets from '../pages/InputTargets'
 import Profile from '../pages/Profile'
+import Register from '../pages/Register'
 
 function ChildLayout() {
   return (
@@ -17,6 +18,7 @@ function ChildLayout() {
         <Route path='/profile/*' element={<><BackHeader title='Profil' /><Profile /></>} />
         <Route path='/targets-completed/*' element={<CompletedTargets />} />
         <Route path='/details-completed/*' element={<CompletedDetails />} />
+        <Route path='/register/*' element={<Register />} />
       </Routes>
       <Footer />
     </>

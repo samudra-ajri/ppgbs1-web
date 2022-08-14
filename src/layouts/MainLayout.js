@@ -7,7 +7,7 @@ import Dashboard from '../pages/Dashboard'
 import Generus from '../pages/Generus'
 import Login from '../pages/Login'
 import Profile from '../pages/Profile'
-import Register from '../pages/Register'
+import RegisterOptions from '../pages/RegisterOptions'
 
 function MainLayout() {
   return (
@@ -20,7 +20,7 @@ function MainLayout() {
         <Route path='/completion' element={<CompletionDashboard />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
+        <Route path='/register' element={<RegisterOptions />} />
       </Routes>
       <BottomNav />
     </>
