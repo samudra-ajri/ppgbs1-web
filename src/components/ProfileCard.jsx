@@ -67,7 +67,13 @@ function ProfileCard(props) {
             <br />
             Hadits besar:
             <br />
-            {user?.greatHadiths?.length !== 0 ? user?.greatHadiths : '-'}
+            {
+              user?.greatHadiths?.length !== 0 
+              ? user?.greatHadiths.map(hadith => (
+                  <>- {hadith} <br/></>
+                ))
+              : '-'
+            }
           </Typography>
         </CardContent>
       </Card>
