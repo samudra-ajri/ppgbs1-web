@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import PopDialog from './PopDialog'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteUser } from '../features/users/userSlice'
+import { moveUser } from '../features/users/userSlice'
 
 function PeopleCard(props) {
   const dispatch = useDispatch()
@@ -20,7 +20,7 @@ function PeopleCard(props) {
   }
 
   const onClickRemove = () => {
-    dispatch(deleteUser(user._id))
+    dispatch(moveUser({ userId: user._id, data: {ds: 'MOVING', klp: 'MOVING'}}))
   }
 
   return (

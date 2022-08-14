@@ -67,6 +67,25 @@ export const deleteUser = createAsyncThunk(
   }
 )
 
+// Move user (change user ds/klp to moving status it means nonactive user)
+export const moveUser = createAsyncThunk(
+  'users/move',
+  async ({ userId, data }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await userService.updateUser(token, userId, data)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -112,6 +131,21 @@ export const userSlice = createSlice({
         )
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(moveUser.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(moveUser.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.users = state.users.filter(
+          (user) => user._id !== action.payload._id
+        )
+      })
+      .addCase(moveUser.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

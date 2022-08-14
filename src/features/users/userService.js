@@ -25,9 +25,21 @@ const deleteUser = async (token, userId) => {
   return response.data
 }
 
+// Update a user
+const updateUser = async (token, userId, data) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.put(API_URL + userId, data, config)
+  return response.data
+}
+
 const userService = {
   getUsers,
-  deleteUser
+  deleteUser,
+  updateUser
 }
 
 export default userService
