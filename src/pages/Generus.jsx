@@ -38,9 +38,15 @@ function Generus() {
   }
 
   const handleClick = (e) => {
+    if (e.target.innerText !== role) {
     setRole(e.target.innerText)
+    setpage(1)
+    setHasmore(true)
     dispatch(getUsersPaginate({ page, search, role }))
   }
+  }
+
+  console.log(hasmore);
 
   return (
     <>
