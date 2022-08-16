@@ -57,7 +57,7 @@ function Generus() {
           <Grid item xs={12}>
             <TextField
               name='search'
-              placeholder={`Cari ${role.toLowerCase()}...`}
+              placeholder={`Cari ${user?.role === 'ADMIN' ? 'nama' : role.toLowerCase()}...`}
               variant='standard'
               value={search}
               onChange={onChange}
@@ -68,7 +68,7 @@ function Generus() {
         </Grid>
       </form>
 
-      {(user?.role !== 'MT' && user?.role !== 'MS') &&
+      {(user?.role !== 'MT' && user?.role !== 'MS' && user?.role !== 'ADMIN') &&
       <Box pb={1}>
           <Chip
             variant={role === 'GENERUS' ? 'solid' : 'outlined'}
