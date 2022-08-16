@@ -14,7 +14,6 @@ function Generus() {
   const [page, setpage] = useState(2)
   const [search, setSearch] = useState('')
   const [role, setRole] = useState('GENERUS')
-  const [hasmore, setHasmore] = useState(true)
 
   useEffect(() => {
     if (!user) navigate('/login')
@@ -24,7 +23,6 @@ function Generus() {
 
   const loadMoreUsers = () => {
     dispatch(getUsersPaginate({ page, search, role }))
-    if (users.length%20 !== 0) setHasmore(false)
     setpage(page + 1)
   }
 
@@ -39,14 +37,10 @@ function Generus() {
 
   const handleClick = (e) => {
     if (e.target.innerText !== role) {
-    setRole(e.target.innerText)
-    setpage(1)
-    setHasmore(true)
-    dispatch(getUsersPaginate({ page, search, role }))
+      setRole(e.target.innerText)
+      setpage(2)
+    }
   }
-  }
-
-  console.log(hasmore);
 
   return (
     <>
@@ -91,7 +85,7 @@ function Generus() {
       <InfiniteScroll
         dataLength={users.length}
         next={loadMoreUsers}
-        hasMore={hasmore}
+        hasMore={(users.length%20 !== 0 || users.length === 0) ? false : true}
         loader={
           <Grid align='center' sx={{ pt: 1.5 }}>
             <CircularProgress size={20} />
