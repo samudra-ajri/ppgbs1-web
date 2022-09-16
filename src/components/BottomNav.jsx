@@ -2,9 +2,10 @@ import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material"
 import LoginIcon from '@mui/icons-material/LoginRounded'
 import PersonIcon from '@mui/icons-material/PersonRounded'
 import ProfileIcon from '@mui/icons-material/FaceOutlined'
-import BarIcon from '@mui/icons-material/EqualizerRounded';
-import DashboardIcon from '@mui/icons-material/DataUsageRounded';
-import PeopleListIcon from '@mui/icons-material/RecentActorsOutlined';
+import BarIcon from '@mui/icons-material/EqualizerRounded'
+import DashboardIcon from '@mui/icons-material/DataUsageRounded'
+import PeopleListIcon from '@mui/icons-material/RecentActorsOutlined'
+import EventIcon from '@mui/icons-material/EventRounded'
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Box } from "@mui/system"
@@ -21,13 +22,14 @@ function BottomNav() {
           showLabels
           value={value}
           onChange={(event, newValue) => {
-            setValue(newValue);
+            setValue(newValue)
           }}
         >
           {user ? (
               user.role !== 'GENERUS' ? [
                 <BottomNavigationAction key="dashboard" component={Link} to="/" label="Dashboard" value="dashboard" icon={<DashboardIcon />} />,
                 <BottomNavigationAction key="progress" component={Link} to="/completion" label="Materi" value="progress" icon={<BarIcon />} />,
+                <BottomNavigationAction key="Kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon />} />,
                 <BottomNavigationAction key="generus" component={Link} to="/users" label="Pengguna" value="generus" icon={<PeopleListIcon />} />,
               ] : [
                 <BottomNavigationAction key="profile" component={Link} to="/profile" label="Akun Saya" value="profile" icon={<ProfileIcon />} />,
