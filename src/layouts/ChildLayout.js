@@ -4,6 +4,7 @@ import BackHeader from '../components/BackHeader'
 import Footer from '../components/Footer'
 import CompletedDetails from '../pages/CompletedDetails'
 import CompletedTargets from '../pages/CompletedTargets'
+import CreateEvent from '../pages/CreateEvent'
 import DetailTargets from '../pages/DetailTargets'
 import InputTargets from '../pages/InputTargets'
 import Profile from '../pages/Profile'
@@ -19,6 +20,7 @@ function ChildLayout() {
         <Route path='/targets-completed/*' element={<CompletedTargets />} />
         <Route path='/details-completed/*' element={<CompletedDetails />} />
         <Route path='/register/*' element={<Register />} />
+        <Route path='/create-event' element={<CreateEvent />} />
       </Routes>
       <Footer />
     </>

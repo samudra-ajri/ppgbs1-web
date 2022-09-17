@@ -5,8 +5,9 @@ import { toast } from 'react-toastify'
 import { createEvent, reset } from '../features/event/eventSlice'
 import { Button, Card, CardContent, Checkbox, CircularProgress, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material'
 import moment from 'moment/moment'
+import BackHeader from '../components/BackHeader'
 
-function Event() {
+function CreateEvent() {
   const [formData, setFormData] = useState({
     name: '',
     passCode: '',
@@ -65,7 +66,9 @@ function Event() {
 
   const onSelect = (e) => {
     let types = classTypes
-    if (!types.includes(e.target.name)) {
+    if (e.target.name === 'ALL') {
+      setClassTypes(['CR', 'PR', 'RM', 'PN'])
+    } else if (!types.includes(e.target.name)) {
       setClassTypes((prev => [...prev, e.target.name]))
     } else {
       setClassTypes(types.filter(type => type !== e.target.name))
@@ -105,14 +108,15 @@ function Event() {
     CR: 'Cabe Rawit',
     PR: 'Pra Remaja',
     RM: 'Remaja',
-    PN: 'Pra Nikah',
-    ALL: 'Semua Generus'
+    PN: 'Pra Nikah'
   }
 
   return (
     <>
+      <BackHeader title='Kegiatan' />
+
       <Typography align='center' variant="h4">
-        Buat Kegiatan
+        Buat Jadwal
       </Typography>
 
       <Grid>
@@ -355,4 +359,4 @@ function Event() {
   )
 }
 
-export default Event
+export default CreateEvent
