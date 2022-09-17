@@ -3,7 +3,7 @@ import capitalize from 'capitalize'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 
-function EventCard(props) {
+function EventHeaderCard(props) {
   const { event } = props
   const region = () => {
     if (event.klp) return `PPK | ${capitalize.words(event.klp)}`
@@ -56,11 +56,11 @@ function EventCard(props) {
           }
         }}>
           <Grid container>
-            <Grid item xs={10} md={11}>
+            <Grid item xs={12} md={12}>
               <Link to={`/c/event-details/${event._id}`} component={CardActionArea}>
                 <Grid container>
                   <Grid item>
-                    <Typography variant='body1'>
+                    <Typography variant='h5' textAlign='center'>
                       {event.name}
                     </Typography>
                   </Grid>
@@ -93,4 +93,4 @@ function EventCard(props) {
   )
 }
 
-export default EventCard
+export default EventHeaderCard
