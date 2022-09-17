@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import EventCard from '../components/EventCard'
-import { listEvents, reset } from '../features/listEvents/listEventsSlice'
+import { listEvents, listEventsGenerus, reset } from '../features/listEvents/listEventsSlice'
 
 function Event() {
   const dispatch = useDispatch()
@@ -13,7 +13,11 @@ function Event() {
 
   useEffect(() => {
     if (!user) navigate('/login')
-    dispatch(listEvents())
+    if (user.role === 'GENERUS') {
+      dispatch(listEventsGenerus())
+    } else {
+      dispatch(listEvents())
+    }
     dispatch(reset())
   }, [user, navigate, dispatch])
 
@@ -24,7 +28,7 @@ function Event() {
   return (
     <>
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>Jadwal Kegiatan</Typography>
-      <Button size="medium" style={{ margin: "20px auto" }} type="submit" variant="contained" color="info" fullWidth onClick={onClick}>Tambah</Button>
+      {user.role !== 'GENERUS' && <Button size="medium" style={{ margin: "20px auto" }} type="submit" variant="contained" color="info" fullWidth onClick={onClick}>Tambah</Button>}
       {isSuccess && events.events.map(event => <EventCard key={event._id} event={event} />)}
     </>
   )

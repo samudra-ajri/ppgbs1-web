@@ -33,6 +33,7 @@ function BottomNav() {
                 <BottomNavigationAction key="generus" component={Link} to="/users" label="Pengguna" value="generus" icon={<PeopleListIcon />} />,
               ] : [
                 <BottomNavigationAction key="profile" component={Link} to="/profile" label="Akun Saya" value="profile" icon={<ProfileIcon />} />,
+                <BottomNavigationAction key="Kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon />} />,
               ]
           ) : (
             [
