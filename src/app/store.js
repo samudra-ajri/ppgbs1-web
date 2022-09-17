@@ -12,6 +12,7 @@ import userCounterReducer from '../features/userCounters/userCounterSlice'
 import personReducer from '../features/persons/personSlice'
 import completedTargetReducer from '../features/targetCompleted/targetCompletedSlice'
 import dashboardReducer from '../features/Dashboards/dashboardSlice'
+import eventReducer from '../features/event/eventSlice'
 
 export const store = configureStore({
   reducer: {
@@ -28,5 +29,6 @@ export const store = configureStore({
     persons: personReducer,
     completedTargets: completedTargetReducer,
     dashboard: dashboardReducer,
+    events: eventReducer,
   },
 })

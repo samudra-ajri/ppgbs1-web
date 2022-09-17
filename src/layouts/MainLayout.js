@@ -4,6 +4,7 @@ import BottomNav from '../components/BottomNav'
 import Header from '../components/Header'
 import CompletionDashboard from '../pages/CompletionDashboard'
 import Dashboard from '../pages/Dashboard'
+import Event from '../pages/Event'
 import Generus from '../pages/Generus'
 import Login from '../pages/Login'
 import Profile from '../pages/Profile'
@@ -21,6 +22,7 @@ function MainLayout() {
         <Route path='/profile' element={<Profile />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<RegisterOptions />} />
+        <Route path='/events' element={<Event />} />
       </Routes>
       <BottomNav />
     </>
