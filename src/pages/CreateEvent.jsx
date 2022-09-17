@@ -21,6 +21,7 @@ function CreateEvent() {
     endYear: moment().year(),
     endHour: moment().hour() + 1,
     endMinute: 0,
+    location: '',
   })
   const [classTypes, setClassTypes] = useState([]);
   const {
@@ -35,7 +36,8 @@ function CreateEvent() {
     endMonth,
     endYear,
     endHour,
-    endMinute
+    endMinute,
+    location
   } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -52,7 +54,7 @@ function CreateEvent() {
       toast.error(message)
     }
     if (isSuccess) {
-      navigate('/')
+      navigate('/events')
     }
     dispatch(reset())
   }, [user, isError, isSuccess, message, navigate, dispatch])
@@ -99,7 +101,8 @@ function CreateEvent() {
       passCode,
       classTypes,
       startDate,
-      endDate
+      endDate,
+      location
     }
     dispatch(createEvent(data))
   }
@@ -115,9 +118,7 @@ function CreateEvent() {
     <>
       <BackHeader title='Kegiatan' />
 
-      <Typography align='center' variant="h4">
-        Buat Jadwal
-      </Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Buat Jadwal</Typography>
 
       <Grid>
         <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
@@ -147,6 +148,18 @@ function CreateEvent() {
                       label="Kode Akses"
                       placeholder="Buat Kode Akses"
                       value={passCode}
+                      onChange={onChange}
+                      variant="standard"
+                      fullWidth
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      name="location"
+                      label="Lokasi"
+                      placeholder="Lokasi"
+                      value={location}
                       onChange={onChange}
                       variant="standard"
                       fullWidth
