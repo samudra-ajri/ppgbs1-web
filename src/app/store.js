@@ -14,6 +14,7 @@ import completedTargetReducer from '../features/targetCompleted/targetCompletedS
 import dashboardReducer from '../features/Dashboards/dashboardSlice'
 import eventReducer from '../features/event/eventSlice'
 import listEventsReducer from '../features/listEvents/listEventsSlice'
+import presencesReducer from '../features/presences/presenceSlice'
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ export const store = configureStore({
     completedTargets: completedTargetReducer,
     dashboard: dashboardReducer,
     events: eventReducer,
-    listEvents: listEventsReducer
+    listEvents: listEventsReducer,
+    presences: presencesReducer,
   },
 })

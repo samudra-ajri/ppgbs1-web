@@ -94,8 +94,8 @@ function CreateEvent() {
     const start = `${startYearStr}-${startMonthStr}-${startDayStr}T${startHourStr}:${startMinuteStr}`
     const end = `${endYearStr}-${endMonthStr}-${endDayStr}T${endHourStr}:${endMinuteStr}`
 
-    const startDate = moment(start).subtract(7, 'hours').format()
-    const endDate = moment(end).subtract(7, 'hours').format()
+    const startDate = moment(start).format()
+    const endDate = moment(end).format()
     const data = {
       name,
       passCode,

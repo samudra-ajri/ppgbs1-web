@@ -2,6 +2,7 @@ import { Card, CardActionArea, CardContent, Grid, Typography } from '@mui/materi
 import capitalize from 'capitalize'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
+import translate from '../utils/translate'
 
 function EventCard(props) {
   const { event, user } = props
@@ -10,8 +11,6 @@ function EventCard(props) {
     if (!event.klp && event.ds) return `PPD | ${capitalize.words(event.ds)}`
     if (!event.klp && !event.ds) return 'PPG'
   }
-
-  console.log(user?.role);
 
   const classTypesAttenders = {
     CR: 'Cabe Rawit',
@@ -22,25 +21,30 @@ function EventCard(props) {
 
   const eventTime = () => {
     const eventTime = {}
-    const startDate = moment(event.startDate).format('DD MMM YYYY')
+    const startDate = moment(event.startDate).format('DD/MM/YY')
     const startTime = moment(event.startDate).format('HH.mm')
-    const endDate = moment(event.endDate).format('DD MMM YYYY')
+    const endDate = moment(event.endDate).format('DD/MM/YY')
     const endTime = moment(event.endDate).format('HH.mm')
+    const startDayName = translate.days(moment(event.startDate).format('dddd'))
     if (startDate === endDate) {
       eventTime.keys = <>
+        <Typography variant='body2'>Hari</Typography>
         <Typography variant='body2'>Tanggal</Typography>
         <Typography variant='body2'>Jam</Typography>
       </>
       eventTime.values = <>
+        <Typography variant='body2'>: {startDayName}</Typography>
         <Typography variant='body2'>: {startDate}</Typography>
         <Typography variant='body2'>: {startTime} - {endTime}</Typography>
       </>
     } else {
       eventTime.keys = <>
+        <Typography variant='body2'>Hari</Typography>
         <Typography variant='body2'>Mulai</Typography>
         <Typography variant='body2'>Selesai</Typography>
       </>
       eventTime.values =  <>
+        <Typography variant='body2'>: {startDayName}</Typography>
         <Typography variant='body2'>: {startDate} pkl. {startTime}</Typography>
         <Typography variant='body2'>: {endDate} pkl. {endTime}</Typography>
       </>
@@ -59,7 +63,7 @@ function EventCard(props) {
         }}>
           <Grid container>
             <Grid item xs={10} md={11}>
-              <Link to={user.role === 'GENERUS' ? `/c/event-presence/${event.roomId}` : `/c/event-details/${event._id}`} component={CardActionArea}>
+              <Link to={user.role === 'GENERUS' ? `/c/event-presence/${event._id}` : `/c/event-details/${event._id}`} component={CardActionArea}>
                 <Grid container>
                   <Grid item>
                     <Typography variant='h5'>
@@ -72,7 +76,7 @@ function EventCard(props) {
                 <Grid container>
                   <Grid item xs={4}>
                     <Typography variant='body2'>Room ID</Typography>
-                    { event.passCode && <Typography variant='body2'>Pass Code</Typography>}
+                    { event.passCode && <Typography variant='body2'>Kode Akses</Typography>}
                     { eventTime().keys }
                     <Typography variant='body2'>Lokasi</Typography>
                     <Typography variant='body2'>Peserta</Typography>
