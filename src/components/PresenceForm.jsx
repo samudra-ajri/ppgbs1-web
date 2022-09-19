@@ -21,7 +21,6 @@ function PresenceForm(props) {
 
   useEffect(() => {
     if (isError) toast.error(message)
-    if (isSuccess) navigate('/events')
     dispatch(isPresent(event.roomId))
     dispatch(reset())
   }, [isError, isSuccess, message, event.roomId, navigate, dispatch])
