@@ -37,6 +37,31 @@ function RegisterOptions() {
                 </Button>
               </Grid>
             </Grid>
+              <Typography pt={3}>Catatan:</Typography>
+            <Grid container>
+              <Grid item xs={1}>
+                <Typography variant='subtitle2'>1.</Typography>
+              </Grid>
+              <Grid item xs={11}>
+                <Typography variant='subtitle2'>Generus registrasi "Sebagai Generus".</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={1}>
+                <Typography variant='subtitle2'>2.</Typography>
+              </Grid>
+              <Grid item xs={11}>
+                <Typography variant='subtitle2'>Muballigh/muballighot registrasi "Sebagai Pengajar".</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={1}>
+                <Typography variant='subtitle2'>3.</Typography>
+              </Grid>
+              <Grid item xs={11}>
+                <Typography variant='subtitle2'>Generus yang sudah lulus tes muballigh registrasi "Sebagai Generus" dan "Sebagai Pengajar"..</Typography>
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
       </Grid>
