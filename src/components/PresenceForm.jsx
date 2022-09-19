@@ -61,7 +61,7 @@ function PresenceForm(props) {
           <Typography variant='body2'>{eventTime()}</Typography>
           { isPresentStatus && <>
             <Typography pt={3} color='green'><CheckIcon fontSize='large' /></Typography>
-            <Typography variant='h5'>Sudah mengisi kehadiran</Typography>
+            <Typography variant='h5'>Hadir</Typography>
           </> }
         </CardContent>
       </Card>
