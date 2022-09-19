@@ -69,15 +69,15 @@ function EventHeaderCard(props) {
 
                 <Grid container>
                   <Grid item xs={4}>
-                    <Typography variant='body2'>Room ID</Typography>
-                    <Typography variant='body2'>Pass Code</Typography>
+                    <Typography variant='body2'>Rosom ID</Typography>
+                    {event.passCode && <Typography variant='body2'>Pass Code</Typography>}
                     { eventTime().keys }
                     <Typography variant='body2'>Lokasi</Typography>
                     <Typography variant='body2'>Peserta</Typography>
                   </Grid>
                   <Grid item xs={8}>
                     <Typography variant='body2'>: {event.roomId.split('-').join(' ')}</Typography>
-                    <Typography variant='body2'>: {event.passCode}</Typography>
+                    {event.passCode && <Typography variant='body2'>: {event.passCode}</Typography>}
                     { eventTime().values }
                     <Typography variant='body2'>: {event.location}</Typography>
                     <Typography variant='body2'>: {event.classTypes.map(type => `${classTypesAttenders[type]} | `)}</Typography>
