@@ -22,10 +22,6 @@ function EventDetails() {
     dispatch(reset())
   }, [user, navigate, dispatch])
 
-  const onClick = () => {
-    navigate('/c/create-event')
-  }
-
   return (
     <>
       <BackHeader title='Kehadiran' />

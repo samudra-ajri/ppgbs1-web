@@ -1,11 +1,12 @@
-import { Button, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import EventCard from '../components/EventCard'
+import BackHeader from '../components/BackHeader'
+import EventHeaderCard from '../components/EventHeaderCard'
 import { listEvents, listEventsGenerus, reset } from '../features/listEvents/listEventsSlice'
 
-function Event() {
+function EventPresence() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
@@ -21,17 +22,13 @@ function Event() {
     dispatch(reset())
   }, [user, navigate, dispatch])
 
-  const onClick = () => {
-    navigate('/c/create-event')
-  }
-
   return (
     <>
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Jadwal Kegiatan</Typography>
-      {user.role !== 'GENERUS' && <Button size="medium" style={{ margin: "20px auto" }} type="submit" variant="contained" color="info" fullWidth onClick={onClick}>Tambah</Button>}
-      {isSuccess && events.events.map(event => <EventCard key={event._id} event={event} user={user}/>)}
+      <BackHeader title='Kehadiran' />
+      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Isi Daftar Hadir</Typography>
+      {isSuccess && events.events.map(event => <EventHeaderCard key={event._id} event={event} user={user}/>)}
     </>
   )
 }
 
-export default Event
+export default EventPresence

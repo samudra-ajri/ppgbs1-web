@@ -76,7 +76,7 @@ function EventHeaderCard(props) {
                     <Typography variant='body2'>Peserta</Typography>
                   </Grid>
                   <Grid item xs={8}>
-                    <Typography variant='body2'>: {event.roomId.split('-').join(' ')}</Typography>
+                    <Typography variant='body2'>: {event.roomIdSlug.split('-').join(' ')}</Typography>
                     {event.passCode && <Typography variant='body2'>: {event.passCode}</Typography>}
                     { eventTime().values }
                     <Typography variant='body2'>: {event.location}</Typography>

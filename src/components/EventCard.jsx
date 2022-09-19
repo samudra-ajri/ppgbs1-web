@@ -4,12 +4,14 @@ import moment from 'moment'
 import { Link } from 'react-router-dom'
 
 function EventCard(props) {
-  const { event } = props
+  const { event, user } = props
   const region = () => {
     if (event.klp) return `PPK | ${capitalize.words(event.klp)}`
     if (!event.klp && event.ds) return `PPD | ${capitalize.words(event.ds)}`
     if (!event.klp && !event.ds) return 'PPG'
   }
+
+  console.log(user?.role);
 
   const classTypesAttenders = {
     CR: 'Cabe Rawit',
@@ -57,7 +59,7 @@ function EventCard(props) {
         }}>
           <Grid container>
             <Grid item xs={10} md={11}>
-              <Link to={`/c/event-details/${event._id}`} component={CardActionArea}>
+              <Link to={user.role === 'GENERUS' ? `/c/event-presence/${event.roomId}` : `/c/event-details/${event._id}`} component={CardActionArea}>
                 <Grid container>
                   <Grid item>
                     <Typography variant='h5'>
@@ -76,7 +78,7 @@ function EventCard(props) {
                     <Typography variant='body2'>Peserta</Typography>
                   </Grid>
                   <Grid item xs={8}>
-                    <Typography variant='body2'>: {event.roomId.split('-').join(' ')}</Typography>
+                    <Typography variant='body2'>: {event.roomIdSlug.split('-').join(' ')}</Typography>
                     { event.passCode && <Typography variant='body2'>: {event.passCode}</Typography>}
                     { eventTime().values }
                     <Typography variant='body2'>: {event.location}</Typography>

@@ -7,6 +7,7 @@ import CompletedTargets from '../pages/CompletedTargets'
 import CreateEvent from '../pages/CreateEvent'
 import DetailTargets from '../pages/DetailTargets'
 import EventDetails from '../pages/EvenDetails'
+import EventPresence from '../pages/EventPresence'
 import InputTargets from '../pages/InputTargets'
 import Profile from '../pages/Profile'
 import Register from '../pages/Register'
@@ -23,6 +24,7 @@ function ChildLayout() {
         <Route path='/register/*' element={<Register />} />
         <Route path='/create-event' element={<CreateEvent />} />
         <Route path='/event-details/*' element={<EventDetails />} />
+        <Route path='/event-presence/*' element={<EventPresence />} />
       </Routes>
       <Footer />
     </>
