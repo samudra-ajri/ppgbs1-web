@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { createPresence, reset } from '../features/presences/presenceSlice'
+import { createPresence, isPresent, reset } from '../features/presences/presenceSlice'
 import translate from '../utils/translate'
+import CheckIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 
 function PresenceForm(props) {
   const { event } = props
@@ -14,15 +15,16 @@ function PresenceForm(props) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { isLoading, isError, isSuccess, message } = useSelector(
+  const { isLoading, isError, isSuccess, message, isPresentStatus } = useSelector(
     (state) => state.presences
   )
 
   useEffect(() => {
     if (isError) toast.error(message)
     if (isSuccess) navigate('/events')
+    dispatch(isPresent(event.roomId))
     dispatch(reset())
-  }, [isError, isSuccess, message, navigate, dispatch])
+  }, [isError, isSuccess, message, event.roomId, navigate, dispatch])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -58,8 +60,13 @@ function PresenceForm(props) {
         }}>
           <Typography variant='h5'>{event.name}</Typography>
           <Typography variant='body2'>{eventTime()}</Typography>
+          { isPresentStatus && <>
+            <Typography pt={3} color='green'><CheckIcon fontSize='large' /></Typography>
+            <Typography variant='h5'>Sudah mengisi kehadiran</Typography>
+          </> }
         </CardContent>
       </Card>
+      { !isPresentStatus && <>
       <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
         <CardContent>
           <form onSubmit={onSubmit}>
@@ -100,6 +107,7 @@ function PresenceForm(props) {
           </form>
         </CardContent>
       </Card>
+      </> }
     </>
   )
 }

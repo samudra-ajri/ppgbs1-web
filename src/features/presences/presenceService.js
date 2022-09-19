@@ -13,8 +13,20 @@ const createPresence = async (data, token) => {
   return response.data
 }
 
+// Check presence status
+const isPresent = async (roomId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(`${API_URL}room/${roomId}/ispresent`, config)
+  return response.data
+}
+
 const presenceService = {
   createPresence,
+  isPresent
 }
 
 export default presenceService
