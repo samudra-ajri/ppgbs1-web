@@ -59,7 +59,7 @@ function RegisterOptions() {
                 <Typography variant='subtitle2'>3.</Typography>
               </Grid>
               <Grid item xs={11}>
-                <Typography variant='subtitle2'>Generus yang sudah lulus tes muballigh registrasi "Sebagai Generus" dan "Sebagai Pengajar"..</Typography>
+                <Typography variant='subtitle2'>Generus yang sudah lulus tes muballigh registrasi "Sebagai Generus" dan "Sebagai Pengajar".</Typography>
               </Grid>
             </Grid>
           </CardContent>
