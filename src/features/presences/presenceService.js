@@ -13,6 +13,18 @@ const createPresence = async (data, token) => {
   return response.data
 }
 
+// Get presence by room id
+const getPresencesByRoomId = async (data, token) => {
+  const { page=1, roomId } = data
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(`${API_URL}room/${roomId}?page=${page}`, config)
+  return response.data
+}
+
 // Check presence status
 const isPresent = async (roomId, token) => {
   const config = {
@@ -26,7 +38,8 @@ const isPresent = async (roomId, token) => {
 
 const presenceService = {
   createPresence,
-  isPresent
+  isPresent,
+  getPresencesByRoomId
 }
 
 export default presenceService

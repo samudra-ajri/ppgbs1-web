@@ -10,7 +10,12 @@ const initialState = {
   
   isSuccessPresentStatus: false,
   isLoadingPresentStatus: false,
-  isPresentStatus: false,
+  isPresentStatus: null,
+
+  isSuccessAttenders: false,
+  isLoadingAttenders: false,
+  attenders: [],
+  attendersCount: 0,
 }
 
 // Create presence
@@ -32,13 +37,51 @@ export const createPresence = createAsyncThunk(
   }
 )
 
-// Check user presence statu
+// Check user presence status
 export const isPresent = createAsyncThunk(
   'presences/ispresent',
   async (roomId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
       return await presenceService.isPresent(roomId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Get presence by roomId
+export const getPresencesByRoomId = createAsyncThunk(
+  'presences/attenders',
+  async ({page, roomId}, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await presenceService.getPresencesByRoomId({page, roomId}, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Get presence by roomId list with paginate
+export const getPresencesByRoomIdPaginate = createAsyncThunk(
+  'presences/attendersPaginate',
+  async ({page, roomId}, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await presenceService.getPresencesByRoomId({page, roomId}, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -60,6 +103,8 @@ export const presenceSlice = createSlice({
       state.isSuccess = false
       state.isError = false
       state.message = ''
+      state.isSuccessPresentStatus = false
+      state.isLoadingPresentStatus = false
     }
   },
   extraReducers: (builder) => {
@@ -87,6 +132,33 @@ export const presenceSlice = createSlice({
       })
       .addCase(isPresent.rejected, (state, action) => {
         state.isLoadingPresentStatus = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getPresencesByRoomId.pending, (state) => {
+        state.isLoadingAttenders = true
+      })
+      .addCase(getPresencesByRoomId.fulfilled, (state, action) => {
+        state.isLoadingAttenders = false
+        state.isSuccessAttenders = true
+        state.attenders = action.payload.attenders
+        state.attendersCount = action.payload.total
+      })
+      .addCase(getPresencesByRoomId.rejected, (state, action) => {
+        state.isLoadingAttenders = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getPresencesByRoomIdPaginate.pending, (state) => {
+        state.isLoadingAttenders = true
+      })
+      .addCase(getPresencesByRoomIdPaginate.fulfilled, (state, action) => {
+        state.isLoadingAttenders = false
+        state.isSuccessAttenders = true
+        state.attenders = [...state.attenders, ...action.payload.attenders]
+      })
+      .addCase(getPresencesByRoomIdPaginate.rejected, (state, action) => {
+        state.isLoadingAttenders = false
         state.isError = true
         state.message = action.payload
       })
