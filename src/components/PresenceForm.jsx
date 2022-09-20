@@ -15,7 +15,7 @@ function PresenceForm(props) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { isLoading, isError, isSuccess, message, isPresentStatus } = useSelector(
+  const { isLoading, isError, isSuccess, message, isPresentStatus, isLoadingPresentStatus, isSuccessPresentStatus } = useSelector(
     (state) => state.presences
   )
 
@@ -48,6 +48,8 @@ function PresenceForm(props) {
     return `${startDayName}, ${startDate} pkl. ${startTime}`
   }
 
+  if (isLoadingPresentStatus) return <Grid align='center' sx={{ pt: 1.5 }}><CircularProgress size={20} /></Grid>
+
   return (
     <>
       <Card sx={{ mb: 0.5 }} align='center'>
@@ -59,7 +61,7 @@ function PresenceForm(props) {
         }}>
           <Typography variant='h5'>{event.name}</Typography>
           <Typography variant='body2'>{eventTime()}</Typography>
-          { isPresentStatus && <>
+          { isPresentStatus && isSuccessPresentStatus && <>
             <Typography pt={3} color='green'><CheckIcon fontSize='large' /></Typography>
             <Typography variant='h5'>Hadir</Typography>
           </> }
