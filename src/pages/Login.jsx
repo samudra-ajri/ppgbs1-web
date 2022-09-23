@@ -95,7 +95,7 @@ function Login() {
               </Grid>
               <Grid item xs={12}>
                 <Button id='generus' onClick={onSubmit} size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Masuk Sebagai Generus</Button>
-                <Button id='admin' onClick={onSubmit} size="large" style={{ margin: "5px auto" }} type="submit" variant="outlined" color="primary" fullWidth>Selain Generus</Button>
+                <Button id='admin' onClick={onSubmit} size="large" style={{ backgroundColor: "#0C0D0E", color:"white", margin: "5px auto" }} type="submit" variant="outlined" fullWidth>Selain Generus</Button>
               </Grid>
             </Grid>
           </form>
