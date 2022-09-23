@@ -49,6 +49,8 @@ function Login() {
       password,
     }
 
+    if (e.currentTarget.id === 'generus') userData.role = 'GENERUS'
+
     dispatch(login(userData))
   }
 
@@ -64,7 +66,7 @@ function Login() {
     <Grid>
       <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
         <CardContent>
-          <form onSubmit={onSubmit}>
+          <form>
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 <TextField
@@ -92,7 +94,8 @@ function Login() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Masuk</Button>
+                <Button id='generus' onClick={onSubmit} size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Masuk Sebagai Generus</Button>
+                <Button id='admin' onClick={onSubmit} size="large" style={{ margin: "5px auto" }} type="submit" variant="outlined" color="primary" fullWidth>Selain Generus</Button>
               </Grid>
             </Grid>
           </form>
