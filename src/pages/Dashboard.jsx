@@ -71,15 +71,29 @@ function Dashboard() {
   }
 
   const handleClick = (e, props) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      ...props
-    }))
+    const filterKey = Object.keys(props)[0]
+    const filterValue = Object.values(props)[0]
+
+    if (Object.values(filters).includes(filterValue)) {
+      handleClickRemove(e, filterKey)
+    } else {
+      setFilters((prevState) => ({
+        ...prevState,
+        ...props
+      }))
+    }
   }
 
   const handleClickRemove = (e, props) => {
+    console.log(props);
     delete filters[props]
     dispatch(getDashboard(filters))
+  }
+
+  const filterColor = (cardName) => {
+    let color = ''
+    if (Object.values(filters).includes(cardName)) color ='#EFEFEF'
+    return { backgroundColor: color }
   }
 
   return (
@@ -146,7 +160,7 @@ function Dashboard() {
 
       <Grid container align='center' spacing={1}>
         <Grid item xs={4}>
-          <Card onClick={e => { handleClick(e, { role: 'GENERUS' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+          <Card style={filterColor('GENERUS')} onClick={e => { handleClick(e, { role: 'GENERUS' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
@@ -163,7 +177,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={4}>
-          <Card onClick={e => { handleClick(e, { role: 'MT' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+          <Card style={filterColor('MT')} onClick={e => { handleClick(e, { role: 'MT' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
@@ -180,7 +194,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={4}>
-          <Card onClick={e => { handleClick(e, { role: 'MS' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+          <Card style={filterColor('MS')} onClick={e => { handleClick(e, { role: 'MS' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
@@ -197,7 +211,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={4}>
-          <Card onClick={e => { handleClick(e, { age: 'preteenAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+          <Card style={filterColor('preteenAge')} onClick={e => { handleClick(e, { age: 'preteenAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
@@ -214,7 +228,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={4}>
-          <Card onClick={e => { handleClick(e, { age: 'teenAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+          <Card style={filterColor('teenAge')} onClick={e => { handleClick(e, { age: 'teenAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
@@ -231,7 +245,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={4}>
-          <Card onClick={e => { handleClick(e, { age: 'premarriedAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+          <Card style={filterColor('premarriedAge')} onClick={e => { handleClick(e, { age: 'premarriedAge' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
@@ -248,7 +262,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card onClick={e => { handleClick(e, { sex: 'male' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+          <Card style={filterColor('male')} onClick={e => { handleClick(e, { sex: 'male' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
@@ -265,7 +279,7 @@ function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={6}>
-          <Card onClick={e => { handleClick(e, { sex: 'female' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
+          <Card style={filterColor('female')} onClick={e => { handleClick(e, { sex: 'female' }) }} sx={{ padding: 1, justifyItems: 'center' }}>
             <Box marginTop={2.5} marginBottom={2.5} sx={{ position: 'relative' }}>
               <Typography
                 align='center'
