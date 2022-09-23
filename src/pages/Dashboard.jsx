@@ -85,7 +85,6 @@ function Dashboard() {
   }
 
   const handleClickRemove = (e, props) => {
-    console.log(props);
     delete filters[props]
     dispatch(getDashboard(filters))
   }
