@@ -87,7 +87,10 @@ function Dashboard() {
   const handleClickRoleFilter = (e, props) => {
     if (e.target.innerText !== role) {
       setRole(e.target.innerText)
-      setFilters(props)
+      setFilters((prevState) => ({
+        ...prevState,
+        ...props
+      }))
     }
   }
 
