@@ -2,41 +2,31 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { createEvent, reset } from '../features/event/eventSlice'
-import { Button, Card, CardContent, Checkbox, CircularProgress, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material'
+import { Button, Card, CardContent, Checkbox, CircularProgress, FormControlLabel, Grid, TextField, Typography } from '@mui/material'
 import moment from 'moment/moment'
 import BackHeader from '../components/BackHeader'
 
 function CreateEvent() {
+  const [startDate, setStartTime] = useState(moment())
+  const handleStartTimeChange = (newValue) => { setStartTime(newValue) }
+
+  const [endDate, setEndTime] = useState(moment().add(1, 'hours'))
+  const handleEndTimeChange = (newValue) => { setEndTime(newValue) }
+
+
   const [formData, setFormData] = useState({
     name: '',
     passCode: '',
-    startDay: moment().date(),
-    startMonth: moment().month() + 1,
-    startYear: moment().year(),
-    startHour: moment().hour(),
-    startMinute: 0,
-    endDay: moment().date(),
-    endMonth: moment().month() + 1,
-    endYear: moment().year(),
-    endHour: moment().hour() + 1,
-    endMinute: 0,
-    location: '',
+    location: ''
   })
   const [classTypes, setClassTypes] = useState([]);
   const {
     name,
     passCode,
-    startDay,
-    startMonth,
-    startYear,
-    startHour,
-    startMinute,
-    endDay,
-    endMonth,
-    endYear,
-    endHour,
-    endMinute,
     location
   } = formData
   const navigate = useNavigate()
@@ -79,31 +69,17 @@ function CreateEvent() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const startYearStr = startYear.toString()
-    const startMonthStr = startMonth.toString().length === 1 ? '0'+startMonth.toString() : startMonth.toString()
-    const startDayStr = startDay.toString().length === 1 ? '0'+startDay.toString() : startDay.toString()
-    const startHourStr = startHour.toString().length === 1 ? '0'+startHour.toString() : startHour.toString()
-    const startMinuteStr = startMinute.toString().length === 1 ? '0'+startMinute.toString() : startMinute.toString()
-
-    const endYearStr = endYear.toString()
-    const endMonthStr = endMonth.toString().length === 1 ? '0'+endMonth.toString() : endMonth.toString()
-    const endDayStr = endDay.toString().length === 1 ? '0'+endDay.toString() : endDay.toString()
-    const endHourStr = endHour.toString().length === 1 ? '0'+endHour.toString() : endHour.toString()
-    const endMinuteStr = endMinute.toString().length === 1 ? '0'+endMinute.toString() : endMinute.toString()
-
-    const start = `${startYearStr}-${startMonthStr}-${startDayStr}T${startHourStr}:${startMinuteStr}`
-    const end = `${endYearStr}-${endMonthStr}-${endDayStr}T${endHourStr}:${endMinuteStr}`
-
-    const startDate = moment(start).format()
-    const endDate = moment(end).format()
+    // const startDate = moment(start).format()
+    // const endDate = moment(end).format()
     const data = {
       name,
       passCode,
       classTypes,
-      startDate,
-      endDate,
+      startDate: startDate.format(),
+      endDate: endDate.format(),
       location
     }
+    // console.log(data);
     dispatch(createEvent(data))
   }
 
@@ -119,6 +95,8 @@ function CreateEvent() {
       <BackHeader title='Kegiatan' />
 
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>Buat Jadwal</Typography>
+
+
 
       <Grid>
         <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
@@ -166,175 +144,7 @@ function CreateEvent() {
                       required
                     />
                   </Grid>
-                  <Grid xs={12} item>
-                    <Typography pt={2}>Mulai Kegiatan</Typography>
-                  </Grid>
-                  <Grid xs={4} item>
-                    <TextField
-                      name="startDay"
-                      placeholder="Tgl"
-                      label="Tgl Dimulai"
-                      value={startDay}
-                      onChange={onChange}
-                      variant="standard"
-                      align="left"
-                      select
-                      fullWidth
-                      required
-                    >
-                      {Array.from(Array(31)).map((_, i) => i + 1).map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                  <Grid xs={4} item>
-                    <TextField
-                      name="startMonth"
-                      placeholder="Bulan"
-                      label="Bulan"
-                      value={startMonth}
-                      onChange={onChange}
-                      variant="standard"
-                      align="left"
-                      select
-                      fullWidth
-                      required
-                    >
-                      {Array.from(Array(12)).map((_, i) => i + 1).map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                  <Grid xs={4} item>
-                    <TextField
-                      name="startYear"
-                      label="Tahun"
-                      placeholder="Tahun"
-                      value={startYear}
-                      onChange={onChange}
-                      type="number"
-                      variant="standard"
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid xs={6} item>
-                    <TextField
-                      name="startHour"
-                      label="Jam Mulai"
-                      placeholder="Jam"
-                      value={startHour}
-                      onChange={onChange}
-                      type="number"
-                      variant="standard"
-                      InputProps={{ inputProps: { min: 1, max: 24 } }}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid xs={6} item>
-                    <TextField
-                      name="startMinute"
-                      label="Menit"
-                      placeholder="Menit"
-                      value={startMinute}
-                      onChange={onChange}
-                      type="number"
-                      variant="standard"
-                      InputProps={{ inputProps: { min: 0, max: 59 } }}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid xs={12} item>
-                    <Typography pt={2}>Selesai Kegiatan</Typography>
-                  </Grid>
-                  <Grid xs={4} item>
-                    <TextField
-                      name="endDay"
-                      placeholder="Tgl"
-                      label="Tgl Selesai"
-                      value={endDay}
-                      onChange={onChange}
-                      variant="standard"
-                      align="left"
-                      select
-                      fullWidth
-                      required
-                    >
-                      {Array.from(Array(31)).map((_, i) => i + 1).map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                  <Grid xs={4} item>
-                    <TextField
-                      name="endMonth"
-                      placeholder="Bulan"
-                      label="Bulan"
-                      value={endMonth}
-                      onChange={onChange}
-                      variant="standard"
-                      align="left"
-                      select
-                      fullWidth
-                      required
-                    >
-                      {Array.from(Array(12)).map((_, i) => i + 1).map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                  <Grid xs={4} item>
-                    <TextField
-                      name="endYear"
-                      label="Tahun"
-                      placeholder="Tahun"
-                      value={endYear}
-                      onChange={onChange}
-                      type="number"
-                      variant="standard"
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid xs={6} item>
-                    <TextField
-                      name="endHour"
-                      label="Jam Selesai"
-                      placeholder="Jam"
-                      value={endHour}
-                      onChange={onChange}
-                      type="number"
-                      variant="standard"
-                      InputProps={{ inputProps: { min: 1, max: 24 } }}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid xs={6} item>
-                    <TextField
-                      name="endMinute"
-                      label="Menit"
-                      placeholder="Menit"
-                      value={endMinute}
-                      onChange={onChange}
-                      type="number"
-                      variant="standard"
-                      InputProps={{ inputProps: { min: 0, max: 59 } }}
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} pb={2}>
                     <TextField
                       name="classTypes"
                       label="Peserta *"
@@ -358,6 +168,29 @@ function CreateEvent() {
                       />
                     ))}
                   </Grid>
+                  <Grid item xs={12} p={3}>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                      <DateTimePicker
+                        name='startDate'
+                        label='Waktu Mulai'
+                        value={startDate}
+                        onChange={handleStartTimeChange}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                      <DateTimePicker
+                        name='endDate'
+                        label='Waktu Selesai'
+                        value={endDate}
+                        onChange={handleEndTimeChange}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  
 
                   <Grid item xs={12}>
                     <Button size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Tambah</Button>
