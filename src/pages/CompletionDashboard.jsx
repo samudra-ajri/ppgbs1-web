@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import CircularProgressWithLabel from '../components/CircularProgressWithLabel'
 import { getAllCompletionsScores, reset } from '../features/completionScores/completionScoreSlice'
 import { getRolesCounter } from '../features/userCounters/userCounterSlice'
-import { getLocations } from '../features/locations/locationSlice'
 import { useState } from 'react'
+import { listDs, listKlp } from '../helpers/locationHelper'
 
 function CompletionDashboard() {
   const dispatch = useDispatch()
@@ -15,7 +15,6 @@ function CompletionDashboard() {
   const { user } = useSelector((state) => state.auth)
   const { completionScores, isLoading } = useSelector((state) => state.completionScores)
   const { countList, isLoading: isLoadingUserCounter } = useSelector((state) => state.usersCounter)
-  const { locations } = useSelector((state) => state.locations)
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
   const [focusKlp, setFocusKlp] = useState(user?.role !== 'PPK' ? 'SEMUA KLP' : user?.klp)
 
@@ -33,23 +32,8 @@ function CompletionDashboard() {
       dispatch(getAllCompletionsScores({ ds: user.ds, klp: user.klp }))
       dispatch(getRolesCounter({ ds: user.ds, klp: user.klp }))
     }
-    dispatch(getLocations())
     dispatch(reset())
   }, [user, navigate, dispatch])
-
-  const dsList = () => {
-    const ds = []
-    const locationsList = locations?.locations ?? []
-    locationsList.forEach(location => {
-      ds.push(location.ds)
-    })
-    return ds
-  }
-
-  const klpList = () => {
-    const locationsObj = locations?.locations ?? []
-    return (locationsObj.find(o => o.ds === focusDs))?.klp ?? []
-  }
 
   const onClickDs = (e) => {
     const filters = e.target.innerText === 'SEMUA DS'
@@ -99,7 +83,7 @@ function CompletionDashboard() {
             sx={{ m: 0.25 }}
             onClick={onClickDs}
           />
-          {dsList().map(ds => <Chip
+          {listDs().map(ds => <Chip
             variant={ds === focusDs ? 'solid' : 'outlined'}
             key={ds}
             label={<Typography sx={{ fontSize: 10 }}> {ds} </Typography>}
@@ -121,7 +105,7 @@ function CompletionDashboard() {
             sx={{ m: 0.25 }}
             onClick={onClickKlp}
           />
-          {klpList().map(klp => <Chip
+          {(focusDs ? listKlp(focusDs) : []).map(klp => <Chip
             variant={klp === focusKlp ? 'solid' : 'outlined'}
             key={klp}
             label={<Typography sx={{ fontSize: 10 }}> {klp} </Typography>}
