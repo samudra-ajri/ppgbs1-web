@@ -1,0 +1,9 @@
+const locations = {
+    buahbatu: ['BAHAGIA PERMAI', 'CIGANITRI MUKTI', 'GBA', 'GBI', 'MARGACINTA', 'PASIRPOGOR', 'SBM'],
+    margahayu: ['MARGAHAYU BARAT', 'MARGAHAYU SELATAN', 'MARGAHAYU UTARA'],
+    regol: ['KEMBAR BARAT', 'KEMBAR TIMUR', 'KOTABARU', 'M. RAMDAN', 'NITIPRAJA', 'PASIRLUYU', 'PASIRSALAM'],
+    riung: ['DARUSSALAM 1', 'DARUSSALAM 2', 'SALUYU'],
+    tegalega: ['CIBOLERANG', 'PANJUNAN', 'PANYILEUKAN', 'PARASDI', 'PASADENA', 'PASIRKOJA', 'SUKALEUEUR']
+}
+
+export default locations

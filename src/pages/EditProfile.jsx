@@ -4,38 +4,40 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import validator from 'email-validator'
 import { register, reset } from '../features/auth/authSlice'
-import { Button, Card, CardContent, Checkbox, CircularProgress, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material'
+import { Button, Card, CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material'
 import BackHeader from '../components/BackHeader'
 import capitalize from 'capitalize'
+import moment from 'moment'
 import { listDs, listKlp } from '../helpers/locationHelper'
 
-function Register() {
-  const path = window.location.pathname.split('/')
-  const title = path[3]
+function EditProfile() {
+  const { user, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  )
 
   const [formData, setFormData] = useState({
-    name: '',
-    dayBirth: '',
-    monthBirth: '',
-    yearBirth: '',
-    registerType: '',
+    name: user.name,
+    dayBirth: moment(user.birthdate).date(),
+    monthBirth: moment(user.birthdate).month() + 1,
+    yearBirth: moment(user.birthdate).year(),
+    registerType: user.phone || user.email,
     password: '',
     password2: '',
-    sex: '',
-    isMuballigh: '',
+    sex: user.sex,
+    isMuballigh: user.isMuballigh,
     // Addition for muballigh data
-    hometown: '',
-    isMarried: '',
-    pondok: '',
-    kertosonoYear: '',
-    firstDutyYear: '',
-    timesDuties: '',
-    education: '',
-    role: ''
+    hometown: user.hometown,
+    isMarried: user.isMarried,
+    pondok: user.pondok,
+    kertosonoYear: user.kertosonoYear,
+    firstDutyYear: user.firstDutyYear,
+    timesDuties: user.timesDuties,
+    education: user.education,
+    role: user.role
   })
-  const [ds, setDs] = useState('')
-  const [klp, setKlp] = useState('')
-  const [greatHadiths, setGreatHadiths] = useState([]);
+  const [ds, setDs] = useState(user.ds)
+  const [klp, setKlp] = useState(user.klp)
+  const [greatHadiths, setGreatHadiths] = useState(user.greatHadiths);
   const {
     name,
     dayBirth,
@@ -58,21 +60,14 @@ function Register() {
   } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  )
 
   useEffect(() => {
     if (isError) {
       toast.error(message)
     }
 
-    if (isSuccess || user) {
-      if (user.role === 'GENERUS') {
-        navigate('/profile')
-      } else {
-        navigate('/')
-      }
+    if (isSuccess) {
+      navigate('/profile')
     }
 
     dispatch(reset())
@@ -120,7 +115,7 @@ function Register() {
         klp
       }
 
-      if (title !== 'generus') {
+      if (user.role !== 'GENERUS') {
         Object.assign(userData, {
           isMuballigh: true,
           hometown,
@@ -152,22 +147,18 @@ function Register() {
     'NASAI',
     'TIRMIDZI',
     'IBNUMAJAH'
-  ];
+  ]
 
   return (
     <>
-      <BackHeader title={'Registrasi ' + title} />
+      <BackHeader title='Profile' />
       <Typography align='center' variant="h4">
-        Buat Akun
+        Edit Profile
       </Typography>
 
       <Grid>
         <Card variant="" style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}>
-          {isLoading ? (
-            <Grid align="center" sx={{ pt: 5 }}>
-              <CircularProgress />
-            </Grid>
-          ) : (
+          
             <CardContent>
               <form onSubmit={onSubmit}>
                 <Grid container spacing={1}>
@@ -229,7 +220,7 @@ function Register() {
                       required
                       disabled={!ds ?? true}
                     >
-                      {(ds ? listKlp(ds) : []).map((klp) => (
+                      {listKlp(ds).map((klp) => (
                         <MenuItem key={klp} value={klp}>
                           {klp}
                         </MenuItem>
@@ -256,7 +247,7 @@ function Register() {
                       ))}
                     </TextField>
                   </Grid>
-                  {title !== 'muballigh' ?
+                  {user.role === 'GENERUS' ?
                     <Grid item xs={6}>
                       <TextField
                         name="isMuballigh"
@@ -352,7 +343,7 @@ function Register() {
                       required
                     />
                   </Grid>
-                  {title === 'muballigh' && (<>
+                  {user.role !== 'GENERUS' && (<>
                     <Grid item xs={12}>
                       <TextField
                         name="hometown"
@@ -469,42 +460,15 @@ function Register() {
                     </Grid>
                   </>)}
                   <Grid item xs={12}>
-                    <TextField
-                      name="password"
-                      label="Buat Password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={onChange}
-                      type="password"
-                      variant="standard"
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      name="password2"
-                      label="Ulangi Password"
-                      placeholder="Password"
-                      value={password2}
-                      onChange={onChange}
-                      type="password"
-                      variant="standard"
-                      fullWidth
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Daftar</Button>
+                    <Button size="large" style={{ margin: "20px auto" }} type="submit" variant="contained" color="primary" fullWidth>Ubah</Button>
                   </Grid>
                 </Grid>
               </form>
             </CardContent>
-          )}
         </Card>
       </Grid>
     </>
   )
 }
 
-export default Register
+export default EditProfile

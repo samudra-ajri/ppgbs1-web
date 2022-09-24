@@ -9,6 +9,7 @@ import Login from '../pages/Login'
 import Profile from '../pages/Profile'
 import RegisterOptions from '../pages/RegisterOptions'
 import Event from '../pages/Event'
+import EditProfile from '../pages/EditProfile'
 
 function MainLayout() {
   return (
@@ -23,7 +24,7 @@ function MainLayout() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<RegisterOptions />} />
         <Route path='/events' element={<Event />} />
-        <Route path='/profile/edit' element={<Login />} />
+        <Route path='/profile/edit' element={<EditProfile />} />
       </Routes>
       <BottomNav />
     </>
