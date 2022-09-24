@@ -4,14 +4,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Box, Card, Chip, Grid, Typography, Divider } from '@mui/material'
 import { getDashboard } from '../features/Dashboards/dashboardSlice'
 import { useState } from 'react'
-import { getLocations } from '../features/locations/locationSlice'
+import { listDs, listKlp } from '../helpers/locationHelper'
 
 function Dashboard() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
   const { dashboardData } = useSelector(state => state.dashboard)
-  const { locations } = useSelector((state) => state.locations)
   const [filters, setFilters] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? { role: 'GENERUS' } : (user?.role !== 'PPK' ? { ds: user?.ds, role: 'GENERUS' } : { klp: user?.klp, role: 'GENERUS' }))
   const [focusDs, setFocusDs] = useState(user?.role === 'PPG' || user?.role === 'ADMIN' ? 'SEMUA DS' : user?.ds)
   const [focusKlp, setFocusKlp] = useState(user?.role !== 'PPK' ? 'SEMUA KLP' : user?.klp)
@@ -20,23 +19,8 @@ function Dashboard() {
   useEffect(() => {
     if (!user) navigate('/login')
     if (user?.role === 'GENERUS') navigate('/profile')
-    dispatch(getLocations())
     dispatch(getDashboard(filters))
   }, [user, filters, navigate, dispatch])
-
-  const dsList = () => {
-    const ds = []
-    const locationsList = locations?.locations ?? []
-    locationsList.forEach(location => {
-      ds.push(location.ds)
-    })
-    return ds
-  }
-
-  const klpList = () => {
-    const locationsObj = locations?.locations ?? []
-    return (locationsObj.find(o => o.ds === focusDs))?.klp ?? []
-  }
 
   const onClickDs = (e) => {
     delete filters.klp
@@ -129,7 +113,7 @@ function Dashboard() {
             sx={{ m: 0.25 }}
             onClick={onClickDs}
           />
-          {dsList().map(ds => <Chip
+          {listDs().map(ds => <Chip
             variant={ds === focusDs ? 'solid' : 'outlined'}
             key={ds}
             label={<Typography sx={{ fontSize: 10 }}> {ds} </Typography>}
@@ -151,7 +135,7 @@ function Dashboard() {
             sx={{ m: 0.25 }}
             onClick={onClickKlp}
           />
-          {klpList().map(klp => <Chip
+          {(focusDs ? listKlp(focusDs) : []).map(klp => <Chip
             variant={klp === focusKlp ? 'solid' : 'outlined'}
             key={klp}
             label={<Typography sx={{ fontSize: 10 }}> {klp} </Typography>}
