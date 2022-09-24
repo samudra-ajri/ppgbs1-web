@@ -51,7 +51,7 @@ function Generus() {
           <Grid item xs={12}>
             <TextField
               name='search'
-              placeholder={`Cari ${user?.role === 'ADMIN' ? 'nama' : role.toLowerCase()}...`}
+              placeholder={`Cari berdasarkan nama, ds, atau klp...`}
               variant='standard'
               value={search}
               onChange={onChange}
