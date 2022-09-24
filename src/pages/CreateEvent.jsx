@@ -176,6 +176,7 @@ function CreateEvent() {
                         value={startDate}
                         onChange={handleStartTimeChange}
                         renderInput={(params) => <TextField {...params} />}
+                        inputFormat="DD/MM/YYYY HH:mm"
                       />
                     </LocalizationProvider>
                   </Grid>
@@ -187,6 +188,7 @@ function CreateEvent() {
                         value={endDate}
                         onChange={handleEndTimeChange}
                         renderInput={(params) => <TextField {...params} />}
+                        inputFormat="DD/MM/YYYY HH:mm"
                       />
                     </LocalizationProvider>
                   </Grid>
