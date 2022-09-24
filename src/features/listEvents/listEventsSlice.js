@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import listEventsService from './listEventsService'
 
 const initialState = {
-  events: null,
+  events: {},
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -35,6 +35,25 @@ export const listEventsGenerus = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token
       return await listEventsService.listEventsGenerus(token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Delete event
+export const deleteEvent = createAsyncThunk(
+  'events/list/delete',
+  async (id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await listEventsService.deleteEvent(id, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -82,6 +101,21 @@ export const listEventsSlice = createSlice({
         state.events = action.payload
       })
       .addCase(listEventsGenerus.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(deleteEvent.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteEvent.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.events = state.events.events.filter(
+          (event) => event._id !== action.payload.id
+        )
+      })
+      .addCase(deleteEvent.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

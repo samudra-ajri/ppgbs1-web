@@ -29,7 +29,7 @@ function Event() {
     <>
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>Jadwal Kegiatan</Typography>
       {user.role !== 'GENERUS' && <Button size="medium" style={{ margin: "20px auto" }} type="submit" variant="contained" color="info" fullWidth onClick={onClick}>Tambah</Button>}
-      {isSuccess && events.events.map(event => <EventCard key={event._id} event={event} user={user}/>)}
+      {isSuccess && events.events?.map(event => <EventCard key={event._id} event={event} user={user}/>)}
     </>
   )
 }

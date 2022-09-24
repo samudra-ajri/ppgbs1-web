@@ -24,9 +24,21 @@ const listEvents = async (token) => {
   return response.data
 }
 
+// Delete event
+const deleteEvent = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.delete(API_URL + id, config)
+  return response.data
+}
+
 const listEventsService = {
   listEvents,
-  listEventsGenerus
+  listEventsGenerus,
+  deleteEvent
 }
 
 export default listEventsService

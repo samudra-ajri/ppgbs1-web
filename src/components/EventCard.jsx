@@ -1,15 +1,37 @@
-import { Card, CardActionArea, CardContent, Grid, Typography } from '@mui/material'
+import { Box, Button, Card, CardActionArea, CardContent, CircularProgress, Grid, IconButton, Stack, Typography } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/DeleteOutlineRounded'
 import capitalize from 'capitalize'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import translate from '../utils/translate'
+import { useState } from 'react'
+import PopDialog from './PopDialog'
+import { deleteEvent } from '../features/listEvents/listEventsSlice'
+import { useDispatch } from 'react-redux'
 
 function EventCard(props) {
+  const dispatch = useDispatch()
   const { event, user } = props
+  const [openPopup, setOpenPopup] = useState(false)
+
   const region = () => {
     if (event.klp) return `PPK | ${capitalize.words(event.klp)}`
     if (!event.klp && event.ds) return `PPD | ${capitalize.words(event.ds)}`
     if (!event.klp && !event.ds) return 'PPG'
+  }
+  const canDelete = () => {
+    if (event.klp && user.role === 'PPK') return true
+    if ((!event.klp && event.ds) && user.role === 'PPD') return true
+    if ((!event.klp && !event.ds) && user.role === 'PPG') return true
+    return false
+  }
+
+  const onClick = () => {
+    setOpenPopup(true)
+  }
+
+  const onClickRemove = () => {
+    dispatch(deleteEvent(event._id))
   }
 
   const classTypesAttenders = {
@@ -18,6 +40,8 @@ function EventCard(props) {
     RM: 'Remaja',
     PN: 'Pra Nikah'
   }
+
+  const isLoading = false
 
   const eventTime = () => {
     const eventTime = {}
@@ -92,9 +116,31 @@ function EventCard(props) {
 
               </Link>
             </Grid>
+            <Grid item>
+                <IconButton align='right' disabled={!canDelete()} onClick={onClick}>
+                  <DeleteIcon fontSize='medium' color={canDelete() ? 'error': 'inherit'} />
+                </IconButton>
+            </Grid>
           </Grid>
         </CardContent>
       </Card>
+      <PopDialog
+        title={`Hapus ${event.name}?`}
+        openPopup={openPopup}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', height: 45 }}>
+          {isLoading ? (
+            <Grid align="center" sx={{ pt: 1.5 }}>
+              <CircularProgress size={20} />
+            </Grid>
+          ) : (
+            <Stack spacing={1} direction='row'>
+              <Button variant='outlined' color='error' onClick={onClickRemove}>Hapus</Button>
+              <Button variant='contained' onClick={() => setOpenPopup(false)}>Batal</Button>
+            </Stack>
+          )}
+        </Box>
+      </PopDialog>
     </>
   )
 }
