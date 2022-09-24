@@ -25,10 +25,25 @@ const logout = () => {
     localStorage.removeItem('user')
 }
 
+// Update my profile
+const update = async (userData, token) => {
+    const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    const response = await API.put(API_URL + 'me', userData, config)
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+    }
+    return response.data
+}
+
 const authService = {
     register,
     login,
-    logout
+    logout,
+    update
 }
 
 export default authService

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import validator from 'email-validator'
-import { register, reset } from '../features/auth/authSlice'
+import { update, reset } from '../features/auth/authSlice'
 import { Button, Card, CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material'
 import BackHeader from '../components/BackHeader'
 import capitalize from 'capitalize'
@@ -21,8 +21,6 @@ function EditProfile() {
     monthBirth: moment(user.birthdate).month() + 1,
     yearBirth: moment(user.birthdate).year(),
     registerType: user.phone || user.email,
-    password: '',
-    password2: '',
     sex: user.sex,
     isMuballigh: user.isMuballigh,
     // Addition for muballigh data
@@ -37,15 +35,13 @@ function EditProfile() {
   })
   const [ds, setDs] = useState(user.ds)
   const [klp, setKlp] = useState(user.klp)
-  const [greatHadiths, setGreatHadiths] = useState(user.greatHadiths);
+  const [greatHadiths, setGreatHadiths] = useState(user.greatHadiths)
   const {
     name,
     dayBirth,
     monthBirth,
     yearBirth,
     registerType,
-    password,
-    password2,
     sex,
     isMuballigh,
     // Addition for muballigh data
@@ -98,46 +94,42 @@ function EditProfile() {
     }
   }
 
+  console.log(ds);
   const onSubmit = (e) => {
     e.preventDefault()
-    if (password !== password2) {
-      toast.error('Konfirmasi password tidak sesuai')
-    } else {
-      const userData = {
-        name,
-        password,
-        dayBirth,
-        monthBirth,
-        yearBirth,
-        sex,
-        isMuballigh,
-        ds,
-        klp
-      }
-
-      if (user.role !== 'GENERUS') {
-        Object.assign(userData, {
-          isMuballigh: true,
-          hometown,
-          isMarried,
-          pondok,
-          kertosonoYear,
-          firstDutyYear,
-          timesDuties,
-          greatHadiths,
-          education,
-          role
-        });
-      }
-
-      if (validator.validate(registerType)) {
-        userData.email = registerType
-      } else if (/^\d+$/.test(registerType)) {
-        userData.phone = registerType
-      }
-
-      dispatch(register(userData))
+    const userData = {
+      name,
+      dayBirth,
+      monthBirth,
+      yearBirth,
+      sex,
+      isMuballigh,
+      ds,
+      klp
     }
+
+    if (user.role !== 'GENERUS') {
+      Object.assign(userData, {
+        isMuballigh: true,
+        hometown,
+        isMarried,
+        pondok,
+        kertosonoYear,
+        firstDutyYear,
+        timesDuties,
+        greatHadiths,
+        education,
+        role
+      })
+    }
+
+    if (validator.validate(registerType)) {
+      userData.email = registerType
+    } else if (/^\d+$/.test(registerType)) {
+      userData.phone = registerType
+    }
+
+    dispatch(update(userData))
   }
 
   const hadiths = [
