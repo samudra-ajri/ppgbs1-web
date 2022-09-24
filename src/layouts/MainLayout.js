@@ -23,6 +23,7 @@ function MainLayout() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<RegisterOptions />} />
         <Route path='/events' element={<Event />} />
+        <Route path='/profile/edit' element={<Login />} />
       </Routes>
       <BottomNav />
     </>
