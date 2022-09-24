@@ -3,11 +3,13 @@ import EditIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import capitalize from 'capitalize'
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function ProfileCard(props) {
   const navigate = useNavigate()
 
   const user = props.user
+  const { user: loggedUser } = useSelector((state) => state.auth)
   const age = moment(user?.birthdate).fromNow().split(' ')[0]
 
   const muballighLabel = () => {
@@ -47,11 +49,13 @@ function ProfileCard(props) {
                 {user?.role !== 'GENERUS' && `Asal: ${user?.hometown}`}
               </Typography>
             </Grid>
-            <Grid item>
+            {user._id === loggedUser._id &&
+              <Grid item>
                 <IconButton align='right' onClick={onClick}>
-                  <EditIcon fontSize='medium'/>
+                  <EditIcon fontSize='medium' />
                 </IconButton>
-            </Grid>
+              </Grid>
+            }
           </Grid>
         </CardContent>
       </Card>
