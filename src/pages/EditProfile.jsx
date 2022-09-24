@@ -94,7 +94,6 @@ function EditProfile() {
     }
   }
 
-  console.log(ds);
   const onSubmit = (e) => {
     e.preventDefault()
     const userData = {
