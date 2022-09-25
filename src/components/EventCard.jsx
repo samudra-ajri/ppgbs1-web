@@ -116,7 +116,7 @@ function EventCard(props) {
 
               </Link>
             </Grid>
-            {(user.role === 'GENERUS' && user.role === 'MT' && user.role === 'MS') && <Grid item>
+            {(user.role !== 'GENERUS' && user.role !== 'MT' && user.role !== 'MS') && <Grid item>
                 <IconButton align='right' disabled={!canDelete()} onClick={onClick}>
                   <DeleteIcon fontSize='medium' color={canDelete() ? 'error': 'inherit'} />
                 </IconButton>
