@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import validator from 'email-validator'
 import { update, reset } from '../features/auth/authSlice'
 import { Button, Card, CardContent, Checkbox, FormControlLabel, Grid, MenuItem, TextField, Typography } from '@mui/material'
 import BackHeader from '../components/BackHeader'
@@ -20,7 +19,8 @@ function EditProfile() {
     dayBirth: moment(user.birthdate).date(),
     monthBirth: moment(user.birthdate).month() + 1,
     yearBirth: moment(user.birthdate).year(),
-    registerType: user.phone || user.email,
+    phone: user.phone || '',
+    email: user.email || '',
     sex: user.sex,
     isMuballigh: user.isMuballigh,
     // Addition for muballigh data
@@ -41,7 +41,8 @@ function EditProfile() {
     dayBirth,
     monthBirth,
     yearBirth,
-    registerType,
+    phone,
+    email,
     sex,
     isMuballigh,
     // Addition for muballigh data
@@ -99,6 +100,8 @@ function EditProfile() {
     const userData = {
       name,
       dayBirth,
+      phone,
+      email,
       monthBirth,
       yearBirth,
       sex,
@@ -120,12 +123,6 @@ function EditProfile() {
         education,
         role
       })
-    }
-
-    if (validator.validate(registerType)) {
-      userData.email = registerType
-    } else if (/^\d+$/.test(registerType)) {
-      userData.phone = registerType
     }
 
     dispatch(update(userData))
@@ -166,14 +163,26 @@ function EditProfile() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    name="registerType"
-                    label="Nomor HP atau Email"
-                    placeholder="Nomor HP atau Email"
-                    value={registerType}
+                    name="phone"
+                    label="Nomor HP"
+                    placeholder="Nomor HP"
+                    value={phone}
                     onChange={onChange}
                     variant="standard"
                     fullWidth
-                    required
+                    required={user.phone ? true : false}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    name="email"
+                    label="Email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={onChange}
+                    variant="standard"
+                    fullWidth
+                    required={user.email ? true : false}
                   />
                 </Grid>
                 <Grid xs={12} sm={6} item>

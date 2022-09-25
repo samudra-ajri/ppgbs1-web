@@ -36,10 +36,9 @@ function ProfileCard(props) {
               <Typography variant="h5" component="div">
                 {user?.name}
               </Typography>
-              <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {user?.phone ? user?.phone : user?.email}
-              </Typography>
-              <Typography variant="body2">
+              <Typography color="text.secondary">{user?.phone && user.phone}</Typography>
+              <Typography color="text.secondary">{user?.email && user.email}</Typography>
+              <Typography sx={{ mt: 1.5 }} variant="body2">
                 {capitalize.words(user?.ds + ', ' + user?.klp)}
                 <br />
                 {(user?.sex === 'male' ? 'Laki-laki' : 'Perempuan') + `${user?.role === 'GENERUS' ? ', ' + age + ' tahun' : ', ' + maritalStatus()}`}
