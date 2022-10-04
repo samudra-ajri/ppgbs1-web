@@ -16,7 +16,7 @@ function MainLayout() {
     <>
       <Header />
       <Routes>
-        <Route path='/' element={<Dashboard />} />
+        <Route path='/profile/edit' element={<EditProfile />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/users' element={<Generus />} />
         <Route path='/completion' element={<CompletionDashboard />} />
@@ -24,7 +24,7 @@ function MainLayout() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<RegisterOptions />} />
         <Route path='/events' element={<Event />} />
-        <Route path='/profile/edit' element={<EditProfile />} />
+        <Route path='/' element={<Dashboard />} />
       </Routes>
       <BottomNav />
     </>
