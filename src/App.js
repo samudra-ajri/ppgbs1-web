@@ -28,7 +28,7 @@ function App() {
         <Container maxWidth="sm" sx={{ pt: 11 }}>
         <Routes>
           <Route path='/c/*' element={<ChildLayout />}/>
-          <Route path='*' element={<MainLayout />}/>
+          <Route path='/*' element={<MainLayout />}/>
           </Routes>
         </Container>
         </ThemeProvider>
