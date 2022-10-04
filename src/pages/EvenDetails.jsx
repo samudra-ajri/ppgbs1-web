@@ -8,8 +8,7 @@ import { getEvent, reset } from '../features/event/eventSlice'
 
 function EventPresence() {
   const location = useLocation()
-  // const eventId = (location.pathname.split('/'))[3]
-  const eventId = '633bc8ee3d10bcf130a3a860'
+  const eventId = (location.pathname.split('/'))[3]
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
