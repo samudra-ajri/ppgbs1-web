@@ -3,7 +3,7 @@ const days = (word) => {
         Monday    : 'Senin',
         Tuesday   : 'Selasa',
         Wednesday : 'Rabu',
-        Thusrday  : 'Kamis',
+        Thursday  : 'Kamis',
         Friday    : 'Jumat',
         Saturday  : 'Sabtu',
         Sunday    : 'Minggu',
