@@ -39,11 +39,18 @@ const update = async (userData, token) => {
     return response.data
 }
 
+// Forogt password
+const forgotPassword = async (userData) => {
+    const response = await API.put(API_URL + 'forgot-password', userData)
+    return response.data
+}
+
 const authService = {
     register,
     login,
     logout,
-    update
+    update,
+    forgotPassword,
 }
 
 export default authService

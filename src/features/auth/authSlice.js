@@ -9,7 +9,8 @@ const initialState = {
     isError: false,
     isSuccess: false,
     isLoading: false,
-    message: ''
+    message: '',
+    isSuccessForgotPassword: false,
 }
 
 // Login user
@@ -56,7 +57,21 @@ export const update = createAsyncThunk('auth/update', async (user, thunkAPI) => 
 
 export const logout = createAsyncThunk('auth/logout', async () => {
     await authService.logout()
-  })
+})
+
+// Forgot password
+export const forgotPassword = createAsyncThunk('auth/forgot-password', async (userData, thunkAPI) => {
+    try {
+        return await authService.forgotPassword(userData)
+    } catch (error) {
+        const message = (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+        ) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+})
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -115,6 +130,18 @@ export const authSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state) => {
                 state.user = null
+            })
+            .addCase(forgotPassword.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(forgotPassword.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccessForgotPassword = true
+            })
+            .addCase(forgotPassword.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
             })
     },
 })

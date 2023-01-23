@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { login, reset } from "../features/auth/authSlice"
+import { forgotPassword, reset } from "../features/auth/authSlice"
 import Spinner from "../components/Spinner"
 import {
   Button,
@@ -18,25 +18,18 @@ function FortgotPassword() {
   const { phoneOrEmail } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
+  const { user, isLoading, isError, isSuccessForgotPassword, message } = useSelector(
     (state) => state.auth
   )
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message)
+    if (isError) toast.error(message)
+    if (user) {
+      if (user.role === "GENERUS") navigate("/profile")
+      navigate("/")
     }
-
-    if (isSuccess || user) {
-      if (user.role === "GENERUS") {
-        navigate("/profile")
-      } else {
-        navigate("/")
-      }
-    }
-
     dispatch(reset())
-  }, [user, isError, isSuccess, message, navigate, dispatch])
+  }, [user, isError, message, navigate, dispatch])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -48,13 +41,10 @@ function FortgotPassword() {
   const onSubmit = (e) => {
     e.preventDefault()
     const userData = { userData: phoneOrEmail }
-    dispatch(login(userData))
+    dispatch(forgotPassword(userData))
   }
 
-  if (isLoading) {
-    return <Spinner />
-  }
-
+  if (isLoading) return <Spinner />
   return (
     <>
       <Typography align='center' variant='h4'>
@@ -79,7 +69,7 @@ function FortgotPassword() {
                     variant='standard'
                     fullWidth
                     required
-                    disabled={isSuccess}
+                    disabled={isSuccessForgotPassword}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -92,11 +82,11 @@ function FortgotPassword() {
                     variant='contained'
                     color='primary'
                     fullWidth
-                    disabled={isSuccess}
+                    disabled={isSuccessForgotPassword}
                   >
                     Mohon Reset Password
                   </Button>
-                  {isSuccess && (
+                  {isSuccessForgotPassword && (
                     <Typography mt={1} align='center' variant='subtitle1'>
                       Permohonan berhasil. Silakan hubungi pengurus PPD/PPK untuk mengetahui password baru.
                     </Typography>
