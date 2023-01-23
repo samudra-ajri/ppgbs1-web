@@ -10,6 +10,7 @@ import Profile from '../pages/Profile'
 import RegisterOptions from '../pages/RegisterOptions'
 import Event from '../pages/Event'
 import EditProfile from '../pages/EditProfile'
+import FortgotPassword from '../pages/FortgotPassword'
 
 function MainLayout() {
   return (
@@ -22,6 +23,7 @@ function MainLayout() {
         <Route path='/completion' element={<CompletionDashboard />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/forgot-password' element={<FortgotPassword />} />
         <Route path='/register' element={<RegisterOptions />} />
         <Route path='/events' element={<Event />} />
         <Route path='/' element={<Dashboard />} />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { login, reset } from "../features/auth/authSlice"
 import Spinner from "../components/Spinner"
@@ -13,12 +13,9 @@ import {
   Typography,
 } from "@mui/material"
 
-function Login() {
-  const [formData, setFormData] = useState({
-    phoneOrEmail: "",
-    password: "",
-  })
-  const { phoneOrEmail, password } = formData
+function FortgotPassword() {
+  const [formData, setFormData] = useState({ phoneOrEmail: "" })
+  const { phoneOrEmail } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -50,14 +47,7 @@ function Login() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-
-    const userData = {
-      userData: phoneOrEmail,
-      password,
-    }
-
-    if (e.currentTarget.id === "generus") userData.role = "GENERUS"
-
+    const userData = { userData: phoneOrEmail }
     dispatch(login(userData))
   }
 
@@ -68,7 +58,7 @@ function Login() {
   return (
     <>
       <Typography align='center' variant='h4'>
-        Login
+        Lupa Password
       </Typography>
 
       <Grid>
@@ -89,19 +79,7 @@ function Login() {
                     variant='standard'
                     fullWidth
                     required
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name='password'
-                    label='Password'
-                    placeholder='Password'
-                    value={password}
-                    onChange={onChange}
-                    type='password'
-                    variant='standard'
-                    fullWidth
-                    required
+                    disabled={isSuccess}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -114,29 +92,15 @@ function Login() {
                     variant='contained'
                     color='primary'
                     fullWidth
+                    disabled={isSuccess}
                   >
-                    Masuk Sebagai Generus
+                    Mohon Reset Password
                   </Button>
-                  <Button
-                    id='admin'
-                    onClick={onSubmit}
-                    size='large'
-                    style={{
-                      backgroundColor: "#0C0D0E",
-                      color: "white",
-                      margin: "5px auto",
-                    }}
-                    type='submit'
-                    variant='outlined'
-                    fullWidth
-                  >
-                    Selain Generus
-                  </Button>
-                  <Link to='/forgot-password'>
-                    <Typography mt={1} align='center' variant='subtitle1' color='#1D9BF0'>
-                      Lupa password?
+                  {isSuccess && (
+                    <Typography mt={1} align='center' variant='subtitle1'>
+                      Permohonan berhasil. Silakan hubungi pengurus PPD/PPK untuk mengetahui password baru.
                     </Typography>
-                  </Link>
+                  )}
                 </Grid>
               </Grid>
             </form>
@@ -147,4 +111,4 @@ function Login() {
   )
 }
 
-export default Login
+export default FortgotPassword
