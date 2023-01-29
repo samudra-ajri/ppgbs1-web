@@ -11,6 +11,7 @@ import RegisterOptions from '../pages/RegisterOptions'
 import Event from '../pages/Event'
 import EditProfile from '../pages/EditProfile'
 import FortgotPassword from '../pages/FortgotPassword'
+import Menu from '../pages/Menu'
 
 function MainLayout() {
   return (
@@ -26,7 +27,8 @@ function MainLayout() {
         <Route path='/forgot-password' element={<FortgotPassword />} />
         <Route path='/register' element={<RegisterOptions />} />
         <Route path='/events' element={<Event />} />
-        <Route path='/' element={<Dashboard />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/' element={<Menu />} />
       </Routes>
       <BottomNav />
     </>

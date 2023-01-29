@@ -8,6 +8,7 @@ import { useState } from 'react'
 import PopDialog from './PopDialog'
 import { deleteEvent } from '../features/listEvents/listEventsSlice'
 import { useDispatch } from 'react-redux'
+import stringCast from '../utils/stringCast'
 
 function EventCard(props) {
   const dispatch = useDispatch()
@@ -34,13 +35,6 @@ function EventCard(props) {
     dispatch(deleteEvent(event._id))
   }
 
-  const classTypesAttenders = {
-    CR: 'Cabe Rawit',
-    PR: 'Pra Remaja',
-    RM: 'Remaja',
-    PN: 'Pra Nikah'
-  }
-
   const isLoading = false
 
   const eventTime = () => {
@@ -52,25 +46,25 @@ function EventCard(props) {
     const startDayName = translate.days(moment(event.startDate).format('dddd'))
     if (startDate === endDate) {
       eventTime.keys = <>
-        <Typography variant='body2'>Hari</Typography>
-        <Typography variant='body2'>Tanggal</Typography>
-        <Typography variant='body2'>Jam</Typography>
+        <Typography sx={{fontSize: '12px'}}>Hari</Typography>
+        <Typography sx={{fontSize: '12px'}}>Tanggal</Typography>
+        <Typography sx={{fontSize: '12px'}}>Jam</Typography>
       </>
       eventTime.values = <>
-        <Typography variant='body2'>: {startDayName}</Typography>
-        <Typography variant='body2'>: {startDate}</Typography>
-        <Typography variant='body2'>: {startTime} - {endTime}</Typography>
+        <Typography sx={{fontSize: '12px'}}>: {startDayName}</Typography>
+        <Typography sx={{fontSize: '12px'}}>: {startDate}</Typography>
+        <Typography sx={{fontSize: '12px'}}>: {startTime} - {endTime}</Typography>
       </>
     } else {
       eventTime.keys = <>
-        <Typography variant='body2'>Hari</Typography>
-        <Typography variant='body2'>Mulai</Typography>
-        <Typography variant='body2'>Selesai</Typography>
+        <Typography sx={{fontSize: '12px'}}>Hari</Typography>
+        <Typography sx={{fontSize: '12px'}}>Mulai</Typography>
+        <Typography sx={{fontSize: '12px'}}>Selesai</Typography>
       </>
       eventTime.values =  <>
-        <Typography variant='body2'>: {startDayName}</Typography>
-        <Typography variant='body2'>: {startDate} pkl. {startTime}</Typography>
-        <Typography variant='body2'>: {endDate} pkl. {endTime}</Typography>
+        <Typography sx={{fontSize: '12px'}}>: {startDayName}</Typography>
+        <Typography sx={{fontSize: '12px'}}>: {startDate} pkl. {startTime}</Typography>
+        <Typography sx={{fontSize: '12px'}}>: {endDate} pkl. {endTime}</Typography>
       </>
     }
     return eventTime
@@ -90,8 +84,8 @@ function EventCard(props) {
               <Link to={user.role === 'GENERUS' ? `/c/event-presence/${event._id}` : `/c/event-details/${event._id}`} component={CardActionArea}>
                 <Grid container>
                   <Grid item>
-                    <Typography variant='h5'>
-                      {event.name}
+                    <Typography variant='body1'>
+                      <b>{event.name}</b>
                     </Typography>
                   </Grid>
                 </Grid>
@@ -99,18 +93,19 @@ function EventCard(props) {
 
                 <Grid container>
                   <Grid item xs={4}>
-                    <Typography variant='body2'>Room ID</Typography>
-                    { event.passCode && <Typography variant='body2'>Kode Akses</Typography>}
+                    <Typography sx={{fontSize: '12px'}}>Room ID</Typography>
+                    { event.passCode && <Typography sx={{fontSize: '12px'}}>Kode Akses</Typography>}
                     { eventTime().keys }
-                    <Typography variant='body2'>Lokasi</Typography>
-                    <Typography variant='body2'>Peserta</Typography>
+                    <Typography sx={{fontSize: '12px'}}>Lokasi</Typography>
+                    <Typography sx={{fontSize: '12px'}}>Peserta</Typography>
                   </Grid>
                   <Grid item xs={8}>
-                    <Typography variant='body2'>: {event.roomIdSlug.split('-').join(' ')}</Typography>
-                    { event.passCode && <Typography variant='body2'>: {event.passCode}</Typography>}
+                    <Typography sx={{fontSize: '12px'}}>: {event.roomIdSlug.split('-').join(' ')}</Typography>
+                    { event.passCode && <Typography sx={{fontSize: '12px'}}>: {event.passCode}</Typography>}
                     { eventTime().values }
-                    <Typography variant='body2'>: {event.location}</Typography>
-                    <Typography variant='body2'>: {event.classTypes.map(type => `${classTypesAttenders[type]} | `)}</Typography>
+                    <Typography sx={{fontSize: '12px'}}>: {event.location}</Typography>
+                    {/* <Typography sx={{fontSize: '12px'}}>: {event.classTypes.map(type => `${classTypesAttenders[type]} `)}</Typography> */}
+                    <Typography sx={{fontSize: '12px'}}>: {stringCast.classType(event.classTypes.join(', '))}</Typography>
                   </Grid>
                 </Grid>
 
