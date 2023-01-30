@@ -29,9 +29,9 @@ const logout = () => {
 const update = async (userData, token) => {
     const config = {
         headers: {
-          Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
-      }
+    }
     const response = await API.put(API_URL + 'me', userData, config)
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
@@ -45,12 +45,25 @@ const forgotPassword = async (userData) => {
     return response.data
 }
 
+// Reset password
+const resetPassword = async (data, token) => {
+    const { resetPasswordToken, newPassword } = data
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await API.put(API_URL + 'reset-password/' + resetPasswordToken, { newPassword }, config)
+    return response.data
+}
+
 const authService = {
     register,
     login,
     logout,
     update,
     forgotPassword,
+    resetPassword,
 }
 
 export default authService

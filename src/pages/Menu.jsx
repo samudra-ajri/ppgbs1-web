@@ -42,7 +42,7 @@ function Menu() {
             <PeopleListIcon fontSize='large' color='info'/>
             <Typography sx={{fontSize: '12px'}}>Users</Typography>
           </Grid>
-          <Grid item xs={4} textAlign='center' component={Link} to='#'>
+          <Grid item xs={4} textAlign='center' component={Link} to='/reset-passwords'>
             <RestPasswordIcon fontSize='large' color='info'/>
             <Typography sx={{fontSize: '12px'}}>Reset User Password</Typography>
           </Grid>

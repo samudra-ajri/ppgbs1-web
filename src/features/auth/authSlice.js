@@ -11,6 +11,7 @@ const initialState = {
     isLoading: false,
     message: '',
     isSuccessForgotPassword: false,
+    isSuccessResetPassword: false,
 }
 
 // Login user
@@ -36,7 +37,7 @@ export const register = createAsyncThunk('auth/register', async (user, thunkAPI)
             error.response.data &&
             error.response.data.message
         ) || error.message || error.toString()
-      return thunkAPI.rejectWithValue(message)
+        return thunkAPI.rejectWithValue(message)
     }
 })
 
@@ -51,7 +52,7 @@ export const update = createAsyncThunk('auth/update', async (user, thunkAPI) => 
             error.response.data &&
             error.response.data.message
         ) || error.message || error.toString()
-      return thunkAPI.rejectWithValue(message)
+        return thunkAPI.rejectWithValue(message)
     }
 })
 
@@ -69,7 +70,22 @@ export const forgotPassword = createAsyncThunk('auth/forgot-password', async (us
             error.response.data &&
             error.response.data.message
         ) || error.message || error.toString()
-      return thunkAPI.rejectWithValue(message)
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Reset password
+export const resetPassword = createAsyncThunk('auth/reset-password', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.resetPassword(data, token)
+    } catch (error) {
+        const message = (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+        ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
     }
 })
 
@@ -82,6 +98,8 @@ export const authSlice = createSlice({
             state.isSuccess = false
             state.isError = false
             state.message = ''
+            state.isSuccessForgotPassword = false
+            state.isSuccessResetPassword = false
         }
     },
     extraReducers: (builder) => {
@@ -134,11 +152,23 @@ export const authSlice = createSlice({
             .addCase(forgotPassword.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(forgotPassword.fulfilled, (state, action) => {
+            .addCase(forgotPassword.fulfilled, (state) => {
                 state.isLoading = false
                 state.isSuccessForgotPassword = true
             })
             .addCase(forgotPassword.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(resetPassword.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(resetPassword.fulfilled, (state) => {
+                state.isLoading = false
+                state.isSuccessResetPassword = true
+            })
+            .addCase(resetPassword.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

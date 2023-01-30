@@ -18,9 +18,8 @@ function FortgotPassword() {
   const { phoneOrEmail } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user, isLoading, isError, isSuccessForgotPassword, message } = useSelector(
-    (state) => state.auth
-  )
+  const { user, isLoading, isError, isSuccessForgotPassword, message } =
+    useSelector((state) => state.auth)
 
   useEffect(() => {
     if (isError) toast.error(message)
@@ -87,9 +86,15 @@ function FortgotPassword() {
                     Mohon Reset Password
                   </Button>
                   {isSuccessForgotPassword && (
-                    <Typography mt={1} align='center' variant='subtitle1'>
-                      Permohonan berhasil. Silakan hubungi pengurus PPD/PPK untuk mengetahui password baru.
-                    </Typography>
+                    <>
+                      <Typography mt={1} align='center' variant='body2' color='#198754'>
+                        <b>Permohonan berhasil.</b>
+                      </Typography>
+                      <Typography mt={1} align='center' variant='body2'>
+                        Silakan hubungi pengurus PPD/PPK
+                        untuk mengetahui password baru.
+                      </Typography>
+                    </>
                   )}
                 </Grid>
               </Grid>

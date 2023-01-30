@@ -11,6 +11,7 @@ import EventPresence from '../pages/EventPresence'
 import InputTargets from '../pages/InputTargets'
 import Profile from '../pages/Profile'
 import Register from '../pages/Register'
+import ResetPassword from '../pages/ResetPassword'
 
 function ChildLayout() {
   return (
@@ -25,6 +26,7 @@ function ChildLayout() {
         <Route path='/create-event' element={<CreateEvent />} />
         <Route path='/event-details/*' element={<EventDetails />} />
         <Route path='/event-presence/*' element={<EventPresence />} />
+        <Route path='/reset-passwords/*' element={<ResetPassword />} />
       </Routes>
       <Footer />
     </>

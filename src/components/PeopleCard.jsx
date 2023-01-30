@@ -37,7 +37,7 @@ function PeopleCard(props) {
               <Link to={`/c/profile/${user._id}`} component={CardActionArea}>
                 <Grid container>
                   <Grid item>
-                    <Typography variant='body1'>
+                    <Typography variant='body2'>
                       {user.name}
                     </Typography>
                   </Grid>

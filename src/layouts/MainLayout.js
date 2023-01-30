@@ -12,6 +12,7 @@ import Event from '../pages/Event'
 import EditProfile from '../pages/EditProfile'
 import FortgotPassword from '../pages/FortgotPassword'
 import Menu from '../pages/Menu'
+import ResetPasswordList from '../pages/ResetPasswordList'
 
 function MainLayout() {
   return (
@@ -28,6 +29,7 @@ function MainLayout() {
         <Route path='/register' element={<RegisterOptions />} />
         <Route path='/events' element={<Event />} />
         <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/reset-passwords' element={<ResetPasswordList />} />
         <Route path='/' element={<Menu />} />
       </Routes>
       <BottomNav />

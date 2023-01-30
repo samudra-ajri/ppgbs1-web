@@ -13,10 +13,10 @@ const initialState = {
 // Get users list
 export const getUsers = createAsyncThunk(
   'users/getAll',
-  async ({page, search, role}, thunkAPI) => {
+  async ({page, search, role, needresetpassword}, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await userService.getUsers(token, page, search, role)
+      return await userService.getUsers(token, page, search, role, needresetpassword)
     } catch (error) {
       const message =
         (error.response &&
@@ -32,10 +32,10 @@ export const getUsers = createAsyncThunk(
 // Get users list with paginate
 export const getUsersPaginate = createAsyncThunk(
   'users/getPaginate',
-  async ({page, search, role}, thunkAPI) => {
+  async ({page, search, role, needresetpassword}, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await userService.getUsers(token, page, search, role)
+      return await userService.getUsers(token, page, search, role, needresetpassword)
     } catch (error) {
       const message =
         (error.response &&
