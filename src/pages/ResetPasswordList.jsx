@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { getUsers, getUsersPaginate, reset } from "../features/users/userSlice"
+import { reset as resetAuth } from "../features/auth/authSlice"
 import PeopleCardResetPassword from "../components/PeopleCardResetPassword"
 
 function ResetPasswordList() {
@@ -19,6 +20,7 @@ function ResetPasswordList() {
     if (!user) navigate("/login")
     dispatch(getUsers({ page: 1, search, role, needresetpassword: true }))
     dispatch(reset())
+    dispatch(resetAuth())
   }, [user, search, role, navigate, dispatch])
 
   const loadMoreUsers = () => {
