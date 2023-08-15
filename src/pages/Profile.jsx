@@ -7,6 +7,7 @@ import { getCompletionsScores, getCompletionsScoresByUserId, reset } from '../fe
 import { getSubjectCategories } from '../features/subjectCategories/subjectCategorySlice'
 import { getUserById, reset as resetUser } from '../features/persons/personSlice'
 import StatisticsCard from '../components/StatisticsCard'
+import NeedUpdateCard from '../components/NeedUpdateCard'
 
 function Profile() {
   const dispatch = useDispatch()
@@ -60,6 +61,7 @@ function Profile() {
 
   return (
     <>
+      <NeedUpdateCard user={userId ? person : user} />
       {user ? <ProfileCard user={userId ? person : user} /> : <></>}
       {(!userId || (person?.role === 'GENERUS')) && <>
       <Typography variant='h6' sx={{ mb: 1 }}>Poin Pencapaian</Typography>
