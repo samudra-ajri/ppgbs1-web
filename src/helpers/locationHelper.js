@@ -13,6 +13,7 @@ const listDs = () => {
 }
 
 const listKlp = (ds) => {
+    if (ds === 'MOVING') return []
     if (ds === 'RIUNG BANDUNG') return locations['riung']
     return locations[ds.toLowerCase()]
 }

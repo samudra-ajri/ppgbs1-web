@@ -190,7 +190,7 @@ function EditProfile() {
                     name="ds"
                     placeholder="Ds"
                     label="Ds"
-                    value={ds}
+                    value={ds === 'MOVING' ? '' : ds}
                     onChange={onChange}
                     variant="standard"
                     align="left"
@@ -210,7 +210,7 @@ function EditProfile() {
                     name="klp"
                     placeholder="Klp"
                     label="Klp"
-                    value={klp}
+                    value={klp === 'MOVING' ? '' : klp }
                     onChange={onChange}
                     variant="standard"
                     align="left"
