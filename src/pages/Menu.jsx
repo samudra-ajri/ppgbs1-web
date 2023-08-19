@@ -5,9 +5,12 @@ import { Box, Grid, Typography } from "@mui/material"
 import stringCast from "../utils/stringCast"
 import BarIcon from "@mui/icons-material/EqualizerRounded"
 import DashboardIcon from "@mui/icons-material/DataUsageRounded"
-import PeopleListIcon from '@mui/icons-material/FaceOutlined';
+import PeopleListIcon from '@mui/icons-material/FaceOutlined'
 import EventIcon from "@mui/icons-material/EventRounded"
 import RestPasswordIcon from "@mui/icons-material/LockResetRounded"
+import DashboardActivity from "@mui/icons-material/TimelineRounded"
+
+import { kibanaUrl } from "../config"
 
 function Menu() {
   const dispatch = useDispatch()
@@ -45,6 +48,12 @@ function Menu() {
           <Grid item xs={4} textAlign='center' component={Link} to='/reset-passwords'>
             <RestPasswordIcon fontSize='large' color='info'/>
             <Typography sx={{fontSize: '12px'}}>Reset User Password</Typography>
+          </Grid>
+          <Grid item xs={4} textAlign='center'>
+            <a href={kibanaUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <DashboardActivity fontSize='large' color='info'/>
+              <Typography sx={{ fontSize: '12px' }}>Log Aktivitas</Typography>
+            </a>
           </Grid>
         </Grid>
       </Box>
