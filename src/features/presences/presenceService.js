@@ -13,6 +13,17 @@ const createPresence = async (data, token) => {
   return response.data
 }
 
+// Create presence by amdin
+const createPresenceByAdmin = async (data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.post(`${API_URL}admin`, data, config)
+  return response.data
+}
+
 // Get presence by room id
 const getPresencesByRoomId = async (data, token) => {
   const { page=1, roomId } = data
@@ -38,8 +49,9 @@ const isPresent = async (roomId, token) => {
 
 const presenceService = {
   createPresence,
+  createPresenceByAdmin,
   isPresent,
-  getPresencesByRoomId
+  getPresencesByRoomId,
 }
 
 export default presenceService
