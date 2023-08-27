@@ -24,6 +24,18 @@ const createPresenceByAdmin = async (data, token) => {
   return response.data
 }
 
+// Remove attender
+const removeAttender = async (data, token) => {
+  const { roomId, attenderId } = data
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.delete(`${API_URL}room/${roomId}/attender/${attenderId}`, config)
+  return response.data
+}
+
 // Get presence by room id
 const getPresencesByRoomId = async (data, token) => {
   const { page=1, roomId } = data
@@ -52,6 +64,7 @@ const presenceService = {
   createPresenceByAdmin,
   isPresent,
   getPresencesByRoomId,
+  removeAttender,
 }
 
 export default presenceService

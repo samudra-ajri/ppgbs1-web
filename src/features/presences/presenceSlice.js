@@ -56,6 +56,25 @@ export const createPresenceByAdmin = createAsyncThunk(
   }
 )
 
+// Create remove attender
+export const removeAttender = createAsyncThunk(
+  'presences/removeAttender',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await presenceService.removeAttender(data, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 // Check user presence status
 export const isPresent = createAsyncThunk(
   'presences/ispresent',
@@ -191,6 +210,21 @@ export const presenceSlice = createSlice({
       })
       .addCase(getPresencesByRoomIdPaginate.rejected, (state, action) => {
         state.isLoadingAttenders = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(removeAttender.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(removeAttender.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.attenders = state.attenders.filter(
+          (attender) => attender.user._id !== action.payload.id
+        )
+      })
+      .addCase(removeAttender.rejected, (state, action) => {
+        state.isLoading = false
         state.isError = true
         state.message = action.payload
       })

@@ -1,10 +1,13 @@
 import {
   Autocomplete,
+  Box,
   Button,
   Card,
   CardContent,
   CircularProgress,
   Grid,
+  IconButton,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material"
@@ -15,10 +18,12 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+import DeleteIcon from "@mui/icons-material/CloseOutlined"
 import {
   createPresenceByAdmin,
   getPresencesByRoomId,
   getPresencesByRoomIdPaginate,
+  removeAttender,
   reset,
 } from "../features/presences/presenceSlice"
 import translate from "../utils/translate"
@@ -26,22 +31,25 @@ import {
   getUsersPaginate,
   reset as resetSearch,
 } from "../features/users/userSlice"
+import PopDialog from "./PopDialog"
 
 function PresenceList(props) {
-  const { event } = props
+  const { event, user } = props
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { users } = useSelector((state) => state.users)
   const [page, setpage] = useState(2)
   const [search, setSearch] = useState("-")
   const [searchValue, setSearchValue] = useState(null)
+  const [openPopup, setOpenPopup] = useState(false)
+  const [removeId, setRemoveId] = useState("")
 
   const { isError, message, attenders, attendersCount, isSuccess, isLoading } =
     useSelector((state) => state.presences)
 
   useEffect(() => {
     if (isError) toast.error(message)
-    if (isSuccess) toast.success('behasil.')
+    if (isSuccess) toast.success("behasil.")
     dispatch(getPresencesByRoomId({ page: 1, roomId: event.roomId }))
     dispatch(reset())
   }, [isError, message, event.roomId, navigate, dispatch, isSuccess])
@@ -86,6 +94,15 @@ function PresenceList(props) {
       userId: searchValue?._id,
     }
     dispatch(createPresenceByAdmin(data))
+  }
+
+  const onClickRemove = () => {
+    const data = {
+      roomId: event.roomId,
+      attenderId: removeId,
+    }
+    dispatch(removeAttender(data))
+    setOpenPopup(false)
   }
 
   return (
@@ -173,23 +190,70 @@ function PresenceList(props) {
       >
         {attenders.map((attender) => (
           <Card key={attender.user._id} sx={{ mb: 0.5 }} align='left'>
-            <CardContent
-              sx={{ padding: 2, "&:last-child": { paddingBottom: 2 } }}
-            >
-              <Typography fontSize={10} component='p' color='text.secondary'>
-                {presenceTime(attender.time)}
-              </Typography>
-              <Typography variant='body1'>{attender.user.name}</Typography>
-              <Typography fontSize={10} component='p' color='text.secondary'>
-                {capitalize.words(`${attender.ds}, ${attender.klp}`)}
-              </Typography>
-              <Typography fontSize={10} component='p' color='text.secondary'>
-                {attender.sex === "male" ? "Laki-laki" : "Perempuan"}
-              </Typography>
-            </CardContent>
+            <Grid container>
+              <Grid item md={11} xs={10}>
+                <CardContent
+                  sx={{ padding: 2, "&:last-child": { paddingBottom: 2 } }}
+                >
+                  <Typography
+                    fontSize={10}
+                    component='p'
+                    color='text.secondary'
+                  >
+                    {presenceTime(attender.time)}
+                  </Typography>
+                  <Typography variant='body1'>{attender.user.name}</Typography>
+                  <Typography
+                    fontSize={10}
+                    component='p'
+                    color='text.secondary'
+                  >
+                    {capitalize.words(`${attender.ds}, ${attender.klp}`)}
+                  </Typography>
+                  <Typography
+                    fontSize={10}
+                    component='p'
+                    color='text.secondary'
+                  >
+                    {attender.sex === "male" ? "Laki-laki" : "Perempuan"}
+                  </Typography>
+                </CardContent>
+              </Grid>
+              {attender.createdBy === user._id ? (
+                <Grid item>
+                  <IconButton
+                    align='right'
+                    onClick={() => {
+                      setOpenPopup(true)
+                      setRemoveId(attender.user._id)
+                    }}
+                  >
+                    <DeleteIcon fontSize='medium' color='error' />
+                  </IconButton>
+                </Grid>
+              ) : ''}
+            </Grid>
           </Card>
         ))}
       </InfiniteScroll>
+
+      <PopDialog
+        title={'Hapus kehadiran?'}
+        openPopup={openPopup}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', height: 45 }}>
+          {isLoading ? (
+            <Grid align="center" sx={{ pt: 1.5 }}>
+              <CircularProgress size={20} />
+            </Grid>
+          ) : (
+            <Stack spacing={1} direction='row'>
+              <Button variant='outlined' color='error' onClick={onClickRemove}>Hapus</Button>
+              <Button variant='contained' onClick={() => setOpenPopup(false)}>Batal</Button>
+            </Stack>
+          )}
+        </Box>
+      </PopDialog>
     </>
   )
 }
