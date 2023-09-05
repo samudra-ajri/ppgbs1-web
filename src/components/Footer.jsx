@@ -7,7 +7,7 @@ function Footer() {
         align="center" 
         sx={{ color:'#76859B', fontSize: 10 }}
       >
-        <b>PIGARU</b> | Pusat Informasi Generus Bandung Selatan I
+        <b translate="no">PIGARU</b> | Pusat Informasi Generus Bandung Selatan I
       </Typography>
       </Paper>
   )
