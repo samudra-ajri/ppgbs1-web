@@ -13,6 +13,7 @@ import EditProfile from '../pages/EditProfile'
 import FortgotPassword from '../pages/FortgotPassword'
 import Menu from '../pages/Menu'
 import ResetPasswordList from '../pages/ResetPasswordList'
+import DecidePosition from '../pages/DecidePosition'
 
 function MainLayout() {
   return (
@@ -30,6 +31,7 @@ function MainLayout() {
         <Route path='/events' element={<Event />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/reset-passwords' element={<ResetPasswordList />} />
+        <Route path='/decide-position' element={<DecidePosition />} />
         <Route path='/' element={<Menu />} />
       </Routes>
       <BottomNav />

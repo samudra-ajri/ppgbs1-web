@@ -26,18 +26,8 @@ function Login() {
   )
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message)
-    }
-
-    if (isSuccess || user) {
-      if (user.role === "GENERUS") {
-        navigate("/profile")
-      } else {
-        navigate("/")
-      }
-    }
-
+    if (isError) toast.error(message)
+    if (isSuccess) navigate('/decide-position')
     dispatch(reset())
   }, [user, isError, isSuccess, message, navigate, dispatch])
 
@@ -50,14 +40,10 @@ function Login() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-
     const userData = {
       login: phoneOrEmail,
       password,
     }
-
-    if (e.currentTarget.id === "generus") userData.role = "GENERUS"
-
     dispatch(login(userData))
   }
 
