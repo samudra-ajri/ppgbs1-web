@@ -15,7 +15,14 @@ const register = async (userData) => {
 const login = async (userData) => {
     const response = await API.post(API_URL + 'login', userData)
     if (response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
+        const config = {
+            headers: {
+                Authorization: `Bearer ${response.data.data.token}`,
+            },
+        }
+        const profile = await API.get(API_URL + 'me', config)
+        const user = { ...response.data.data, ...profile.data.data }
+        localStorage.setItem('user', JSON.stringify(user))
     }
     return response.data
 }
