@@ -1,6 +1,6 @@
 import API from '../../api'
 
-const API_URL = 'api/users/'
+const API_URL = 'auths/'
 
 // Register user
 const register = async (userData) => {

@@ -52,7 +52,7 @@ function Login() {
     e.preventDefault()
 
     const userData = {
-      userData: phoneOrEmail,
+      login: phoneOrEmail,
       password,
     }
 
@@ -115,22 +115,7 @@ function Login() {
                     color='primary'
                     fullWidth
                   >
-                    Masuk Sebagai Generus
-                  </Button>
-                  <Button
-                    id='admin'
-                    onClick={onSubmit}
-                    size='large'
-                    style={{
-                      backgroundColor: "#0C0D0E",
-                      color: "white",
-                      margin: "5px auto",
-                    }}
-                    type='submit'
-                    variant='outlined'
-                    fullWidth
-                  >
-                    Selain Generus
+                    Masuk
                   </Button>
                   <Link to='/forgot-password'>
                     <Typography mt={1} align='center' variant='subtitle1' color='#1D9BF0'>
