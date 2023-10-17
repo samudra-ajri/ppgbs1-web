@@ -7,7 +7,10 @@ import {
   Grid,
   Typography,
 } from "@mui/material"
-import { Link } from "react-router-dom"
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom"
+import { decidePosition, reset } from "../features/auth/authSlice"
 
 function stringToColor(string) {
   let hash = 0;
@@ -39,10 +42,26 @@ function stringAvatar(name) {
 }
 
 function DecidePositionCard(props) {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const { alreadyDecidedPosition } = useSelector(
+    (state) => state.auth
+  )
+
+  useEffect(() => {
+    if (alreadyDecidedPosition ) navigate('/profile')
+    dispatch(reset())
+  }, [alreadyDecidedPosition, navigate, dispatch])
+
+  const handleClick = () => {
+    dispatch(decidePosition(position.positionId))
+  }
+
   const { position } = props
   return (
     <Container maxWidth="xs">
-      <Card sx={{ mb: 2, cursor: "pointer" }}>
+      <Card sx={{ mb: 2, cursor: "pointer" }} onClick={handleClick}>
         <CardContent>
           <Grid container>
             <Grid item xs={10} md={11}>

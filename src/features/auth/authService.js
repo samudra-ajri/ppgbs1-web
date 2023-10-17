@@ -68,6 +68,24 @@ const resetPassword = async (data, token) => {
     return response.data
 }
 
+// decide position
+const decidePosition = async (positionId, token) => {
+    try {
+        const switchPositionConfig = { headers: { Authorization: `Bearer ${token}` }}
+        const response = await API.post(API_URL + 'switch-position/', { positionId }, switchPositionConfig)
+        if (response.data) {
+            const config = { headers: { Authorization: `Bearer ${response.data.data.token}` }}
+            const profile = await API.get(API_URL + 'me', config)
+            const user = { ...response.data.data, ...profile.data.data }
+            user.alreadyDecidedPosition = true
+            localStorage.setItem('user', JSON.stringify(user))
+            return user
+        }
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 const authService = {
     register,
     login,
@@ -75,6 +93,7 @@ const authService = {
     update,
     forgotPassword,
     resetPassword,
+    decidePosition,
 }
 
 export default authService

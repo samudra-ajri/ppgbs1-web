@@ -25,7 +25,6 @@ function DecidePosition() {
       <Typography variant='h5' align='center' sx={{ pb: 4 }}>
         Login dengan Akun
       </Typography>
-      {console.log(user)}
       {user.positions.map((position) => (
         <DecidePositionCard position={position} key={position.positionId}/>
       ))}

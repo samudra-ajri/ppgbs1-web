@@ -6,6 +6,7 @@ const user = JSON.parse(localStorage.getItem('user'))
 
 const initialState = {
     user: user ? user : null,
+    alreadyDecidedPosition: user?.alreadyDecidedPosition ? user.alreadyDecidedPosition : false,
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -79,6 +80,21 @@ export const resetPassword = createAsyncThunk('auth/reset-password', async (data
     try {
         const token = thunkAPI.getState().auth.user.token
         return await authService.resetPassword(data, token)
+    } catch (error) {
+        const message = (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+        ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Decide position
+export const decidePosition = createAsyncThunk('auth/decide-position', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.decidePosition(data, token)
     } catch (error) {
         const message = (
             error.response &&
@@ -169,6 +185,18 @@ export const authSlice = createSlice({
                 state.isSuccessResetPassword = true
             })
             .addCase(resetPassword.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(decidePosition.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(decidePosition.fulfilled, (state) => {
+                state.isLoading = false
+                state.alreadyDecidedPosition = true
+            })
+            .addCase(decidePosition.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
