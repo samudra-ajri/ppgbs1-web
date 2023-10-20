@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import DecidePositionCard from "../components/DecidePositionCard"
-import { reset } from "../features/auth/authSlice"
+import { decidePosition, reset } from "../features/auth/authSlice"
 
 function DecidePosition() {
   const dispatch = useDispatch()
@@ -12,7 +12,12 @@ function DecidePosition() {
 
   useEffect(() => {
     if (!user) navigate("/login")
-    if (user.positions.length === 1 || alreadyDecidedPosition) navigate("/profile")
+
+    if (user.positions.length === 1) {
+      dispatch(decidePosition())
+      navigate("/profile")
+    }
+    if (alreadyDecidedPosition) navigate("/profile")
     dispatch(reset())
   }, [user, alreadyDecidedPosition, navigate, dispatch])
 
