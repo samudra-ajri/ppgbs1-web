@@ -164,6 +164,7 @@ export const authSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state) => {
                 state.user = null
+                state.alreadyDecidedPosition = false
             })
             .addCase(forgotPassword.pending, (state) => {
                 state.isLoading = true

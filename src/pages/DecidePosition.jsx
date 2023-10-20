@@ -8,13 +8,11 @@ import { reset } from "../features/auth/authSlice"
 function DecidePosition() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { user } = useSelector((state) => state.auth)
-  const { alreadyDecidedPosition } = useSelector((state) => state.auth)
+  const { user, alreadyDecidedPosition } = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (!user) navigate("/login")
-    if (user.positions.length === 1) navigate("/profile")
-    if (alreadyDecidedPosition) navigate("/profile")
+    if (user.positions.length === 1 || alreadyDecidedPosition) navigate("/profile")
     dispatch(reset())
   }, [user, alreadyDecidedPosition, navigate, dispatch])
 
