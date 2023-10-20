@@ -1,24 +1,22 @@
 import { Typography } from "@mui/material"
 import { useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import DecidePositionCard from "../components/DecidePositionCard"
-// import PresenceForm from '../components/PresenceForm'
-// import { getEvent, reset } from '../features/event/eventSlice'
+import { reset } from "../features/auth/authSlice"
 
 function DecidePosition() {
-  // const eventId = window.location.pathname.split('/')[3]
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  // const { event, isSuccess } = useSelector((state) => state.events)
+  const { alreadyDecidedPosition } = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (!user) navigate("/login")
-    // dispatch(getEvent(eventId))
-    // dispatch(reset())
-    // }, [user, eventId, navigate, dispatch])
-  }, [user, navigate])
+    if (user.positions.length === 1) navigate("/profile")
+    if (alreadyDecidedPosition) navigate("/profile")
+    dispatch(reset())
+  }, [user, alreadyDecidedPosition, navigate, dispatch])
 
   return (
     <>
@@ -26,7 +24,7 @@ function DecidePosition() {
         Login dengan Akun
       </Typography>
       {user.positions.map((position) => (
-        <DecidePositionCard position={position} key={position.positionId}/>
+        <DecidePositionCard position={position} key={position.positionId} />
       ))}
     </>
   )
