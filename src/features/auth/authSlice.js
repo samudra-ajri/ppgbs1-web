@@ -94,8 +94,7 @@ export const resetPassword = createAsyncThunk('auth/reset-password', async (data
 export const decidePosition = createAsyncThunk('auth/decide-position', async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        if (data) return await authService.decidePosition(data, token)
-        return user
+        return await authService.decidePosition(data, token)
     } catch (error) {
         const message = (
             error.response &&
@@ -124,10 +123,10 @@ export const authSlice = createSlice({
             .addCase(register.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(register.fulfilled, (state, action) => {
+            .addCase(register.fulfilled, (state) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = null
             })
             .addCase(register.rejected, (state, action) => {
                 state.isLoading = false

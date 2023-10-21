@@ -14,7 +14,7 @@ function DecidePosition() {
     if (!user) navigate("/login")
 
     if (user.positions.length === 1) {
-      dispatch(decidePosition())
+      dispatch(decidePosition(user.positions[0].positionId))
       navigate("/profile")
     }
     if (alreadyDecidedPosition) navigate("/profile")

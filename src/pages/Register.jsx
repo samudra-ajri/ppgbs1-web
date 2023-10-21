@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { register, reset } from "../features/auth/authSlice"
+import { getppd, getppk } from "../features/organizations/organizationSlice"
 import {
   Button,
   Card,
@@ -14,6 +15,7 @@ import {
   Typography,
 } from "@mui/material"
 import BackHeader from "../components/BackHeader"
+import { getPositions } from "../features/positions/positionSlice"
 
 function Register() {
   const navigate = useNavigate()
@@ -33,6 +35,8 @@ function Register() {
     position1: "",
     position2: "",
   })
+  const [ppd, setPPD] = useState("")
+  const [ppk, setPPK] = useState("")
 
   const {
     name,
@@ -52,11 +56,43 @@ function Register() {
     (state) => state.auth
   )
 
+  const {
+    ppd: ppdList,
+    ppk: ppkList,
+    isError: orgError,
+    message: orgMessage,
+  } = useSelector((state) => state.organizations)
+
+  const {
+    positions: positionsList,
+    isError: positionError,
+    message: positionMessage,
+  } = useSelector((state) => state.positions)
+
   useEffect(() => {
     if (isError) toast.error(message)
-    if (isSuccess || user) navigate("/decide-position")
+    if (orgError) toast.error(orgMessage)
+    if (positionError) toast.error(positionMessage)
+    if (user) navigate("/decide-position")
+    if (isSuccess) {
+      toast.success('Hore! Registrasi berhasil.')
+      navigate("/login")
+    }
+    if (!ppdList) dispatch(getppd())
     dispatch(reset())
-  }, [user, isError, isSuccess, message, navigate, dispatch])
+  }, [
+    user,
+    isError,
+    orgError,
+    positionError,
+    isSuccess,
+    message,
+    orgMessage,
+    positionMessage,
+    ppdList,
+    navigate,
+    dispatch,
+  ])
 
   const addPositionForm = () => {
     setPositionsCount([...positionsCount, positionsCount.length + 1])
@@ -76,21 +112,40 @@ function Register() {
     }))
   }
 
+  const onChangePPD = (e) => {
+    const ppdId = e.target.value
+    setPPD(ppdId)
+    setPPK("")
+    dispatch(getppk(ppdId))
+  }
+
+  const onChangePPK = (e) => {
+    const orgId = e.target.value
+    setPPK(orgId)
+    setFormData((prevState) => ({
+      ...prevState,
+      position1: "",
+      position2: "",
+    }))
+    dispatch(getPositions(orgId))
+  }
+
   const onSubmit = (e) => {
     e.preventDefault()
     if (password !== password2) {
       toast.error("Konfirmasi password tidak sesuai")
     } else {
+      const month = monthBirth.toString().padStart(2, '0')
+      const day = dayBirth.toString().padStart(2, '0')
       const userData = {
         name,
         phone,
         sex,
         isMuballigh,
-        dayBirth,
-        monthBirth,
-        yearBirth,
+        birthdate: `${yearBirth}-${month}-${day}`,
         password,
-        positionIds: [position1, position2],
+        password2,
+        positionIds: [position1, position2].filter(item => item !== ''),
       }
 
       dispatch(register(userData))
@@ -156,8 +211,8 @@ function Register() {
                       required
                     >
                       {[
-                        { value: "male", label: "Laki-Laki" },
-                        { value: "female", label: "Perempuan" },
+                        { value: 1, label: "Laki-Laki" },
+                        { value: 0, label: "Perempuan" },
                       ].map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
@@ -247,48 +302,47 @@ function Register() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      name='ds'
-                      label='Ds'
-                      placeholder='Ds'
-                      value={sex}
-                      onChange={onChange}
+                      name='ppd'
+                      label='PPD'
+                      placeholder='PPD'
+                      value={ppd}
+                      onChange={onChangePPD}
                       variant='standard'
                       align='left'
                       select
                       fullWidth
                       required
                     >
-                      {[
-                        { value: "GENERUS", label: "Generus" },
-                        { value: "PENGAJAR", label: "Pengajar" },
-                      ].map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {ppdList?.data.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.name.replace("PPD ", "")}
                         </MenuItem>
                       ))}
                     </TextField>
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      name='klp'
-                      label='Klp'
-                      placeholder='Klp'
-                      value={sex}
-                      onChange={onChange}
+                      name='ppk'
+                      label='PPK'
+                      placeholder='PPK'
+                      value={ppk}
+                      onChange={onChangePPK}
                       variant='standard'
                       align='left'
+                      disabled={ppkList ? false : true}
                       select
                       fullWidth
                       required
                     >
-                      {[
-                        { value: "GENERUS", label: "Generus" },
-                        { value: "PENGAJAR", label: "Pengajar" },
-                      ].map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
+                      {ppkList ? (
+                        ppkList?.data.map((option) => (
+                          <MenuItem key={option.id} value={option.id}>
+                            {option.name.replace("PPK ", "")}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem></MenuItem>
+                      )}
                     </TextField>
                   </Grid>
                   <Grid item xs={12}>
@@ -332,14 +386,15 @@ function Register() {
                         fullWidth
                         required
                       >
-                        {[
-                          { value: "GENERUS", label: "Generus" },
-                          { value: "PENGAJAR", label: "Pengajar" },
-                        ].map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
+                        {positionsList ? (
+                          positionsList?.data.map((option) => (
+                            <MenuItem key={option.id} value={option.id}>
+                              {option.type}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <MenuItem></MenuItem>
+                        )}
                       </TextField>
                     </Grid>
                   ))}
