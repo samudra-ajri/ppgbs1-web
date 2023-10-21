@@ -1,105 +1,63 @@
-import { Card, CardContent, Grid, IconButton, Typography } from '@mui/material'
-import EditIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
-import capitalize from 'capitalize'
-import moment from 'moment'
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Card, CardContent, Grid, IconButton, Typography } from "@mui/material"
+import EditIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined"
+import moment from "moment"
+import { useNavigate } from "react-router-dom"
 
 function ProfileCard(props) {
   const navigate = useNavigate()
 
   const user = props.user
-  const { user: loggedUser } = useSelector((state) => state.auth)
-  const age = moment(user?.birthdate).fromNow().split(' ')[0]
-
-  const muballighLabel = () => {
-    if (user?.role === 'MT') return 'Muballigh Tugasan'
-    if (user?.role === 'MS') return 'Muballigh Setempat'
-  }
+  const age = moment(user?.birthdate).fromNow().split(" ")[0]
 
   const maritalStatus = () => {
-    if (user?.isMarried) return 'sudah menikah'
-    return 'lajang'
+    if (user?.isMarried) return "sudah menikah"
+    return "lajang"
   }
 
   const onClick = () => {
-    navigate('/profile/edit')
+    navigate("/profile/edit")
   }
 
   return (
     <>
-
-      <Card sx={{ marginBottom: 2, justifyItems: 'center' }}>
+      <Card sx={{ marginBottom: 2, justifyItems: "center" }}>
         <CardContent>
           <Grid container>
             <Grid item xs={10} md={11}>
-              <Typography variant="h5" component="div">
+              <Typography variant='h5' component='div'>
                 {user?.name}
               </Typography>
-              <Typography color="text.secondary">{user?.phone && user.phone}</Typography>
-              <Typography color="text.secondary">{user?.email && user.email}</Typography>
-              <Typography sx={{ mt: 1.5 }} variant="body2">
-                {capitalize.words(user?.ds + ', ' + user?.klp)}
-                <br />
-                {(user?.sex === 'male' ? 'Laki-laki' : 'Perempuan') + `${user?.role === 'GENERUS' ? ', ' + age + ' tahun' : ', ' + maritalStatus()}`}
-                <br />
+              <Typography color='text.secondary'>
+                {user?.currentPosition[0].positionName}
               </Typography>
-              <Typography variant="body2">
-                {user?.role !== 'GENERUS' && `Asal: ${user?.hometown}`}
+              <Typography color='text.secondary'></Typography>
+              <Typography color='text.secondary'>
+                {user?.email && user.email}
+              </Typography>
+              <Typography variant='body2'>
+                {user?.phone && user.phone}
+              </Typography>
+              <Typography variant='body2'>
+                {user?.email && user.email}
+              </Typography>
+              <Typography variant='body2'>
+                {(user?.sex === 1 ? "Laki-laki" : "Perempuan") +
+                  `${
+                    user?.currentPosition[0].type === "GENERUS"
+                      ? ", " + age + " tahun"
+                      : ", " + maritalStatus()
+                  }`}
+                <br />
               </Typography>
             </Grid>
-            {user._id === loggedUser._id &&
-              <Grid item>
-                <IconButton align='right' onClick={onClick}>
-                  <EditIcon fontSize='medium' />
-                </IconButton>
-              </Grid>
-            }
+            <Grid item>
+              <IconButton align='right' onClick={onClick}>
+                <EditIcon fontSize='medium' />
+              </IconButton>
+            </Grid>
           </Grid>
         </CardContent>
       </Card>
-
-      {(user?.role === 'MT' || user?.role === 'MS') &&
-        <>
-          <Card sx={{ marginBottom: 2, justifyItems: 'center' }}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                Kemuballighan
-              </Typography>
-              <Typography variant="h6" component="div">
-                {muballighLabel()}
-              </Typography>
-              <Typography variant="body2">
-                {`Tahun lulus Kertosono: ${user?.kertosonoYear}`}
-              </Typography>
-            </CardContent>
-          </Card>
-
-          <Card sx={{ marginBottom: 2, justifyItems: 'center' }}>
-            <CardContent>
-              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                Pendidikan
-              </Typography>
-              <Typography variant="body2">
-                {`Asal pondok: ${capitalize.words(user?.pondok)}`}
-                <br />
-                {`Pendidikan formal: ${capitalize.words(user?.education)}`}
-                <br />
-                <br />
-                Hadits besar:
-                <br />
-                {
-                  user?.greatHadiths?.length !== 0
-                    ? user?.greatHadiths.map(hadith => (
-                      <>- {hadith} <br /></>
-                    ))
-                    : '-'
-                }
-              </Typography>
-            </CardContent>
-          </Card>
-        </>
-      }
     </>
   )
 }
