@@ -1,6 +1,6 @@
 import API from '../../api'
 
-const API_URL = '/api/completions/'
+const API_URL = 'completions/'
 
 // Get all users completions scores
 const getAllCompletionsScores = async (filters, token) => {
@@ -25,9 +25,22 @@ const getCompletionsScoresByUserId = async (token, userId) => {
   return response.data
 }
 
+// Get sum user completions
+const getSumCompletions = async (token, filters) => {
+  const { structure, userId } = filters
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(API_URL + `sum/${structure}/users/${userId}`, config)
+  return response.data
+}
+
 const completionScoreService = {
   getCompletionsScoresByUserId,
-  getAllCompletionsScores
+  getAllCompletionsScores,
+  getSumCompletions,
 }
 
 export default completionScoreService

@@ -3,6 +3,7 @@ import completionScoreService from './completionScoreService'
 
 const initialState = {
   completionScores: {},
+  sumCompletions: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -16,6 +17,25 @@ export const getAllCompletionsScores = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token
       return await completionScoreService.getAllCompletionsScores(filters, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Get sum users completions
+export const getSumCompletions = createAsyncThunk(
+  'completions/sumCompletions',
+  async (filters, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await completionScoreService.getSumCompletions(token, filters)
     } catch (error) {
       const message =
         (error.response &&
@@ -45,6 +65,19 @@ export const completionScoreSlice = createSlice({
         state.completionScores = action.payload
       })
       .addCase(getAllCompletionsScores.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getSumCompletions.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getSumCompletions.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.sumCompletions = action.payload.data
+      })
+      .addCase(getSumCompletions.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
