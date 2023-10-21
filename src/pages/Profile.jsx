@@ -24,12 +24,54 @@ function Profile() {
     (state) => state.completionScores
   )
   const [completionStructure, setCompletionStructure] = useState("grade")
+  const [completionGrade, setCompletionGrade] = useState("")
+  const [completionSubject, setCompletionSubject] = useState("")
+  const [completionCategory, setCompletionCategory] = useState("")
 
   useEffect(() => {
     if (!user) navigate("/login")
-    dispatch(getSumCompletions({ structure: "grade", userId: user.id }))
+    dispatch(
+      getSumCompletions({
+        structure: completionStructure,
+        userId: user.id,
+        grade: completionGrade,
+        subject: completionSubject,
+        category: completionCategory,
+      })
+    )
     dispatch(reset())
-  }, [user, userId, navigate, dispatch])
+  }, [
+    user,
+    userId,
+    completionStructure,
+    completionGrade,
+    completionSubject,
+    completionCategory,
+    navigate,
+    dispatch,
+  ])
+
+  const completionClickHandler = (sumCompletion) => {
+    switch (completionStructure) {
+      case "grade":
+        setCompletionStructure("subject")
+        setCompletionGrade(sumCompletion)
+        break
+
+      case "subject":
+        setCompletionStructure("category")
+        setCompletionSubject(sumCompletion)
+        break
+
+      case "category":
+        setCompletionStructure("subcategory")
+        setCompletionCategory(sumCompletion)
+        break
+
+      default:
+        break
+    }
+  }
 
   return (
     <>
@@ -42,15 +84,24 @@ function Profile() {
           </CardContent>
         </Card>
       ) : (
-        <Grid container spacing={1} sx={{ mt: 1, mb: 1 }}>
+        <Grid container spacing={2}>
           {sumCompletions.map((sumCompletion, index) => (
-            <SumCompletionCard
+            <Grid
+              item
+              xs={6}
               key={index}
-              percentage={sumCompletion.percentage}
-              title={sumCompletion[completionStructure]}
-              link='#'
-              structure={completionStructure}
-            />
+              onClick={() =>
+                completionClickHandler(sumCompletion[completionStructure])
+              }
+            >
+              <SumCompletionCard
+                key={index}
+                percentage={sumCompletion.percentage}
+                title={sumCompletion[completionStructure]}
+                link='#'
+                structure={completionStructure}
+              />
+            </Grid>
           ))}
         </Grid>
       )}

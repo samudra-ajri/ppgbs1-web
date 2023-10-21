@@ -27,13 +27,21 @@ const getCompletionsScoresByUserId = async (token, userId) => {
 
 // Get sum user completions
 const getSumCompletions = async (token, filters) => {
-  const { structure, userId } = filters
+  const { structure, userId, grade, subject, category, subcategory } = filters
+
+  const queryFilters = []
+  if (grade) queryFilters.push(`grade=${grade}`)
+  if (subject) queryFilters.push(`subject=${subject}`)
+  if (category) queryFilters.push(`category=${category}`)
+  if (subcategory) queryFilters.push(`subcategory=${subcategory}`)
+  console.log(`${queryFilters.join('&')}`);
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + `sum/${structure}/users/${userId}`, config)
+  const response = await API.get(API_URL + `sum/${structure}/users/${userId}?${queryFilters.join('&')}`, config)
   return response.data
 }
 
