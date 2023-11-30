@@ -5,6 +5,7 @@ import ProfileIcon from '@mui/icons-material/FaceOutlined'
 import DashboardIcon from '@mui/icons-material/DataUsageRounded'
 import EventIcon from '@mui/icons-material/EventRounded'
 import HomeIcon from '@mui/icons-material/HomeMaxRounded'
+import CompletionIcon from '@mui/icons-material/GradingOutlined'
 import ArrowBackIcon from '@mui/icons-material/ArrowBackRounded'
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
@@ -28,13 +29,14 @@ function BottomNav() {
           }}
         >
           {user && alreadyDecidedPosition ? (
-              user.role !== 'GENERUS' ? [
+              user.currentPosition.type !== 'GENERUS' ? [
                 <BottomNavigationAction key="menu" component={Link} to="/" label="Menu" value="menu" icon={pathname === '/' ? <HomeIcon fontSize="small"/> : <ArrowBackIcon fontSize="small"/>} />,
                 <BottomNavigationAction key="dashboard" component={Link} to="/dashboard" label="Dashboard" value="dashboard" icon={<DashboardIcon fontSize="small"/>} />,
-                <BottomNavigationAction key="Kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon fontSize="small"/>} />,
+                <BottomNavigationAction key="kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon fontSize="small"/>} />,
               ] : [
-                <BottomNavigationAction key="profile" component={Link} to="/profile" label="Akun Saya" value="profile" icon={<ProfileIcon fontSize="small"/>} />,
-                <BottomNavigationAction key="Kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon fontSize="small"/>} />,
+                <BottomNavigationAction key="kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon fontSize="small"/>} />,
+                <BottomNavigationAction key="capaian" component={Link} to="/user-completion" label="Capaian Materi" value="capaian" icon={<CompletionIcon fontSize="small"/>} />,
+                <BottomNavigationAction key="profile" component={Link} to="/profile" label="Profile" value="profile" icon={<ProfileIcon fontSize="small"/>} />,
               ]
           ) : (
             user && !alreadyDecidedPosition ? [] :

@@ -28,7 +28,7 @@ function ProfileCard(props) {
                 {user?.name}
               </Typography>
               <Typography color='text.secondary'>
-                {user?.currentPosition[0].positionName}
+                {user?.currentPosition.positionName}
               </Typography>
               <Typography color='text.secondary'></Typography>
               <Typography color='text.secondary'>
@@ -43,7 +43,7 @@ function ProfileCard(props) {
               <Typography variant='body2'>
                 {(user?.sex === 1 ? "Laki-laki" : "Perempuan") +
                   `${
-                    user?.currentPosition[0].type === "GENERUS"
+                    user?.currentPosition.type === "GENERUS"
                       ? ", " + age + " tahun"
                       : ", " + maritalStatus()
                   }`}

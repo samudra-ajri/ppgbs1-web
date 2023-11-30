@@ -14,6 +14,7 @@ import FortgotPassword from '../pages/FortgotPassword'
 import Menu from '../pages/Menu'
 import ResetPasswordList from '../pages/ResetPasswordList'
 import DecidePosition from '../pages/DecidePosition'
+import UserCompletion from '../pages/UserCompletion'
 
 function MainLayout() {
   return (
@@ -25,6 +26,7 @@ function MainLayout() {
         <Route path='/users' element={<Generus />} />
         <Route path='/completion' element={<CompletionDashboard />} />
         <Route path='/profile' element={<Profile />} />
+        <Route path='/user-completion' element={<UserCompletion />} />
         <Route path='/login' element={<Login />} />
         <Route path='/forgot-password' element={<FortgotPassword />} />
         <Route path='/register' element={<Register />} />
