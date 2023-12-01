@@ -18,7 +18,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (!user) navigate('/login')
-    if (user?.role === 'GENERUS') navigate('/profile')
+    if (user?.role === 'GENERUS') navigate('/user-completion')
     dispatch(getDashboard(filters))
   }, [user, filters, navigate, dispatch])
 

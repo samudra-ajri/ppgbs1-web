@@ -24,7 +24,7 @@ function FortgotPassword() {
   useEffect(() => {
     if (isError) toast.error(message)
     if (user) {
-      if (user.role === "GENERUS") navigate("/profile")
+      if (user.role === "GENERUS") navigate("/user-completion")
       navigate("/")
     }
     dispatch(reset())

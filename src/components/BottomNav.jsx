@@ -33,6 +33,7 @@ function BottomNav() {
                 <BottomNavigationAction key="menu" component={Link} to="/" label="Menu" value="menu" icon={pathname === '/' ? <HomeIcon fontSize="small"/> : <ArrowBackIcon fontSize="small"/>} />,
                 <BottomNavigationAction key="dashboard" component={Link} to="/dashboard" label="Dashboard" value="dashboard" icon={<DashboardIcon fontSize="small"/>} />,
                 <BottomNavigationAction key="kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon fontSize="small"/>} />,
+                <BottomNavigationAction key="profile" component={Link} to="/profile" label="Profile" value="profile" icon={<ProfileIcon fontSize="small"/>} />,
               ] : [
                 <BottomNavigationAction key="kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon fontSize="small"/>} />,
                 <BottomNavigationAction key="capaian" component={Link} to="/user-completion" label="Capaian Materi" value="capaian" icon={<CompletionIcon fontSize="small"/>} />,

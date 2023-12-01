@@ -39,7 +39,7 @@ function CreateEvent() {
 
   useEffect(() => {
     if (!user) navigate('/login')
-    if (user?.role === 'GENERUS') navigate('/profile')
+    if (user?.role === 'GENERUS') navigate('/user-completion')
     if (isError) {
       toast.error(message)
     }

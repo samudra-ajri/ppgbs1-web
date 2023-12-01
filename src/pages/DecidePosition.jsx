@@ -15,9 +15,9 @@ function DecidePosition() {
 
     if (user.positions.length === 1) {
       dispatch(decidePosition(user.positions[0].positionId))
-      navigate("/profile")
+      navigate("/user-completion")
     }
-    if (alreadyDecidedPosition) navigate("/profile")
+    if (alreadyDecidedPosition) navigate("/user-completion")
     dispatch(reset())
   }, [user, alreadyDecidedPosition, navigate, dispatch])
 
