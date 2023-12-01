@@ -43,10 +43,10 @@ export const register = createAsyncThunk('auth/register', async (user, thunkAPI)
 })
 
 // Update my profile
-export const update = createAsyncThunk('auth/update', async (user, thunkAPI) => {
+export const update = createAsyncThunk('auth/update', async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await authService.update(user, token)
+        return await authService.update(data, token)
     } catch (error) {
         const message = (
             error.response &&

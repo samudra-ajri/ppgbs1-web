@@ -6,7 +6,6 @@ import CompletionDashboard from '../pages/CompletionDashboard'
 import Dashboard from '../pages/Dashboard'
 import Generus from '../pages/Generus'
 import Login from '../pages/Login'
-import Profile from '../pages/Profile'
 import Register from '../pages/Register'
 import Event from '../pages/Event'
 import EditProfile from '../pages/EditProfile'
@@ -21,11 +20,10 @@ function MainLayout() {
     <>
       <Header />
       <Routes>
-        <Route path='/profile/edit' element={<EditProfile />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/users' element={<Generus />} />
         <Route path='/completion' element={<CompletionDashboard />} />
-        <Route path='/profile' element={<Profile />} />
+        <Route path='/profile' element={<EditProfile />} />
         <Route path='/user-completion' element={<UserCompletion />} />
         <Route path='/login' element={<Login />} />
         <Route path='/forgot-password' element={<FortgotPassword />} />

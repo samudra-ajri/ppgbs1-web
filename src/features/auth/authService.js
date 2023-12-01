@@ -40,11 +40,11 @@ const update = async (userData, token) => {
             Authorization: `Bearer ${token}`,
         },
     }
-    const response = await API.put(API_URL + 'me', userData, config)
+    const response = await API.put('users/me', userData, config)
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
+        return decidePosition(userData.newPositionId, token)
     }
-    return response.data
 }
 
 // Forogt password
