@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import ProfileCard from "../components/ProfileCard"
+import EditProfile from "./EditProfile"
 import {
   reset,
 } from "../features/completionScores/completionScoreSlice"
@@ -19,7 +19,7 @@ function Profile() {
 
   return (
     <>
-      <ProfileCard user={user} />
+      <EditProfile user={user} />
     </>
   )
 }

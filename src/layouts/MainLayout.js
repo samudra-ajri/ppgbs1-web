@@ -8,12 +8,12 @@ import Generus from '../pages/Generus'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Event from '../pages/Event'
-import EditProfile from '../pages/EditProfile'
 import FortgotPassword from '../pages/FortgotPassword'
 import Menu from '../pages/Menu'
 import ResetPasswordList from '../pages/ResetPasswordList'
 import DecidePosition from '../pages/DecidePosition'
 import UserCompletion from '../pages/UserCompletion'
+import Profile from '../pages/Profile'
 
 function MainLayout() {
   return (
@@ -23,7 +23,7 @@ function MainLayout() {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/users' element={<Generus />} />
         <Route path='/completion' element={<CompletionDashboard />} />
-        <Route path='/profile' element={<EditProfile />} />
+        <Route path='/profile' element={<Profile />} />
         <Route path='/user-completion' element={<UserCompletion />} />
         <Route path='/login' element={<Login />} />
         <Route path='/forgot-password' element={<FortgotPassword />} />

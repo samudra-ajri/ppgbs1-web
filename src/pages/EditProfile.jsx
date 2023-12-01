@@ -15,16 +15,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-import BackHeader from "../components/BackHeader"
+
 import moment from "moment"
 
-function EditProfile() {
+function EditProfile(props) {
+  const { user } = props
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { user, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  )
+  const { isError, isSuccess, message } = useSelector((state) => state.auth)
 
   const {
     ppd: ppdList,
@@ -156,13 +155,12 @@ function EditProfile() {
   const onLogout = () => {
     dispatch(logout())
     dispatch(reset())
-    navigate('/')
+    navigate("/")
   }
 
   return (
     <>
-      <BackHeader title='Profile' />
-      <Typography align='center' variant='h4'>
+      <Typography variant='h6' align='center' sx={{ mb: 1 }}>
         Profile
       </Typography>
 
