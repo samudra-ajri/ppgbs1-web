@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { update, reset } from "../features/auth/authSlice"
+import { logout, update, reset } from "../features/auth/authSlice"
 import { getppd, getppk } from "../features/organizations/organizationSlice"
 import { getPositions } from "../features/positions/positionSlice"
 
@@ -151,6 +151,12 @@ function EditProfile() {
 
     dispatch(update(userData))
     setIsFormChanged(false)
+  }
+
+  const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())
+    navigate('/')
   }
 
   return (
@@ -365,6 +371,16 @@ function EditProfile() {
                   >
                     Ubah
                   </Button>
+                  <Typography
+                    mt={1}
+                    align='center'
+                    variant='subtitle1'
+                    color='red'
+                    style={{ cursor: "pointer", fontWeight: "bold" }}
+                    onClick={onLogout}
+                  >
+                    Logout
+                  </Typography>
                 </Grid>
               </Grid>
             </form>
