@@ -76,7 +76,6 @@ function UserCompletion() {
   return (
     <>
       <ProfileCard user={user} />
-      <Typography variant='body'>Capaian Materi</Typography>
       {!isSuccess ? (
         <Card align='center'>
           <CardContent>
