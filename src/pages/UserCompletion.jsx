@@ -7,7 +7,6 @@ import {
   CardContent,
   CircularProgress,
   Grid,
-  Typography,
 } from "@mui/material"
 import {
   getSumCompletions,
