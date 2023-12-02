@@ -8,8 +8,10 @@ import MainLayout from './layouts/MainLayout'
 const theme = createTheme({
   typography: {
     fontFamily: [
-      'Varela Round', 
-      'sans-serif'
+      'OpenSans',
+      'Arial',
+      'Helvetica',
+      'sans-serif',
     ].join(",")
   },
   palette: {
