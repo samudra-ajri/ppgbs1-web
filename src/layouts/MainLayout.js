@@ -14,6 +14,7 @@ import ResetPasswordList from '../pages/ResetPasswordList'
 import DecidePosition from '../pages/DecidePosition'
 import UserCompletion from '../pages/UserCompletion'
 import Profile from '../pages/Profile'
+import Footer from '../components/Footer'
 
 function MainLayout() {
   return (
@@ -34,6 +35,7 @@ function MainLayout() {
         <Route path='/decide-position' element={<DecidePosition />} />
         <Route path='/' element={<Menu />} />
       </Routes>
+      <Footer />
       <BottomNav />
     </>
   )
