@@ -36,12 +36,12 @@ function UserCompletion() {
       ) : (
         <Grid container spacing={2}>
           {sumCompletions.map((sumCompletion, index) => (
-            <Grid item xs={6} key={index} onClick={() => {}}>
+            <Grid item xs={6} key={index}>
               <SumCompletionCard
                 key={index}
                 percentage={sumCompletion.percentage}
                 title={sumCompletion.category}
-                link='#'
+                link={`/c/targets/${sumCompletion.category}`}
               />
             </Grid>
           ))}
