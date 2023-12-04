@@ -34,7 +34,6 @@ const getSumCompletions = async (token, filters) => {
   if (subject) queryFilters.push(`subject=${subject}`)
   if (category) queryFilters.push(`category=${category}`)
   if (subcategory) queryFilters.push(`subcategory=${subcategory}`)
-  console.log(`${queryFilters.join('&')}`);
 
   const config = {
     headers: {

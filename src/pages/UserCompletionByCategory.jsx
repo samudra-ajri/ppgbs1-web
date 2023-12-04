@@ -1,94 +1,81 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import BackHeader from '../components/BackHeader'
-import { getSubjectsByCategory, reset as resetSubject } from '../features/subjects/subjectSlice'
-import TargetCard from '../components/TargetCard'
-import { CircularProgress, Typography } from '@mui/material'
-import { Box } from '@mui/system'
-import LinearProgressWithLabel from '../components/LinearProgressWithLabel'
-import { getCompletionsByCategory, getUserCompletionsByCategory, reset } from '../features/completions/completionSlice'
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import BackHeader from "../components/BackHeader"
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  Typography,
+} from "@mui/material"
+import { Box } from "@mui/system"
+import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
+import SumCompletionCard from "../components/SumCompletionCard"
+import {
+  getSumCompletions,
+  reset,
+} from "../features/completionScores/completionScoreSlice"
 
 function UserCompletionByCategory() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const rawTitle = window.location.pathname.split('/')
-  const title = rawTitle[3]
-  const userId = rawTitle[4]
+  const pathnames = window.location.pathname.split("/")
+  const category = pathnames[3]
   const { user } = useSelector((state) => state.auth)
-  const { subjects, isLoading: isLoadingSubjects } = useSelector(
-    (state) => state.subjects
-  )
-  const { completions, isSuccess, isLoading: isLoadingCompletions } = useSelector(
-    (state) => state.completions
+  const { sumCompletions, isSuccess } = useSelector(
+    (state) => state.completionScores
   )
 
   useEffect(() => {
-    if (!user) navigate('/login')
-    if (userId) {
-      dispatch(getUserCompletionsByCategory({ title, userId }))
-    } else {
-      dispatch(getCompletionsByCategory(title))
-    }
-    dispatch(getSubjectsByCategory(title))
+    if (!user) navigate("/login")
+    dispatch(
+      getSumCompletions({
+        structure: "subcategory",
+        userId: user.id,
+        category: category,
+      })
+    )
     dispatch(reset())
-    dispatch(resetSubject())
-  }, [user, title, userId, navigate, dispatch])
+  }, [user, navigate, dispatch, category])
 
-  const listSubjects = (subjects) => {
-    if (Object.keys(subjects).length !== 0) return subjects.subjects
-    return []
-  }
-
-  const listCompletions = (completions) => {
-    if (Object.keys(completions).length !== 0) return completions.completions
-    return []
-  }
-
-  const getCompletionBySubject = (completions, subjectId) => {
-    if (completions && completions.length !== 0) return completions.find(({ subject }) => subject === subjectId)
-    return {}
-  }
-
-  const isLoading = () => {
-    if (isLoadingSubjects && isLoadingCompletions) return true
-    return false
-  }
-
-  const categoryPoin = () => {
-    if (
-      Object.keys(subjects).length !== 0 &&
-      Object.keys(completions).length !== 0
-    ) return completions.totalPoin.total / subjects.totalPoin * 100
-    return 0
+  const totalCategoryPercentage = () => {
+    const totalCompletionCount = sumCompletions?.reduce((acc, curr) => acc + curr.completionCount, 0)
+    const totalMaterialCount = sumCompletions?.reduce((acc, curr) => acc + curr.materialCount, 0)
+    const totalPercentage = (totalCompletionCount / totalMaterialCount) * 100
+    return Number(totalPercentage.toFixed(2))
   }
 
   return (
     <>
-      <BackHeader title={title} />
+      <BackHeader title={category} />
       <Box mb={2}>
-        <Typography variant="h7" component="b">
+        <Typography variant='h7' component='b'>
           Total
         </Typography>
-        <LinearProgressWithLabel value={
-          isLoading() ? 0 : categoryPoin()
-        } />
+        <LinearProgressWithLabel
+          value={isSuccess ? totalCategoryPercentage() : 0}
+        />
       </Box>
       {!isSuccess ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <CircularProgress />
-        </Box>
+        <Card align='center'>
+          <CardContent>
+            <CircularProgress size='3rem' />
+          </CardContent>
+        </Card>
       ) : (
-        <Box mb={5}>
-          {listSubjects(subjects).map((subject) => (
-            <TargetCard
-              key={subject.name}
-              userId={userId}
-              subject={subject}
-              completion={getCompletionBySubject(listCompletions(completions), subject._id)}
-            />
+        <Grid container spacing={2}>
+          {sumCompletions.map((sumCompletion, index) => (
+            <Grid item xs={6} key={index}>
+              <SumCompletionCard
+                key={index}
+                percentage={sumCompletion.percentage}
+                title={sumCompletion.subcategory}
+                link={`/c/user-completion/${sumCompletion.subcategory}`}
+              />
+            </Grid>
           ))}
-        </Box>
+        </Grid>
       )}
     </>
   )
