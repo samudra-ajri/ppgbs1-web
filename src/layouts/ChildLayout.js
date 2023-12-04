@@ -12,6 +12,7 @@ import InputTargets from '../pages/InputTargets'
 import Profile from '../pages/Profile'
 import Register from '../pages/Register'
 import ResetPassword from '../pages/ResetPassword'
+import UserCompletionByCategory from '../pages/UserCompletionByCategory'
 
 function ChildLayout() {
   return (
@@ -19,6 +20,7 @@ function ChildLayout() {
       <Routes>
         <Route exact path='/details/*' element={<InputTargets />} />
         <Route path='/targets/*' element={<DetailTargets />} />
+        <Route path='/user-completion/*' element={<UserCompletionByCategory />} />
         <Route path='/profile/*' element={<><BackHeader title='Profil' /><Profile /></>} />
         <Route path='/targets-completed/*' element={<CompletedTargets />} />
         <Route path='/details-completed/*' element={<CompletedDetails />} />

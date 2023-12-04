@@ -41,7 +41,7 @@ function UserCompletion() {
                 key={index}
                 percentage={sumCompletion.percentage}
                 title={sumCompletion.category}
-                link={`/c/targets/${sumCompletion.category}`}
+                link={`/c/user-completion/${sumCompletion.category}`}
               />
             </Grid>
           ))}
