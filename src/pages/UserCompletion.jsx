@@ -12,7 +12,6 @@ import SumCompletionCard from "../components/SumCompletionCard"
 function UserCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const userId = window.location.pathname.split("/")[3]
   const { user } = useSelector((state) => state.auth)
   const { sumCompletions, isSuccess } = useSelector(
     (state) => state.completionScores
@@ -22,7 +21,7 @@ function UserCompletion() {
     if (!user) navigate("/login")
     dispatch(getSumCompletions({ structure: "category", userId: user.id }))
     dispatch(reset())
-  }, [user, userId, navigate, dispatch])
+  }, [user, navigate, dispatch])
 
   return (
     <>
