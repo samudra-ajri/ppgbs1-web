@@ -10,7 +10,7 @@ function SumCompletionCard(props) {
           <Typography variant='body2' component='div'>
             {props.title}
           </Typography>
-          <LinearProgressWithLabel value={props.percentage} />
+          {props.structure !== 'material' && <LinearProgressWithLabel value={props.percentage} />}
         </CardContent>
       </Link>
     </Card>
