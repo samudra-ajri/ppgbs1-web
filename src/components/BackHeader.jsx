@@ -46,8 +46,8 @@ function BackHeader(props) {
             >
               <BackIcon />
             </IconButton>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <b>{capitalize.words(translate(props.title))}</b>
+            <Typography component="div" sx={{ flexGrow: 1 }}>
+              {capitalize.words(translate(props.title))}
             </Typography>
             <Button
               onClick={handleClick}
