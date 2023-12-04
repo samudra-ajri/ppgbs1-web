@@ -1,15 +1,15 @@
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import BackHeader from "../components/BackHeader"
 import {
+  Box,
   Card,
   CardContent,
   CircularProgress,
   Grid,
   Typography,
 } from "@mui/material"
-import { Box } from "@mui/system"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import BackHeader from "../components/BackHeader"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import SumCompletionCard from "../components/SumCompletionCard"
 import {
@@ -17,11 +17,11 @@ import {
   reset,
 } from "../features/completionScores/completionScoreSlice"
 
-function UserCompletionByCategory() {
+function InputCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const pathnames = window.location.pathname.split("/")
-  const category = pathnames[3]
+  const subcategory = pathnames[3]
   const { user } = useSelector((state) => state.auth)
   const { sumCompletions, isSuccess } = useSelector(
     (state) => state.completionScores
@@ -31,24 +31,30 @@ function UserCompletionByCategory() {
     if (!user) navigate("/login")
     dispatch(
       getSumCompletions({
-        structure: "subcategory",
+        structure: "material",
         userId: user.id,
-        category: category,
+        subcategory: subcategory,
       })
     )
     dispatch(reset())
-  }, [user, navigate, dispatch, category])
+  }, [user, navigate, dispatch, subcategory])
 
   const totalCategoryPercentage = () => {
-    const totalCompletionCount = sumCompletions?.reduce((acc, curr) => acc + curr.completionCount, 0)
-    const totalMaterialCount = sumCompletions?.reduce((acc, curr) => acc + curr.materialCount, 0)
+    const totalCompletionCount = sumCompletions?.reduce(
+      (acc, curr) => acc + curr.completionCount,
+      0
+    )
+    const totalMaterialCount = sumCompletions?.reduce(
+      (acc, curr) => acc + curr.materialCount,
+      0
+    )
     const totalPercentage = (totalCompletionCount / totalMaterialCount) * 100
     return Number(totalPercentage.toFixed(2))
   }
 
   return (
     <>
-      <BackHeader title={category} />
+      <BackHeader title={subcategory.replace(/%20/g, " ")} />
       <Box mb={2}>
         <Typography variant='h7' component='b'>
           Total
@@ -66,12 +72,14 @@ function UserCompletionByCategory() {
       ) : (
         <Grid container spacing={2}>
           {sumCompletions.map((sumCompletion, index) => (
-            <Grid item xs={6} key={index}>
+            <Grid item xs={12} key={index}>
               <SumCompletionCard
                 key={index}
                 percentage={sumCompletion.percentage}
-                title={sumCompletion.subcategory}
-                link={`/c/detail-completion/${sumCompletion.subcategory}`}
+                title={sumCompletion.material}
+                link='#'
+                structure='material'
+                grade={sumCompletion.grade}
               />
             </Grid>
           ))}
@@ -81,4 +89,4 @@ function UserCompletionByCategory() {
   )
 }
 
-export default UserCompletionByCategory
+export default InputCompletion
