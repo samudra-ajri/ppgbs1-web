@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import BackHeader from '../components/BackHeader'
-import Footer from '../components/Footer'
 import CompletedDetails from '../pages/CompletedDetails'
 import CompletedTargets from '../pages/CompletedTargets'
 import CreateEvent from '../pages/CreateEvent'
@@ -32,7 +31,6 @@ function ChildLayout() {
         <Route path='/event-presence/*' element={<EventPresence />} />
         <Route path='/reset-passwords/*' element={<ResetPassword />} />
       </Routes>
-      <Footer />
     </>
   )
 }

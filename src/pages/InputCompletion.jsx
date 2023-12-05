@@ -1,18 +1,14 @@
 import {
   Box,
-  Button,
   Card,
   CardContent,
-  Chip,
   CircularProgress,
-  Drawer,
   Grid,
-  IconButton,
+  MenuItem,
+  TextField,
   Typography,
 } from "@mui/material"
-import FilterListIcon from "@mui/icons-material/FilterList"
-import CloseIcon from "@mui/icons-material/Close"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import BackHeader from "../components/BackHeader"
@@ -33,6 +29,7 @@ function InputCompletion() {
   const { sumCompletions, isSuccess } = useSelector(
     (state) => state.completionScores
   )
+  const [filterGrade, setFilterGrade] = useState("initial")
 
   useEffect(() => {
     if (!user) navigate("/login")
@@ -55,8 +52,24 @@ function InputCompletion() {
       (acc, curr) => acc + curr.materialCount,
       0
     )
-    const totalPercentage = (totalCompletionCount / totalMaterialCount) * 100
+    const totalPercentage =
+      totalCompletionCount && totalMaterialCount
+        ? (totalCompletionCount / totalMaterialCount) * 100
+        : 0
     return Number(totalPercentage.toFixed(2))
+  }
+
+  const onChangeFilter = (e) => {
+    const grade = e.target.value === "initial" ? null : e.target.value
+    setFilterGrade(e.target.value)
+    dispatch(
+      getSumCompletions({
+        structure: "material",
+        userId: user.id,
+        subcategory: subcategory,
+        grade: grade,
+      })
+    )
   }
 
   return (
@@ -78,47 +91,26 @@ function InputCompletion() {
         </Card>
       ) : (
         <>
-          <Button
+          <TextField
+            name='grade'
+            label='Filter Kelas'
+            value={filterGrade}
+            onChange={onChangeFilter}
+            variant='outlined'
+            align='left'
             size='small'
-            variant='contained'
-            color='inherit'
-            startIcon={<FilterListIcon />}
+            select
+            fullWidth
           >
-            Filter
-          </Button>
-
-          <Drawer anchor='left' open={true} onClose={() => {}}>
-            <Box
-              sx={{ width: 300, padding: 3 }}
-              role='presentation'
-              onClick={() => {}}
-              onKeyDown={() => {}}
-            >
-              <IconButton aria-label='close'>
-                <CloseIcon />
-              </IconButton>
-              <Typography align='center'>
-                <b>Filter</b>
-              </Typography>
-              <Typography mt={2} mb={1}>
-                Kelas
-              </Typography>
-              {Object.keys(gradeEnum).map((grade) => (
-                <Chip
-                  variant='outlined'
-                  key={grade}
-                  label={
-                    <Typography sx={{ fontSize: 12 }}>
-                      {gradeEnum[grade]}
-                    </Typography>
-                  }
-                  name={grade}
-                  onClick={() => {}}
-                  sx={{ ml: 0, mr: 1, mb: 1 }}
-                />
-              ))}
-            </Box>
-          </Drawer>
+            <MenuItem key='initial' value='initial'>
+              Semua kelas
+            </MenuItem>
+            {Object.keys(gradeEnum).map((option) => (
+              <MenuItem key={option} value={option}>
+                {gradeEnum[option]}
+              </MenuItem>
+            ))}
+          </TextField>
 
           <Grid mt={0.1} container spacing={2}>
             {sumCompletions.map((sumCompletion, index) => (
@@ -133,6 +125,13 @@ function InputCompletion() {
                 />
               </Grid>
             ))}
+            <Grid item xs={12}>
+              {sumCompletions?.length === 0 && (
+                <Typography align='center' variant='body2'>
+                  Tidak ada target materi pada kelas ini.
+                </Typography>
+              )}
+            </Grid>
           </Grid>
         </>
       )}

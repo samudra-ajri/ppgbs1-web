@@ -399,11 +399,11 @@ function Register() {
                     </Grid>
                   ))}
 
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <Button
                       size='medium'
                       style={{ margin: "20px auto" }}
-                      variant='contained'
+                      variant='outlined'
                       color='inherit'
                       disabled={positionsCount.length < 2}
                       onClick={removePositionForm}
@@ -412,11 +412,11 @@ function Register() {
                     </Button>
                   </Grid>
 
-                  <Grid item xs={4}>
+                  <Grid item xs={6}>
                     <Button
                       size='medium'
                       style={{ margin: "20px 5px" }}
-                      variant='contained'
+                      variant='outlined'
                       color='inherit'
                       disabled={positionsCount.length >= 2}
                       onClick={addPositionForm}
