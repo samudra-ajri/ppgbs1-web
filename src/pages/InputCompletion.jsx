@@ -1,11 +1,17 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
+  Chip,
   CircularProgress,
+  Drawer,
   Grid,
+  IconButton,
   Typography,
 } from "@mui/material"
+import FilterListIcon from "@mui/icons-material/FilterList"
+import CloseIcon from "@mui/icons-material/Close"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -16,6 +22,7 @@ import {
   getSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
+import gradeEnum from "../enums/gradeEnum"
 
 function InputCompletion() {
   const dispatch = useDispatch()
@@ -70,20 +77,64 @@ function InputCompletion() {
           </CardContent>
         </Card>
       ) : (
-        <Grid container spacing={2}>
-          {sumCompletions.map((sumCompletion, index) => (
-            <Grid item xs={12} key={index}>
-              <SumCompletionCard
-                key={index}
-                percentage={sumCompletion.percentage}
-                title={sumCompletion.material}
-                link='#'
-                structure='material'
-                grade={sumCompletion.grade}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        <>
+          <Button
+            size='small'
+            variant='contained'
+            color='inherit'
+            startIcon={<FilterListIcon />}
+          >
+            Filter
+          </Button>
+
+          <Drawer anchor='left' open={true} onClose={() => {}}>
+            <Box
+              sx={{ width: 300, padding: 3 }}
+              role='presentation'
+              onClick={() => {}}
+              onKeyDown={() => {}}
+            >
+              <IconButton aria-label='close'>
+                <CloseIcon />
+              </IconButton>
+              <Typography align='center'>
+                <b>Filter</b>
+              </Typography>
+              <Typography mt={2} mb={1}>
+                Kelas
+              </Typography>
+              {Object.keys(gradeEnum).map((grade) => (
+                <Chip
+                  variant='outlined'
+                  key={grade}
+                  label={
+                    <Typography sx={{ fontSize: 12 }}>
+                      {gradeEnum[grade]}
+                    </Typography>
+                  }
+                  name={grade}
+                  onClick={() => {}}
+                  sx={{ ml: 0, mr: 1, mb: 1 }}
+                />
+              ))}
+            </Box>
+          </Drawer>
+
+          <Grid mt={0.1} container spacing={2}>
+            {sumCompletions.map((sumCompletion, index) => (
+              <Grid item xs={12} key={index}>
+                <SumCompletionCard
+                  key={index}
+                  percentage={sumCompletion.percentage}
+                  title={sumCompletion.material}
+                  link='#'
+                  structure='material'
+                  grade={sumCompletion.grade}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </>
       )}
     </>
   )
