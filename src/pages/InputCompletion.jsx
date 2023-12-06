@@ -24,7 +24,8 @@ function InputCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const pathnames = window.location.pathname.split("/")
-  const subcategory = pathnames[3]
+  const category = pathnames[3]
+  const subcategory = pathnames[4]
   const { user } = useSelector((state) => state.auth)
   const { sumCompletions, isSuccess } = useSelector(
     (state) => state.completionScores
@@ -72,6 +73,8 @@ function InputCompletion() {
     )
   }
 
+  const isQuranHaditsCategory = category === "Alquran" || category === "Hadits"
+
   return (
     <>
       <BackHeader title={subcategory.replace(/%20/g, " ")} />
@@ -91,37 +94,41 @@ function InputCompletion() {
         </Card>
       ) : (
         <>
-          <TextField
-            name='grade'
-            label='Filter Kelas'
-            value={filterGrade}
-            onChange={onChangeFilter}
-            variant='outlined'
-            align='left'
-            size='small'
-            select
-            fullWidth
-          >
-            <MenuItem key='initial' value='initial'>
-              Semua kelas
-            </MenuItem>
-            {Object.keys(gradeEnum).map((option) => (
-              <MenuItem key={option} value={option}>
-                {gradeEnum[option]}
+          {isQuranHaditsCategory ? (
+            <Typography>Halaman {category}:</Typography>
+          ) : (
+            <TextField
+              name='grade'
+              label='Filter Kelas'
+              value={filterGrade}
+              onChange={onChangeFilter}
+              variant='outlined'
+              align='left'
+              size='small'
+              select
+              fullWidth
+            >
+              <MenuItem key='initial' value='initial'>
+                Semua kelas
               </MenuItem>
-            ))}
-          </TextField>
+              {Object.keys(gradeEnum).map((option) => (
+                <MenuItem key={option} value={option}>
+                  {gradeEnum[option]}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
 
-          <Grid mt={0.1} container spacing={2}>
+          <Grid mt={0.1} pb={10} container spacing={2}>
             {sumCompletions.map((sumCompletion, index) => (
-              <Grid item xs={12} key={index}>
+              <Grid item xs={isQuranHaditsCategory ? 3 : 12} key={index}>
                 <SumCompletionCard
                   key={index}
                   percentage={sumCompletion.percentage}
                   title={sumCompletion.material}
                   link='#'
                   structure='material'
-                  grade={sumCompletion.grade}
+                  grade={isQuranHaditsCategory ? null : sumCompletion.grade}
                 />
               </Grid>
             ))}

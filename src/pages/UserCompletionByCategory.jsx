@@ -64,14 +64,14 @@ function UserCompletionByCategory() {
           </CardContent>
         </Card>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container pb={10} spacing={2}>
           {sumCompletions.map((sumCompletion, index) => (
             <Grid item xs={6} key={index}>
               <SumCompletionCard
                 key={index}
                 percentage={sumCompletion.percentage}
                 title={sumCompletion.subcategory}
-                link={`/c/detail-completion/${sumCompletion.subcategory}`}
+                link={`/c/detail-completion/${category}/${sumCompletion.subcategory}`}
               />
             </Grid>
           ))}

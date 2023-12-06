@@ -8,7 +8,7 @@ function SumCompletionCard(props) {
     <Card>
       <Link to={props.link} component={CardActionArea}>
         <CardContent>
-          {props.structure === "material" && (
+          {(props.grade || props.grade === 0) && (
             <Typography variant='caption' display='block' gutterBottom>
               kelas: {gradeEnum[props.grade]}
             </Typography>
