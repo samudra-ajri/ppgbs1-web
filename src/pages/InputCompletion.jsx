@@ -74,6 +74,9 @@ function InputCompletion() {
   }
 
   const isQuranHaditsCategory = category === "Alquran" || category === "Hadits"
+  const isPageNumber = (string) => {
+    return /^\d+$/.test(string)
+  }
 
   return (
     <>
@@ -121,7 +124,11 @@ function InputCompletion() {
 
           <Grid mt={0.1} pb={10} container spacing={2}>
             {sumCompletions.map((sumCompletion, index) => (
-              <Grid item xs={isQuranHaditsCategory ? 3 : 12} key={index}>
+              <Grid
+                item
+                xs={isQuranHaditsCategory && isPageNumber(sumCompletion.material) ? 3 : 12}
+                key={index}
+              >
                 <SumCompletionCard
                   key={index}
                   percentage={sumCompletion.percentage}
@@ -129,6 +136,8 @@ function InputCompletion() {
                   link='#'
                   structure='material'
                   grade={isQuranHaditsCategory ? null : sumCompletion.grade}
+                  backgroundColor={sumCompletion?.completionCount && '#2E7D32'}
+                  fontColor={sumCompletion?.completionCount && '#F0F6F0'}
                 />
               </Grid>
             ))}
