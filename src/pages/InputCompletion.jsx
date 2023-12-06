@@ -112,7 +112,7 @@ function InputCompletion() {
               fullWidth
             >
               <MenuItem key='initial' value='initial'>
-                Semua kelas
+                Semua Kelas
               </MenuItem>
               {Object.keys(gradeEnum).map((option) => (
                 <MenuItem key={option} value={option}>
@@ -127,6 +127,7 @@ function InputCompletion() {
               <Grid
                 item
                 xs={isQuranHaditsCategory && isPageNumber(sumCompletion.material) ? 3 : 12}
+                md={isQuranHaditsCategory && isPageNumber(sumCompletion.material) ? 2 : 12}
                 key={index}
               >
                 <SumCompletionCard
