@@ -139,6 +139,17 @@ function InputCompletion() {
     console.log(removeCompletions)
   }
 
+  const isModified = () => {
+    if (!initialData) return false
+    const inputKeys = Object.keys(inputs)
+    const initialDataKeys = Object.keys(initialData.completionInputs)
+    if (inputKeys.length !== initialDataKeys.length) return false
+    for (const key of inputKeys) {
+      if (inputs[key] !== initialData.completionInputs[key]) return false
+    }
+    return true
+  }
+
   const isQuranHaditsCategory = category === "Alquran" || category === "Hadits"
   const isPageNumber = (string) => {
     return /^\d+$/.test(string)
@@ -213,23 +224,25 @@ function InputCompletion() {
                 Pilih Semua
               </Button>
             </Grid>
-            <Grid item>
-              <Button
-                // disabled={isModified()}
-                sx={{ fontSize: 11 }}
-                variant='outlined'
-                onClick={resetInputs}
-              >
-                Reset pilihan
-              </Button>
-            </Grid>
             <Grid item xs style={{ flexGrow: 1 }}></Grid> {/* Spacer item */}
             <Grid item>
               <Button
-                // disabled={isModified()}
+                disabled={isModified()}
                 sx={{ fontSize: 11 }}
-                variant='outlined'
+                variant='contained'
+                onClick={resetInputs}
+                color='error'
+              >
+                Batal
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                disabled={isModified()}
+                sx={{ fontSize: 11 }}
+                variant='contained'
                 onClick={saveInputs}
+                color='success'
               >
                 Simpan
               </Button>
