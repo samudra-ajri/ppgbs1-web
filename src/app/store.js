@@ -17,6 +17,7 @@ import listEventsReducer from '../features/listEvents/listEventsSlice'
 import presencesReducer from '../features/presences/presenceSlice'
 import organizationsReducer from '../features/organizations/organizationSlice'
 import positionsReducer from '../features/positions/positionSlice'
+import initialDataReducer from '../features/initialData/initialDataSlice'
 
 export const store = configureStore({
   reducer: {
@@ -38,5 +39,6 @@ export const store = configureStore({
     presences: presencesReducer,
     organizations: organizationsReducer,
     positions: positionsReducer,
+    initialData: initialDataReducer,
   },
 })

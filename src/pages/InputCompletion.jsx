@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CircularProgress,
@@ -19,6 +20,7 @@ import {
   reset,
 } from "../features/completionScores/completionScoreSlice"
 import gradeEnum from "../enums/gradeEnum"
+import { createInitialData } from "../features/initialData/initialDataSlice"
 
 function InputCompletion() {
   const dispatch = useDispatch()
@@ -27,10 +29,13 @@ function InputCompletion() {
   const category = pathnames[3]
   const subcategory = pathnames[4]
   const { user } = useSelector((state) => state.auth)
+  const { initialData } = useSelector((state) => state.initialData)
   const { sumCompletions, isSuccess } = useSelector(
     (state) => state.completionScores
   )
   const [filterGrade, setFilterGrade] = useState("initial")
+  const [inputs, setInputs] = useState({})
+  const [removeInputs, setRemoveInputs] = useState({})
 
   useEffect(() => {
     if (!user) navigate("/login")
@@ -43,6 +48,18 @@ function InputCompletion() {
     )
     dispatch(reset())
   }, [user, navigate, dispatch, subcategory])
+
+  useEffect(() => {
+    if (sumCompletions) {
+      const completionInputs = sumCompletions.reduce((acc, item) => {
+        acc[item.materialId] = item.completionCount
+        return acc
+      }, {})
+
+      dispatch(createInitialData({ completionInputs }))
+      setInputs(completionInputs)
+    }
+  }, [dispatch, sumCompletions])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
@@ -73,9 +90,67 @@ function InputCompletion() {
     )
   }
 
+  const onClickInput = (completion) => {
+    if (inputs[completion.materialId]) {
+      setInputs((prevState) => ({
+        ...prevState,
+        [completion.materialId]: 0,
+      }))
+      if (initialData.completionInputs[completion.materialId])
+        setRemoveInputs((prevState) => ({
+          ...prevState,
+          [completion.materialId]: 1,
+        }))
+    } else {
+      setInputs((prevState) => ({
+        ...prevState,
+        [completion.materialId]: 1,
+      }))
+      setRemoveInputs((prevState) => ({
+        ...prevState,
+        [completion.materialId]: 0,
+      }))
+    }
+  }
+
+  const selectAllInputs = () => {
+    const allInputs = sumCompletions.reduce((acc, item) => {
+      acc[item.materialId] = 1
+      return acc
+    }, {})
+    setRemoveInputs({})
+    setInputs(allInputs)
+  }
+
+  const resetInputs = () => {
+    setRemoveInputs({})
+    setInputs(initialData.completionInputs)
+  }
+
+  const saveInputs = () => {
+    const newCompletions = Object.keys(inputs)
+      .filter((key) => inputs[key] === 1)
+      .map((key) => parseInt(key))
+    console.log(newCompletions)
+
+    const removeCompletions = Object.keys(removeInputs)
+      .filter((key) => removeInputs[key] === 1)
+      .map((key) => parseInt(key))
+    console.log(removeCompletions)
+  }
+
   const isQuranHaditsCategory = category === "Alquran" || category === "Hadits"
   const isPageNumber = (string) => {
     return /^\d+$/.test(string)
+  }
+
+  const cardColor = (sumCompletion) => {
+    const background = inputs[sumCompletion.materialId] && "#2E7D32"
+    const font = inputs[sumCompletion.materialId] && "#F0F6F0"
+    return {
+      background,
+      font,
+    }
   }
 
   return (
@@ -122,13 +197,61 @@ function InputCompletion() {
             </TextField>
           )}
 
+          <Grid
+            container
+            spacing={1}
+            direction='row'
+            alignItems='center'
+            mt={3}
+          >
+            <Grid item>
+              <Button
+                sx={{ fontSize: 11 }}
+                variant='contained'
+                onClick={selectAllInputs}
+              >
+                Pilih Semua
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                // disabled={isModified()}
+                sx={{ fontSize: 11 }}
+                variant='outlined'
+                onClick={resetInputs}
+              >
+                Reset pilihan
+              </Button>
+            </Grid>
+            <Grid item xs style={{ flexGrow: 1 }}></Grid> {/* Spacer item */}
+            <Grid item>
+              <Button
+                // disabled={isModified()}
+                sx={{ fontSize: 11 }}
+                variant='outlined'
+                onClick={saveInputs}
+              >
+                Simpan
+              </Button>
+            </Grid>
+          </Grid>
+
           <Grid mt={0.1} pb={10} container spacing={2}>
             {sumCompletions.map((sumCompletion, index) => (
               <Grid
                 item
-                xs={isQuranHaditsCategory && isPageNumber(sumCompletion.material) ? 3 : 12}
-                md={isQuranHaditsCategory && isPageNumber(sumCompletion.material) ? 2 : 12}
+                xs={
+                  isQuranHaditsCategory && isPageNumber(sumCompletion.material)
+                    ? 3
+                    : 12
+                }
+                md={
+                  isQuranHaditsCategory && isPageNumber(sumCompletion.material)
+                    ? 2
+                    : 12
+                }
                 key={index}
+                onClick={() => onClickInput(sumCompletion)}
               >
                 <SumCompletionCard
                   key={index}
@@ -137,8 +260,8 @@ function InputCompletion() {
                   link='#'
                   structure='material'
                   grade={isQuranHaditsCategory ? null : sumCompletion.grade}
-                  backgroundColor={sumCompletion?.completionCount && '#2E7D32'}
-                  fontColor={sumCompletion?.completionCount && '#F0F6F0'}
+                  backgroundColor={cardColor(sumCompletion).background}
+                  fontColor={cardColor(sumCompletion).font}
                 />
               </Grid>
             ))}
