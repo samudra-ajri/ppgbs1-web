@@ -21,6 +21,12 @@ import {
 } from "../features/completionScores/completionScoreSlice"
 import gradeEnum from "../enums/gradeEnum"
 import { createInitialData } from "../features/initialData/initialDataSlice"
+import {
+  createCompletion,
+  deleteCompletion,
+  reset as resetCompletionUpdate,
+} from "../features/updateCompletion/updateCompletionSlice"
+import { toast } from "react-toastify"
 
 function InputCompletion() {
   const dispatch = useDispatch()
@@ -33,12 +39,19 @@ function InputCompletion() {
   const { sumCompletions, isSuccess } = useSelector(
     (state) => state.completionScores
   )
+  const {
+    isSuccess: isSuccessUpdate,
+    isError: isErrorUpdate,
+    messaga: messagaUpdate,
+  } = useSelector((state) => state.updateCompletion)
   const [filterGrade, setFilterGrade] = useState("initial")
   const [inputs, setInputs] = useState({})
   const [removeInputs, setRemoveInputs] = useState({})
 
   useEffect(() => {
     if (!user) navigate("/login")
+    if (isSuccessUpdate) toast.success("Hore! Berhasil update.")
+    if (isErrorUpdate) toast.error(messagaUpdate)
     dispatch(
       getSumCompletions({
         structure: "material",
@@ -47,7 +60,16 @@ function InputCompletion() {
       })
     )
     dispatch(reset())
-  }, [user, navigate, dispatch, subcategory])
+    dispatch(resetCompletionUpdate())
+  }, [
+    user,
+    navigate,
+    dispatch,
+    subcategory,
+    isSuccessUpdate,
+    isErrorUpdate,
+    messagaUpdate,
+  ])
 
   useEffect(() => {
     if (sumCompletions) {
@@ -131,12 +153,14 @@ function InputCompletion() {
     const newCompletions = Object.keys(inputs)
       .filter((key) => inputs[key] === 1)
       .map((key) => parseInt(key))
-    console.log(newCompletions)
+    if (newCompletions.length > 1)
+      dispatch(createCompletion({ materialIds: newCompletions }))
 
     const removeCompletions = Object.keys(removeInputs)
       .filter((key) => removeInputs[key] === 1)
       .map((key) => parseInt(key))
-    console.log(removeCompletions)
+    if (removeCompletions.length > 1)
+      dispatch(deleteCompletion({ materialIds: removeCompletions }))
   }
 
   const isModified = () => {

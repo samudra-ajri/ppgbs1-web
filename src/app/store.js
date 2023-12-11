@@ -18,6 +18,7 @@ import presencesReducer from '../features/presences/presenceSlice'
 import organizationsReducer from '../features/organizations/organizationSlice'
 import positionsReducer from '../features/positions/positionSlice'
 import initialDataReducer from '../features/initialData/initialDataSlice'
+import updateCompletionReducer from '../features/updateCompletion/updateCompletionSlice'
 
 export const store = configureStore({
   reducer: {
@@ -40,5 +41,6 @@ export const store = configureStore({
     organizations: organizationsReducer,
     positions: positionsReducer,
     initialData: initialDataReducer,
+    updateCompletion: updateCompletionReducer,
   },
 })
