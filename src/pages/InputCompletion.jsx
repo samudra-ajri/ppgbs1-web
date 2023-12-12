@@ -237,7 +237,7 @@ function InputCompletion() {
             spacing={1}
             direction='row'
             alignItems='center'
-            mt={3}
+            mt={1}
           >
             <Grid item>
               <Button
@@ -245,7 +245,7 @@ function InputCompletion() {
                 variant='contained'
                 onClick={selectAllInputs}
               >
-                Pilih Semua
+                Hatam Semua
               </Button>
             </Grid>
             <Grid item xs style={{ flexGrow: 1 }}></Grid> {/* Spacer item */}
