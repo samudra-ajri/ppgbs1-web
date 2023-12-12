@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import BackHeader from "../components/BackHeader"
@@ -7,6 +7,8 @@ import {
   CardContent,
   CircularProgress,
   Grid,
+  MenuItem,
+  TextField,
   Typography,
 } from "@mui/material"
 import { Box } from "@mui/system"
@@ -16,6 +18,7 @@ import {
   getSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
+import gradeEnum from "../enums/gradeEnum"
 
 function UserCompletionByCategory() {
   const dispatch = useDispatch()
@@ -26,6 +29,8 @@ function UserCompletionByCategory() {
   const { sumCompletions, isSuccess } = useSelector(
     (state) => state.completionScores
   )
+
+  const [filterGrade, setFilterGrade] = useState("initial")
 
   useEffect(() => {
     if (!user) navigate("/login")
@@ -40,11 +45,35 @@ function UserCompletionByCategory() {
   }, [user, navigate, dispatch, category])
 
   const totalCategoryPercentage = () => {
-    const totalCompletionCount = sumCompletions?.reduce((acc, curr) => acc + curr.completionCount, 0)
-    const totalMaterialCount = sumCompletions?.reduce((acc, curr) => acc + curr.materialCount, 0)
-    const totalPercentage = (totalCompletionCount / totalMaterialCount) * 100
+    const totalCompletionCount = sumCompletions?.reduce(
+      (acc, curr) => acc + curr.completionCount,
+      0
+    )
+    const totalMaterialCount = sumCompletions?.reduce(
+      (acc, curr) => acc + curr.materialCount,
+      0
+    )
+    const totalPercentage =
+      totalCompletionCount && totalMaterialCount
+        ? (totalCompletionCount / totalMaterialCount) * 100
+        : 0
     return Number(totalPercentage.toFixed(2))
   }
+
+  const onChangeFilter = (e) => {
+    const grade = e.target.value === "initial" ? null : e.target.value
+    setFilterGrade(e.target.value)
+    dispatch(
+      getSumCompletions({
+        structure: "subcategory",
+        userId: user.id,
+        category: category,
+        grade: grade,
+      })
+    )
+  }
+
+  const isQuranHaditsCategory = category === "Alquran" || category === "Hadits"
 
   return (
     <>
@@ -57,6 +86,30 @@ function UserCompletionByCategory() {
           value={isSuccess ? totalCategoryPercentage() : 0}
         />
       </Box>
+
+      {isQuranHaditsCategory && (
+        <TextField
+          name='grade'
+          label='Filter Kelas'
+          value={filterGrade}
+          onChange={onChangeFilter}
+          variant='outlined'
+          align='left'
+          size='small'
+          select
+          fullWidth
+        >
+          <MenuItem key='initial' value='initial'>
+            Semua Kelas
+          </MenuItem>
+          {Object.keys(gradeEnum).map((option) => (
+            <MenuItem key={option} value={option}>
+              {gradeEnum[option]}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
+
       {!isSuccess ? (
         <Card align='center'>
           <CardContent>
@@ -64,7 +117,7 @@ function UserCompletionByCategory() {
           </CardContent>
         </Card>
       ) : (
-        <Grid container pb={10} spacing={2}>
+        <Grid container pb={10} spacing={2} mt={1}>
           {sumCompletions.map((sumCompletion, index) => (
             <Grid item xs={6} key={index}>
               <SumCompletionCard
@@ -75,6 +128,13 @@ function UserCompletionByCategory() {
               />
             </Grid>
           ))}
+          <Grid item xs={12}>
+            {sumCompletions?.length === 0 && (
+              <Typography align='center' variant='body2'>
+                Tidak ada target materi pada kelas ini.
+              </Typography>
+            )}
+          </Grid>
         </Grid>
       )}
     </>
