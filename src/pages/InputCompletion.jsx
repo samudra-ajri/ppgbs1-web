@@ -153,13 +153,13 @@ function InputCompletion() {
     const newCompletions = Object.keys(inputs)
       .filter((key) => inputs[key] === 1)
       .map((key) => parseInt(key))
-    if (newCompletions.length > 1)
+    if (newCompletions.length > 0)
       dispatch(createCompletion({ materialIds: newCompletions }))
 
     const removeCompletions = Object.keys(removeInputs)
       .filter((key) => removeInputs[key] === 1)
       .map((key) => parseInt(key))
-    if (removeCompletions.length > 1)
+    if (removeCompletions.length > 0)
       dispatch(deleteCompletion({ materialIds: removeCompletions }))
   }
 
