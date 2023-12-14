@@ -19,7 +19,7 @@ function Menu() {
 
   useEffect(() => {
     if (!user) navigate("/login")
-    if (user?.role === "GENERUS") navigate("/user-completion")
+    if (user?.currentPosition.type === "GENERUS") navigate("/user-completion")
   }, [user, navigate, dispatch])
 
   if (!user) return
