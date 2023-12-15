@@ -27,11 +27,13 @@ function UserCompletion() {
     <>
       <ProfileCard user={user} />
       {!isSuccess ? (
-        <Card align='center'>
-          <CardContent>
-            <CircularProgress size='3rem' />
-          </CardContent>
-        </Card>
+        <Grid pb={10}>
+          <Card align='center'>
+            <CardContent>
+              <CircularProgress size='3rem' />
+            </CardContent>
+          </Card>
+        </Grid>
       ) : (
         <Grid container pb={10} spacing={2}>
           {sumCompletions.map((sumCompletion, index) => (
