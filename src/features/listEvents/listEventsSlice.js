@@ -2,20 +2,23 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import listEventsService from './listEventsService'
 
 const initialState = {
-  events: {},
+  events: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: '',
+  currentPage: 1,
+  totalPages: 1,
+  hasNextPage: true
 }
 
 // list events admin
 export const listEvents = createAsyncThunk(
   'events/list',
-  async (_, thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await listEventsService.listEvents(token)
+      return await listEventsService.listEvents(params, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -75,7 +78,10 @@ export const listEventsSlice = createSlice({
       state.isSuccess = false
       state.isError = false
       state.message = ''
-    }
+      state.currentPage = 1
+      state.hasNextPage = true
+      state.events = []
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -85,12 +91,16 @@ export const listEventsSlice = createSlice({
       .addCase(listEvents.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.events = action.payload
+        state.events = [...state.events, ...action.payload.data]
+        state.currentPage = action.payload.currentPage
+        state.totalPages = Math.ceil(action.payload.total / action.payload.count)
+        state.hasNextPage = action.payload.hasNextPage
       })
       .addCase(listEvents.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
+        state.hasNextPage = false
       })
       .addCase(listEventsGenerus.pending, (state) => {
         state.isLoading = true

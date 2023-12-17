@@ -1,6 +1,5 @@
 import { Box, Button, Card, CardActionArea, CardContent, CircularProgress, Grid, IconButton, Stack, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/DeleteOutlineRounded'
-import capitalize from 'capitalize'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import translate from '../utils/translate'
@@ -8,18 +7,12 @@ import { useState } from 'react'
 import PopDialog from './PopDialog'
 import { deleteEvent } from '../features/listEvents/listEventsSlice'
 import { useDispatch } from 'react-redux'
-import stringCast from '../utils/stringCast'
 
 function EventCard(props) {
   const dispatch = useDispatch()
   const { event, user } = props
   const [openPopup, setOpenPopup] = useState(false)
 
-  const region = () => {
-    if (event.klp) return `PPK | ${capitalize.words(event.klp)}`
-    if (!event.klp && event.ds) return `PPD | ${capitalize.words(event.ds)}`
-    if (!event.klp && !event.ds) return 'PPG'
-  }
   const canDelete = () => {
     if (event.klp && user.role === 'PPK') return true
     if ((!event.klp && event.ds) && user.role === 'PPD') return true
@@ -39,11 +32,13 @@ function EventCard(props) {
 
   const eventTime = () => {
     const eventTime = {}
-    const startDate = moment(event.startDate).format('DD/MM/YY')
-    const startTime = moment(event.startDate).format('HH.mm')
-    const endDate = moment(event.endDate).format('DD/MM/YY')
-    const endTime = moment(event.endDate).format('HH.mm')
-    const startDayName = translate.days(moment(event.startDate).format('dddd'))
+    const startDateObject = moment(new Date(Number(event.startDate)))
+    const endDateObject = moment(new Date(Number(event.endDate)))
+    const startDate = startDateObject.format('DD/MM/YY')
+    const startTime = startDateObject.format('HH.mm')
+    const endDate = endDateObject.format('DD/MM/YY')
+    const endTime = endDateObject.format('HH.mm')
+    const startDayName = translate.days(startDateObject.format('dddd'))
     if (startDate === endDate) {
       eventTime.keys = <>
         <Typography sx={{fontSize: '12px'}}>Hari</Typography>
@@ -89,23 +84,20 @@ function EventCard(props) {
                     </Typography>
                   </Grid>
                 </Grid>
-                <Typography pb={1} variant='subtitle2' color='text.secondary'>{region()}</Typography>
+                <Typography pb={1} variant='subtitle2' color='text.secondary'>{event.organizationName}</Typography>
 
                 <Grid container>
                   <Grid item xs={4}>
                     <Typography sx={{fontSize: '12px'}}>Room ID</Typography>
-                    { event.passCode && <Typography sx={{fontSize: '12px'}}>Kode Akses</Typography>}
+                    { event.passcode && <Typography sx={{fontSize: '12px'}}>Kode Akses</Typography>}
                     { eventTime().keys }
                     <Typography sx={{fontSize: '12px'}}>Lokasi</Typography>
-                    <Typography sx={{fontSize: '12px'}}>Peserta</Typography>
                   </Grid>
                   <Grid item xs={8}>
-                    <Typography sx={{fontSize: '12px'}}>: {event.roomIdSlug.split('-').join(' ')}</Typography>
-                    { event.passCode && <Typography sx={{fontSize: '12px'}}>: {event.passCode}</Typography>}
+                    <Typography sx={{fontSize: '12px'}}>: {event.roomId}</Typography>
+                    { event.passcode && <Typography sx={{fontSize: '12px'}}>: {event.passcode}</Typography>}
                     { eventTime().values }
                     <Typography sx={{fontSize: '12px'}}>: {event.location}</Typography>
-                    {/* <Typography sx={{fontSize: '12px'}}>: {event.classTypes.map(type => `${classTypesAttenders[type]} `)}</Typography> */}
-                    <Typography sx={{fontSize: '12px'}}>: {stringCast.classType(event.classTypes.join(', '))}</Typography>
                   </Grid>
                 </Grid>
 

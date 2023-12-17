@@ -1,6 +1,6 @@
 import API from '../../api'
 
-const API_URL = 'api/events/'
+const API_URL = '/events'
 
 // List evenets
 const listEventsGenerus = async (token) => {
@@ -14,13 +14,14 @@ const listEventsGenerus = async (token) => {
 }
 
 // List evenets admin
-const listEvents = async (token) => {
+const listEvents = async (params, token) => {
+  const { page } = params
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + 'admin', config)
+  const response = await API.get(API_URL + `?page=${page}`, config)
   return response.data
 }
 
