@@ -105,9 +105,9 @@ function EventCard(props) {
             <Grid item xs={10} md={11}>
               <Link
                 to={
-                  user.role === "GENERUS"
-                    ? `/c/event-presence/${event._id}`
-                    : `/c/event-details/${event._id}`
+                  user.currentPosition.type === "GENERUS"
+                    ? `/c/event-presence/${event.id}`
+                    : `/c/event-details/${event.id}`
                 }
                 component={CardActionArea}
               >

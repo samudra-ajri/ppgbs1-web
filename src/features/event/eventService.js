@@ -1,8 +1,8 @@
 import API from '../../api'
 
-const API_URL = 'api/events/'
+const API_URL = '/events'
 
-// Create evenet
+// Create event
 const createEvent = async (data, token) => {
   const config = {
     headers: {
@@ -13,14 +13,14 @@ const createEvent = async (data, token) => {
   return response.data
 }
 
-// Get evenet by id
+// Get event by id
 const getEvent = async (id, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + id, config)
+  const response = await API.get(API_URL + `/${id}`, config)
   return response.data
 }
 

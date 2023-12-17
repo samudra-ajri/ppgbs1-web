@@ -77,11 +77,11 @@ export const removeAttender = createAsyncThunk(
 
 // Check user presence status
 export const isPresent = createAsyncThunk(
-  'presences/ispresent',
-  async (roomId, thunkAPI) => {
+  'presences/detail',
+  async (params, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await presenceService.isPresent(roomId, token)
+      return await presenceService.detail(params, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -179,12 +179,11 @@ export const presenceSlice = createSlice({
       .addCase(isPresent.fulfilled, (state, action) => {
         state.isLoadingPresentStatus = false
         state.isSuccessPresentStatus = true
-        state.isPresentStatus = action.payload.isPresent
+        state.isPresentStatus = action.payload
       })
       .addCase(isPresent.rejected, (state, action) => {
         state.isLoadingPresentStatus = false
-        state.isError = true
-        state.message = action.payload
+        state.isPresentStatus = null
       })
       .addCase(getPresencesByRoomId.pending, (state) => {
         state.isLoadingAttenders = true
