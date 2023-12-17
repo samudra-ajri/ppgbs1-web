@@ -69,8 +69,6 @@ function CreateEvent() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    // const startDate = moment(start).format()
-    // const endDate = moment(end).format()
     const data = {
       name,
       passCode,
@@ -79,7 +77,6 @@ function CreateEvent() {
       endDate: endDate.format(),
       location
     }
-    // console.log(data);
     dispatch(createEvent(data))
   }
 

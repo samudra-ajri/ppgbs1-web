@@ -22,7 +22,6 @@ function Event() {
   }, [user, navigate, dispatch])
 
   const fetchMoreEvents = () => {
-    console.log(page);
     if (hasNextPage) {
       setPage((prevPage) => prevPage + 1)
       dispatch(listEvents({ page: page + 1 }))
