@@ -19,6 +19,7 @@ import {
   reset,
 } from "../features/completionScores/completionScoreSlice"
 import gradeEnum from "../enums/gradeEnum"
+import { logout } from "../features/auth/authSlice"
 
 function UserCompletionByCategory() {
   const dispatch = useDispatch()
@@ -26,7 +27,7 @@ function UserCompletionByCategory() {
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const { user } = useSelector((state) => state.auth)
-  const { sumCompletions, isSuccess } = useSelector(
+  const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores
   )
 
@@ -34,6 +35,12 @@ function UserCompletionByCategory() {
 
   useEffect(() => {
     if (!user) navigate("/login")
+    if (isError && message === "Missing authentication.") {
+      dispatch(logout())
+      dispatch(reset())
+      navigate("/login")
+      return
+    }
     dispatch(
       getSumCompletions({
         structure: "subcategory",
@@ -42,7 +49,7 @@ function UserCompletionByCategory() {
       })
     )
     dispatch(reset())
-  }, [user, navigate, dispatch, category])
+  }, [user, navigate, dispatch, category, isError, message])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(

@@ -8,20 +8,27 @@ import {
   reset,
 } from "../features/completionScores/completionScoreSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
+import { logout } from "../features/auth/authSlice"
 
 function UserCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { sumCompletions, isSuccess } = useSelector(
+  const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores
   )
 
   useEffect(() => {
     if (!user) navigate("/login")
+    if (isError && message === "Missing authentication.") {
+      dispatch(logout())
+      dispatch(reset())
+      navigate("/login")
+      return
+    }
     dispatch(getSumCompletions({ structure: "category", userId: user.id }))
     dispatch(reset())
-  }, [user, navigate, dispatch])
+  }, [user, isError, navigate, dispatch, message])
 
   return (
     <>

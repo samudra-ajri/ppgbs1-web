@@ -27,6 +27,7 @@ import {
   reset as resetCompletionUpdate,
 } from "../features/updateCompletion/updateCompletionSlice"
 import { toast } from "react-toastify"
+import { logout } from "../features/auth/authSlice"
 
 function InputCompletion() {
   const dispatch = useDispatch()
@@ -36,7 +37,7 @@ function InputCompletion() {
   const subcategory = pathnames[4]
   const { user } = useSelector((state) => state.auth)
   const { initialData } = useSelector((state) => state.initialData)
-  const { sumCompletions, isSuccess } = useSelector(
+  const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores
   )
   const {
@@ -52,6 +53,12 @@ function InputCompletion() {
     if (!user) navigate("/login")
     if (isSuccessUpdate) toast.success("Hore! Berhasil update.")
     if (isErrorUpdate) toast.error(messagaUpdate)
+    if (isError && message === "Missing authentication.") {
+      dispatch(logout())
+      dispatch(reset())
+      navigate("/login")
+      return
+    }
     dispatch(
       getSumCompletions({
         structure: "material",
@@ -61,15 +68,7 @@ function InputCompletion() {
     )
     dispatch(reset())
     dispatch(resetCompletionUpdate())
-  }, [
-    user,
-    navigate,
-    dispatch,
-    subcategory,
-    isSuccessUpdate,
-    isErrorUpdate,
-    messagaUpdate,
-  ])
+  }, [user, navigate, dispatch, subcategory, isSuccessUpdate, isErrorUpdate, messagaUpdate, isError, message])
 
   useEffect(() => {
     if (sumCompletions) {
