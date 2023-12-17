@@ -55,7 +55,6 @@ function InputCompletion() {
     if (isErrorUpdate) toast.error(messagaUpdate)
     if (isError && message === "Missing authentication.") {
       dispatch(logout())
-      dispatch(reset())
       navigate("/login")
       return
     }

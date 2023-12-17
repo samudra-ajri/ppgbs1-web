@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { login, reset } from "../features/auth/authSlice"
+import { reset as resetCompletionScore } from "../features/completionScores/completionScoreSlice"
 import Spinner from "../components/Spinner"
 import {
   Button,
@@ -27,8 +28,9 @@ function Login() {
 
   useEffect(() => {
     if (isError) toast.error(message)
-    if (isSuccess || user) navigate('/decide-position')
+    if (isSuccess || user) navigate("/decide-position")
     dispatch(reset())
+    dispatch(resetCompletionScore())
   }, [user, isError, isSuccess, message, navigate, dispatch])
 
   const onChange = (e) => {
@@ -104,7 +106,12 @@ function Login() {
                     Masuk
                   </Button>
                   <Link to='/forgot-password'>
-                    <Typography mt={1} align='center' variant='subtitle1' color='#1D9BF0'>
+                    <Typography
+                      mt={1}
+                      align='center'
+                      variant='subtitle1'
+                      color='#1D9BF0'
+                    >
                       Lupa password?
                     </Typography>
                   </Link>

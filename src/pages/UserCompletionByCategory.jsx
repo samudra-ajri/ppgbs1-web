@@ -37,7 +37,6 @@ function UserCompletionByCategory() {
     if (!user) navigate("/login")
     if (isError && message === "Missing authentication.") {
       dispatch(logout())
-      dispatch(reset())
       navigate("/login")
       return
     }
