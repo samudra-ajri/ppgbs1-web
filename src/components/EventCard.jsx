@@ -154,7 +154,7 @@ function EventCard(props) {
                 </Grid>
               </Link>
             </Grid>
-            {user.currentPosition.type !== "GENERUS" && (
+            {user.currentPosition.type === "ADMIN" && (
               <Grid item>
                 <IconButton
                   align='right'

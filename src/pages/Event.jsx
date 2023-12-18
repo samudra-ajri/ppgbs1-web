@@ -37,7 +37,7 @@ function Event() {
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>
         Jadwal Kegiatan
       </Typography>
-      {user.currentPosition.type !== "GENERUS" && (
+      {user.currentPosition.type === "ADMIN" && (
         <Button
           size='medium'
           style={{ margin: "20px auto" }}
