@@ -10,7 +10,9 @@ function Event() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { events, hasNextPage, isSuccess } = useSelector((state) => state.listEvents)
+  const { events, hasNextPage, isSuccess } = useSelector(
+    (state) => state.listEvents
+  )
   const [page, setPage] = useState(1)
 
   useEffect(() => {
@@ -65,6 +67,7 @@ function Event() {
             <EventCard key={event.id} event={event} user={user} />
           ))}
       </InfiniteScroll>
+
       {isSuccess && events.length === 0 && (
         <Typography
           textAlign='center'
