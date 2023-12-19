@@ -16,12 +16,13 @@ const createPresence = async (data, token) => {
 
 // Create presence by amdin
 const createPresenceByAdmin = async (data, token) => {
+  const { eventId, userId } = data
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.post(`${API_URL}admin`, data, config)
+  const response = await API.post(API_URL + `/${eventId}/presences/${userId}`, data, config)
   return response.data
 }
 

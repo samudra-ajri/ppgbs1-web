@@ -1,16 +1,17 @@
 
 import API from '../../api'
 
-const API_URL = '/api/users/'
+const API_URL = '/users'
 
 // Get users list
-const getUsers = async (token, page = 1, search = '', role = '', needresetpassword = '') => {
+const getUsers = async (token, params) => {
+  const { positionType, search, ancestorId } = params
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + `?page=${page}&limit=20&search=${search}&role=${role}&needresetpassword=${needresetpassword}`, config)
+  const response = await API.get(API_URL + `?isActive=true&search=${search}&positionType=${positionType}&ancestorId=${ancestorId}`, config)
   return response.data
 }
 

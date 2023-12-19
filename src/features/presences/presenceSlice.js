@@ -10,6 +10,7 @@ const initialState = {
   
   isSuccessPresentStatus: false,
   isLoadingPresentStatus: false,
+  isSuccessCreatePresence: false,
   isPresentStatus: null,
 
   attenders: [],
@@ -148,6 +149,7 @@ export const presenceSlice = createSlice({
       state.message = ''
       state.isSuccessPresentStatus = false
       state.isLoadingPresentStatus = false
+      state.isSuccessCreatePresence = false
 
       state.isLoadingAttenders = false
       state.isSuccessAttenders = false
@@ -180,7 +182,7 @@ export const presenceSlice = createSlice({
       })
       .addCase(createPresenceByAdmin.fulfilled, (state, action) => {
         state.isLoading = false
-        state.isSuccess = true
+        state.isSuccessCreatePresence = true
         state.presence = action.payload
       })
       .addCase(createPresenceByAdmin.rejected, (state, action) => {

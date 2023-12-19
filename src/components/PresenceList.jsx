@@ -11,7 +11,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-import capitalize from "capitalize"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -35,8 +34,8 @@ function PresenceList(props) {
   const { event, user } = props
   const dispatch = useDispatch()
   const { users } = useSelector((state) => state.users)
-  const [page, setPage] = useState(2)
-  const [search, setSearch] = useState("-")
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState("")
   const [searchValue, setSearchValue] = useState(null)
   const [openPopup, setOpenPopup] = useState(false)
   const [removeId, setRemoveId] = useState("")
@@ -50,6 +49,7 @@ function PresenceList(props) {
     isLoading,
     hasNextPage,
     isSuccessAttenders,
+    isSuccessCreatePresence,
   } = useSelector((state) => state.presences)
 
   useEffect(() => {
@@ -58,31 +58,35 @@ function PresenceList(props) {
   }, [isError, isSuccess, message])
 
   useEffect(() => {
-    dispatch(getPresencesByEventId({ page: 1, eventId: event.id }))
+    if (isSuccessCreatePresence) {
+      toast.success("kehadiran behasil ditambah.")
+    } else {
+      dispatch(getPresencesByEventId({ page: 1, eventId: event.id }))
+    }
     return () => {
       dispatch(reset())
     }
-  }, [dispatch, event.id])
+  }, [dispatch, event.id, isSuccessCreatePresence])
 
   const fetchMoreAttenders = () => {
     if (hasNextPage) {
       setPage((prevPage) => prevPage + 1)
-      dispatch(getPresencesByEventId({ page: page, eventId: event.id }))
+      dispatch(getPresencesByEventId({ page: page + 1, eventId: event.id }))
     }
   }
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     if (search) {
-  //       dispatch(getUsersPaginate({ page: 1, search, role: "GENERUS" }))
-  //       dispatch(resetSearch())
-  //     } else {
-  //       setSearch([])
-  //     }
-  //   }, 1000)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (search) {
+        dispatch(getUsersPaginate({ search, positionType: "GENERUS", ancestorId: event.organizationId }))
+        dispatch(resetSearch())
+      } else {
+        setSearch([])
+      }
+    }, 1000)
 
-  //   return () => clearTimeout(timeoutId)
-  // }, [dispatch, search])
+    return () => clearTimeout(timeoutId)
+  }, [dispatch, event.organizationId, search])
 
   const eventTime = () => {
     const startDateObject = moment(new Date(Number(event.startDate)))
@@ -102,12 +106,13 @@ function PresenceList(props) {
   const onSubmit = (e) => {
     e.preventDefault()
     setSearch("-")
-    setSearchValue(null)
     const data = {
-      roomId: event.roomId,
-      userId: searchValue?._id,
+      eventId: event.id,
+      userId: searchValue?.id,
     }
     dispatch(createPresenceByAdmin(data))
+    setPage(1)
+    setSearchValue(null)
   }
 
   const onClickRemove = () => {
@@ -139,7 +144,7 @@ function PresenceList(props) {
         </CardContent>
       </Card>
 
-      {/* <Grid container paddingBottom={5} paddingTop={5} spacing={2}>
+      <Grid container paddingBottom={5} paddingTop={5} spacing={2}>
         <Grid item xs={8}>
           <Autocomplete
             clearOnBlur
@@ -159,7 +164,7 @@ function PresenceList(props) {
                 label='Tambah kehadiran generus...'
                 value={search}
                 onChange={(e) =>
-                  setSearch(e.target.value ? e.target.value : "-")
+                  setSearch(e.target.value ? e.target.value : "")
                 }
               />
             )}
@@ -167,7 +172,7 @@ function PresenceList(props) {
         </Grid>
         <Grid item xs={4}>
           <Button
-            disabled={isLoading}
+            disabled={searchValue ? false : true}
             size='small'
             type='submit'
             variant='contained'
@@ -179,7 +184,7 @@ function PresenceList(props) {
             Tambah
           </Button>
         </Grid>
-      </Grid> */}
+      </Grid>
 
       <InfiniteScroll
         dataLength={attenders?.length || 0}

@@ -8,6 +8,9 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: '',
+  currentPage: 1,
+  totalPages: 1,
+  hasNextPage: false
 }
 
 // Get users list
@@ -32,10 +35,10 @@ export const getUsers = createAsyncThunk(
 // Get users list with paginate
 export const getUsersPaginate = createAsyncThunk(
   'users/getPaginate',
-  async ({page, search, role, needresetpassword}, thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await userService.getUsers(token, page, search, role, needresetpassword)
+      return await userService.getUsers(token, params)
     } catch (error) {
       const message =
         (error.response &&
@@ -100,12 +103,16 @@ export const userSlice = createSlice({
       .addCase(getUsers.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.users = action.payload.users
+        state.users = [...state.users, ...action.payload.data]
+        state.currentPage = action.payload.currentPage
+        state.totalPages = Math.ceil(action.payload.total / action.payload.count)
+        state.hasNextPage = action.payload.hasNextPage
       })
       .addCase(getUsers.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
+        state.hasNextPage = false
       })
       .addCase(getUsersPaginate.pending, (state) => {
         state.isLoading = true
@@ -113,7 +120,7 @@ export const userSlice = createSlice({
       .addCase(getUsersPaginate.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.users = [...state.users, ...action.payload.users]
+        state.users = [...state.users, ...action.payload.data]
       })
       .addCase(getUsersPaginate.rejected, (state, action) => {
         state.isLoading = false
