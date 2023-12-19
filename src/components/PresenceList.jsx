@@ -16,13 +16,11 @@ import moment from "moment"
 import { useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import DeleteIcon from "@mui/icons-material/CloseOutlined"
 import {
   createPresenceByAdmin,
-  getPresencesByRoomId,
-  getPresencesByRoomIdPaginate,
+  getPresencesByEventId,
   removeAttender,
   reset,
 } from "../features/presences/presenceSlice"
@@ -35,53 +33,69 @@ import PopDialog from "./PopDialog"
 
 function PresenceList(props) {
   const { event, user } = props
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { users } = useSelector((state) => state.users)
-  const [page, setpage] = useState(2)
+  const [page, setPage] = useState(2)
   const [search, setSearch] = useState("-")
   const [searchValue, setSearchValue] = useState(null)
   const [openPopup, setOpenPopup] = useState(false)
   const [removeId, setRemoveId] = useState("")
 
-  const { isError, message, attenders, attendersCount, isSuccess, isLoading } =
-    useSelector((state) => state.presences)
+  const {
+    isError,
+    message,
+    attenders,
+    attendersCount,
+    isSuccess,
+    isLoading,
+    hasNextPage,
+    isSuccessAttenders,
+  } = useSelector((state) => state.presences)
 
   useEffect(() => {
     if (isError) toast.error(message)
     if (isSuccess) toast.success("behasil.")
-    dispatch(getPresencesByRoomId({ page: 1, roomId: event.roomId }))
-    dispatch(reset())
-  }, [isError, message, event.roomId, navigate, dispatch, isSuccess])
+  }, [isError, isSuccess, message])
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (search) {
-        dispatch(getUsersPaginate({ page: 1, search, role: "GENERUS" }))
-        dispatch(resetSearch())
-      } else {
-        setSearch([])
-      }
-    }, 1000)
+    dispatch(getPresencesByEventId({ page: 1, eventId: event.id }))
+    return () => {
+      dispatch(reset())
+    }
+  }, [dispatch, event.id])
 
-    return () => clearTimeout(timeoutId)
-  }, [dispatch, search])
-
-  const loadMoreUsers = () => {
-    dispatch(getPresencesByRoomIdPaginate({ page, roomId: event.roomId }))
-    setpage(page + 1)
+  const fetchMoreAttenders = () => {
+    if (hasNextPage) {
+      setPage((prevPage) => prevPage + 1)
+      dispatch(getPresencesByEventId({ page: page, eventId: event.id }))
+    }
   }
 
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     if (search) {
+  //       dispatch(getUsersPaginate({ page: 1, search, role: "GENERUS" }))
+  //       dispatch(resetSearch())
+  //     } else {
+  //       setSearch([])
+  //     }
+  //   }, 1000)
+
+  //   return () => clearTimeout(timeoutId)
+  // }, [dispatch, search])
+
   const eventTime = () => {
-    const startDate = moment(event.startDate).format("DD MMM YYYY")
-    const startTime = moment(event.startDate).format("HH.mm")
-    const startDayName = translate.days(moment(event.startDate).format("dddd"))
+    const startDateObject = moment(new Date(Number(event.startDate)))
+    const startDate = startDateObject.format("DD MMM YYYY")
+    const startTime = startDateObject.format("HH.mm")
+    const startDayName = translate.days(startDateObject.format("dddd"))
     return `${startDayName}, ${startDate} pkl. ${startTime}`
   }
 
   const presenceTime = (time) => {
-    const startTime = moment(time).format("HH:mm")
-    const startDayName = translate.days(moment(time).format("dddd"))
+    const createdDateObject = moment(new Date(Number(time)))
+    const startTime = createdDateObject.format("HH:mm")
+    const startDayName = translate.days(createdDateObject.format("dddd"))
     return `${startDayName}, ${startTime}`
   }
 
@@ -98,8 +112,8 @@ function PresenceList(props) {
 
   const onClickRemove = () => {
     const data = {
-      roomId: event.roomId,
-      attenderId: removeId,
+      eventId: event.id,
+      userId: removeId,
     }
     dispatch(removeAttender(data))
     setOpenPopup(false)
@@ -125,7 +139,7 @@ function PresenceList(props) {
         </CardContent>
       </Card>
 
-      <Grid container paddingBottom={5} paddingTop={5} spacing={2}>
+      {/* <Grid container paddingBottom={5} paddingTop={5} spacing={2}>
         <Grid item xs={8}>
           <Autocomplete
             clearOnBlur
@@ -141,6 +155,7 @@ function PresenceList(props) {
             renderInput={(params) => (
               <TextField
                 {...params}
+                size='small'
                 label='Tambah kehadiran generus...'
                 value={search}
                 onChange={(e) =>
@@ -153,25 +168,23 @@ function PresenceList(props) {
         <Grid item xs={4}>
           <Button
             disabled={isLoading}
-            size='large'
+            size='small'
             type='submit'
             variant='contained'
             color='info'
             fullWidth
-            style={{ paddingTop: "14px", paddingBottom: "14px" }}
+            style={{ paddingTop: "9px", paddingBottom: "8px" }}
             onClick={onSubmit}
           >
             Tambah
           </Button>
         </Grid>
-      </Grid>
+      </Grid> */}
 
       <InfiniteScroll
-        dataLength={attenders.length}
-        next={loadMoreUsers}
-        hasMore={
-          attenders.length % 20 !== 0 || attenders.length === 0 ? false : true
-        }
+        dataLength={attenders?.length || 0}
+        next={fetchMoreAttenders}
+        hasMore={hasNextPage}
         loader={
           <Grid align='center' sx={{ pt: 1.5 }}>
             <CircularProgress size={20} />
@@ -188,68 +201,72 @@ function PresenceList(props) {
           </Typography>
         }
       >
-        {attenders.map((attender) => (
-          <Card key={attender.user._id} sx={{ mb: 0.5 }} align='left'>
-            <Grid container>
-              <Grid item md={11} xs={10}>
-                <CardContent
-                  sx={{ padding: 2, "&:last-child": { paddingBottom: 2 } }}
-                >
-                  <Typography
-                    fontSize={10}
-                    component='p'
-                    color='text.secondary'
+        {isSuccessAttenders &&
+          attenders.map((attender) => (
+            <Card key={attender.userId} sx={{ mb: 0.5 }} align='left'>
+              <Grid container>
+                <Grid item md={11} xs={10}>
+                  <CardContent
+                    sx={{ padding: 2, "&:last-child": { paddingBottom: 2 } }}
                   >
-                    {presenceTime(attender.time)}
-                  </Typography>
-                  <Typography variant='body1'>{attender.user.name}</Typography>
-                  <Typography
-                    fontSize={10}
-                    component='p'
-                    color='text.secondary'
-                  >
-                    {capitalize.words(`${attender.ds}, ${attender.klp}`)}
-                  </Typography>
-                  <Typography
-                    fontSize={10}
-                    component='p'
-                    color='text.secondary'
-                  >
-                    {attender.sex === "male" ? "Laki-laki" : "Perempuan"}
-                  </Typography>
-                </CardContent>
-              </Grid>
-              {attender.createdBy === user._id ? (
-                <Grid item>
-                  <IconButton
-                    align='right'
-                    onClick={() => {
-                      setOpenPopup(true)
-                      setRemoveId(attender.user._id)
-                    }}
-                  >
-                    <DeleteIcon fontSize='medium' color='error' />
-                  </IconButton>
+                    <Typography
+                      fontSize={10}
+                      component='p'
+                      color='text.secondary'
+                    >
+                      {presenceTime(attender.createdAt)}
+                    </Typography>
+                    <Typography variant='body1'>{attender.userName}</Typography>
+                    <Typography
+                      fontSize={10}
+                      component='p'
+                      color='text.secondary'
+                    >
+                      {attender.organizationName}
+                    </Typography>
+                    <Typography
+                      fontSize={10}
+                      component='p'
+                      color='text.secondary'
+                    >
+                      {attender.userSex === 1 ? "Laki-laki" : "Perempuan"}
+                    </Typography>
+                  </CardContent>
                 </Grid>
-              ) : ''}
-            </Grid>
-          </Card>
-        ))}
+                {attender.createdBy === user.id ? (
+                  <Grid item>
+                    <IconButton
+                      align='right'
+                      onClick={() => {
+                        setOpenPopup(true)
+                        setRemoveId(attender.userId)
+                      }}
+                    >
+                      <DeleteIcon fontSize='medium' color='error' />
+                    </IconButton>
+                  </Grid>
+                ) : (
+                  ""
+                )}
+              </Grid>
+            </Card>
+          ))}
       </InfiniteScroll>
 
-      <PopDialog
-        title={'Hapus kehadiran?'}
-        openPopup={openPopup}
-      >
-        <Box sx={{ display: 'flex', justifyContent: 'center', height: 45 }}>
+      <PopDialog title={"Hapus kehadiran?"} openPopup={openPopup}>
+        <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
           {isLoading ? (
-            <Grid align="center" sx={{ pt: 1.5 }}>
+            <Grid align='center' sx={{ pt: 1.5 }}>
               <CircularProgress size={20} />
             </Grid>
           ) : (
             <Stack spacing={1} direction='row'>
-              <Button variant='outlined' color='error' onClick={onClickRemove}>Hapus</Button>
-              <Button variant='contained' onClick={() => setOpenPopup(false)}>Batal</Button>
+              <Button variant='outlined' color='error' onClick={onClickRemove}>
+                Hapus
+              </Button>
+              <Button variant='contained' onClick={() => setOpenPopup(false)}>
+                Batal
+              </Button>
             </Stack>
           )}
         </Box>

@@ -18,7 +18,9 @@ function EventPresence() {
   useEffect(() => {
     if (!user) navigate('/login')
     dispatch(getEvent(eventId))
-    dispatch(reset())
+    return () => {
+      dispatch(reset())
+    }
   }, [user, eventId, navigate, dispatch])
 
   return (
@@ -26,7 +28,7 @@ function EventPresence() {
       <BackHeader title='Kehadiran' />
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar Hadir</Typography>
       {isSuccess && <>
-        <PresenceList key={event._id} event={event} user={user} />
+        <PresenceList event={event.data} user={user} />
       </>}
     </>
   )

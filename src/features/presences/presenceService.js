@@ -27,25 +27,25 @@ const createPresenceByAdmin = async (data, token) => {
 
 // Remove attender
 const removeAttender = async (data, token) => {
-  const { roomId, attenderId } = data
+  const { eventId, userId } = data
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.delete(`${API_URL}room/${roomId}/attender/${attenderId}`, config)
+  const response = await API.delete(`${API_URL}/${eventId}/presences/${userId}`, config)
   return response.data
 }
 
-// Get presence by room id
-const getPresencesByRoomId = async (data, token) => {
-  const { page = 1, roomId } = data
+// Get presence by event id
+const getPresencesByEventId = async (data, token) => {
+  const { page, eventId } = data
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(`${API_URL}room/${roomId}?page=${page}`, config)
+  const response = await API.get(`${API_URL}/${eventId}/presences?page=${page}`, config)
   return response.data
 }
 
@@ -65,7 +65,7 @@ const presenceService = {
   createPresence,
   createPresenceByAdmin,
   detail,
-  getPresencesByRoomId,
+  getPresencesByEventId,
   removeAttender,
 }
 

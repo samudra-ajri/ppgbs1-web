@@ -9,7 +9,7 @@ const initialState = {
   message: '',
   currentPage: 1,
   totalPages: 1,
-  hasNextPage: true
+  hasNextPage: false
 }
 
 // list events admin
@@ -79,7 +79,7 @@ export const listEventsSlice = createSlice({
       state.isError = false
       state.message = ''
       state.currentPage = 1
-      state.hasNextPage = true
+      state.hasNextPage = false
       state.events = []
     },
   },

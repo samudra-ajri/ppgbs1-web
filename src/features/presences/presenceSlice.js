@@ -12,10 +12,15 @@ const initialState = {
   isLoadingPresentStatus: false,
   isPresentStatus: null,
 
+  attenders: [],
+  isErrorAttenders: false,
   isSuccessAttenders: false,
   isLoadingAttenders: false,
-  attenders: [],
+  messageAttenders: '',
   attendersCount: 0,
+  currentPage: 1,
+  totalPages: 1,
+  hasNextPage: false,
 }
 
 // Create presence
@@ -95,12 +100,12 @@ export const isPresent = createAsyncThunk(
 )
 
 // Get presence by roomId
-export const getPresencesByRoomId = createAsyncThunk(
+export const getPresencesByEventId = createAsyncThunk(
   'presences/attenders',
-  async ({page, roomId}, thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await presenceService.getPresencesByRoomId({page, roomId}, token)
+      return await presenceService.getPresencesByEventId(params, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -143,6 +148,16 @@ export const presenceSlice = createSlice({
       state.message = ''
       state.isSuccessPresentStatus = false
       state.isLoadingPresentStatus = false
+
+      state.isLoadingAttenders = false
+      state.isSuccessAttenders = false
+      state.isErrorAttenders = false
+      state.messageAttenders = ''
+      state.currentPage = 1
+      state.totalPages = 1
+      state.hasNextPage = false
+      state.attenders = []
+      state.attendersCount = 0
     }
   },
   extraReducers: (builder) => {
@@ -185,19 +200,23 @@ export const presenceSlice = createSlice({
         state.isLoadingPresentStatus = false
         state.isPresentStatus = null
       })
-      .addCase(getPresencesByRoomId.pending, (state) => {
+      .addCase(getPresencesByEventId.pending, (state) => {
         state.isLoadingAttenders = true
       })
-      .addCase(getPresencesByRoomId.fulfilled, (state, action) => {
+      .addCase(getPresencesByEventId.fulfilled, (state, action) => {
         state.isLoadingAttenders = false
         state.isSuccessAttenders = true
-        state.attenders = action.payload.attenders
+        state.attenders = [...state.attenders, ...action.payload.data]
         state.attendersCount = action.payload.total
+        state.currentPage = action.payload.currentPage
+        state.totalPages = Math.ceil(action.payload.total / action.payload.count)
+        state.hasNextPage = action.payload.hasNextPage
       })
-      .addCase(getPresencesByRoomId.rejected, (state, action) => {
+      .addCase(getPresencesByEventId.rejected, (state, action) => {
         state.isLoadingAttenders = false
-        state.isError = true
-        state.message = action.payload
+        state.isErrorAttenders = true
+        state.messageAttenders = action.payload
+        state.hasNextPage = false
       })
       .addCase(getPresencesByRoomIdPaginate.pending, (state) => {
         state.isLoadingAttenders = true
@@ -219,8 +238,9 @@ export const presenceSlice = createSlice({
         state.isLoading = false
         state.isSuccess = true
         state.attenders = state.attenders.filter(
-          (attender) => attender.user._id !== action.payload.id
+          (attender) => attender.userId !== action.payload.userId
         )
+        state.attendersCount = state.attenders.length
       })
       .addCase(removeAttender.rejected, (state, action) => {
         state.isLoading = false

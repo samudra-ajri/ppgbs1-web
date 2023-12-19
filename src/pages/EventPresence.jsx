@@ -24,7 +24,7 @@ function EventPresence() {
       <BackHeader title='Kehadiran' />
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>Isi Daftar Hadir</Typography>
       {isSuccess && <>
-        <PresenceForm key={event.id} event={event.data} user={user} />
+        <PresenceForm event={event.data} user={user} />
       </>}
     </>
   )
