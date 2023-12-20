@@ -1,68 +1,113 @@
-import { Box, Chip, CircularProgress, Grid, TextField, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import PeopleCard from '../components/PeopleCard'
-import { getUsers, getUsersPaginate, reset } from '../features/users/userSlice'
+import {
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import InfiniteScroll from "react-infinite-scroll-component"
+import PeopleCard from "../components/PeopleCard"
+import { getUsers, getUsersPaginate, reset } from "../features/users/userSlice"
 
 function Generus() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { users } = useSelector((state) => state.users)
-  const [page, setpage] = useState(2)
-  const [search, setSearch] = useState('')
-  const [role, setRole] = useState('GENERUS')
+  const { users, isLoading } = useSelector((state) => state.users)
+  // const [page, setpage] = useState(2)
+  const [searchBar, setSearchBar] = useState("")
+  const [filters, setFilters] = useState({
+    page: 1,
+    positionType: "GENERUS",
+    organizationId: "",
+    sex: "",
+    grade: "",
+    search: "",
+  })
 
   useEffect(() => {
-    if (!user) navigate('/login')
-    dispatch(getUsers({ page: 1, search, role }))
-    dispatch(reset())
-  }, [user, search, role, navigate, dispatch])
+    if (!user) navigate("/login")
+    return () => {
+      dispatch(reset())
+    }
+  }, [user, navigate, dispatch])
+
+  useEffect(() => {
+    dispatch(getUsersPaginate(filters))
+  }, [dispatch, filters])
 
   const loadMoreUsers = () => {
-    dispatch(getUsersPaginate({ page, search, role }))
-    setpage(page + 1)
+    setFilters((prevState) => ({
+      ...prevState,
+      page: prevState.page + 1,
+    }))
   }
 
   const onChange = (e) => {
-    setSearch(e.target.value)
+    setSearchBar(e.target.value)
   }
 
   const onSubmit = (e) => {
     e.preventDefault()
-    dispatch(getUsersPaginate({ page, search, role }))
+    setFilters((prevState) => ({
+      ...prevState,
+      search: searchBar,
+    }))
+    dispatch(reset())
   }
 
-  const handleClick = (e) => {
-    if (e.target.innerText !== role) {
-      setRole(e.target.innerText)
-      setpage(2)
-    }
-  }
+  // const handleClick = (e) => {
+  //   if (e.target.innerText !== role) {
+  //     setRole(e.target.innerText)
+  //     setpage(2)
+  //   }
+  // }
 
   return (
     <>
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar Pengguna</Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 1 }}>
+        Users
+      </Typography>
 
-      <form onSubmit={onSubmit}>
-        <Grid container justifyContent='center' padding={2}>
-          <Grid item xs={12}>
-            <TextField
-              name='search'
-              placeholder={`Cari berdasarkan nama, ds, atau klp...`}
-              variant='standard'
-              value={search}
-              onChange={onChange}
-              fullWidth
-              required
-            />
-          </Grid>
+      <Grid container paddingBottom={5} paddingTop={5} spacing={2}>
+        <Grid item xs={9}>
+          <TextField
+            name='search'
+            placeholder={`Cari berdasarkan nama...`}
+            size='small'
+            value={searchBar}
+            onChange={onChange}
+            fullWidth
+            required
+          />
         </Grid>
-      </form>
+        <Grid item xs={3}>
+          <Button
+            size='small'
+            type='submit'
+            variant='contained'
+            color='info'
+            fullWidth
+            style={{ paddingTop: "9px", paddingBottom: "8px" }}
+            onClick={onSubmit}
+          >
+            Cari
+          </Button>
+        </Grid>
+      </Grid>
+      
+      {isLoading && (
+        <Grid align='center' sx={{ pt: 1.5 }}>
+          <CircularProgress size={20} />
+        </Grid>
+      )}
 
-      {(user?.role !== 'MT' && user?.role !== 'MS' && user?.role !== 'ADMIN') &&
+      {/* {(user?.role !== 'MT' && user?.role !== 'MS' && user?.role !== 'ADMIN') &&
       <Box pb={1}>
           <Chip
             variant={role === 'GENERUS' ? 'solid' : 'outlined'}
@@ -81,29 +126,35 @@ function Generus() {
             onClick={handleClick}
           />
         </Box>
-      }
+      } */}
+
       <InfiniteScroll
         dataLength={users.length}
         next={loadMoreUsers}
-        hasMore={(users.length%20 !== 0 || users.length === 0) ? false : true}
+        hasMore={users.length % 20 !== 0 || users.length === 0 ? false : true}
         loader={
           <Grid align='center' sx={{ pt: 1.5 }}>
             <CircularProgress size={20} />
           </Grid>
         }
         endMessage={
-          <Typography align='center' p={3} color='text.secondary' variant='body2'>
-            {users.length === 0 && 'Tidak ditemukan'}
+          <Typography
+            align='center'
+            p={3}
+            color='text.secondary'
+            variant='body2'
+          >
+            {!isLoading && users.length === 0 && "User tidak ditemukan."}
           </Typography>
         }
       >
-        {users.map(u =>
+        {users.map((userDetail, index) => (
           <PeopleCard
-            key={u._id}
-            user={u}
-            canDelete={(user?.role !== 'MT' && user?.role !== 'MS')}
+            key={index}
+            user={userDetail}
+            canDelete={user?.currentPosition.type === "ADMIN"}
           />
-        )}
+        ))}
       </InfiniteScroll>
     </>
   )

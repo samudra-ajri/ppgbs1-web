@@ -4,16 +4,32 @@ import API from '../../api'
 const API_URL = '/users'
 
 // Get users list
-const getUsers = async (token, params) => {
-  const { positionType, search, ancestorId } = params
+const getUsers = async (token, {
+  page = 1,
+  positionType = '',
+  organizationId = '',
+  sex = '',
+  grade = '',
+  search = ''
+} = {}) => {
   const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${token}` },
   }
-  const response = await API.get(API_URL + `?isActive=true&search=${search}&positionType=${positionType}&ancestorId=${ancestorId}`, config)
+
+  const queryParams = new URLSearchParams({
+    page,
+    isActive: true,
+    search,
+    positionType,
+    organizationId,
+    sex,
+    grade
+  }).toString()
+
+  const response = await API.get(`${API_URL}?${queryParams}`, config)
   return response.data
 }
+
 
 // Delete a user
 const deleteUser = async (token, userId) => {

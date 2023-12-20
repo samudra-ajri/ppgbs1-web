@@ -78,7 +78,7 @@ function PresenceList(props) {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (search) {
-        dispatch(getUsersPaginate({ search, positionType: "GENERUS", ancestorId: event.organizationId }))
+        dispatch(getUsersPaginate({ search, positionType: "GENERUS" }))
         dispatch(resetSearch())
       } else {
         setSearch([])
