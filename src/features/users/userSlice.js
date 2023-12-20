@@ -10,7 +10,8 @@ const initialState = {
   message: '',
   currentPage: 1,
   totalPages: 1,
-  hasNextPage: false
+  hasNextPage: false,
+  totalCount: 0
 }
 
 // Get users list
@@ -121,6 +122,7 @@ export const userSlice = createSlice({
         state.isLoading = false
         state.isSuccess = true
         state.users = [...state.users, ...action.payload.data]
+        state.totalCount = action.payload.total
       })
       .addCase(getUsersPaginate.rejected, (state, action) => {
         state.isLoading = false

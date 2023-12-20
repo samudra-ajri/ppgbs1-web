@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   Chip,
   CircularProgress,
   Grid,
@@ -18,7 +20,7 @@ function Generus() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { users, isLoading } = useSelector((state) => state.users)
+  const { users, totalCount, isLoading } = useSelector((state) => state.users)
   // const [page, setpage] = useState(2)
   const [searchBar, setSearchBar] = useState("")
   const [filters, setFilters] = useState({
@@ -74,6 +76,21 @@ function Generus() {
         Users
       </Typography>
 
+      <Card sx={{ mb: 0.5 }} align='center'>
+        <CardContent
+          sx={{
+            padding: 2,
+            "&:last-child": {
+              paddingBottom: 2,
+            },
+          }}
+        >
+          <Typography variant='body1'>Jumlah</Typography>
+          <Typography variant='h5'>{totalCount}</Typography>
+          <Typography variant='body2'>Orang</Typography>
+        </CardContent>
+      </Card>
+
       <Grid container paddingBottom={5} paddingTop={5} spacing={2}>
         <Grid item xs={9}>
           <TextField
@@ -100,7 +117,7 @@ function Generus() {
           </Button>
         </Grid>
       </Grid>
-      
+
       {isLoading && (
         <Grid align='center' sx={{ pt: 1.5 }}>
           <CircularProgress size={20} />
