@@ -32,13 +32,14 @@ const getUsers = async (token, {
 
 
 // Delete a user
-const deleteUser = async (token, userId) => {
+const deleteUser = async (token, params) => {
+  const { userId, positionId } = params
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.delete(API_URL + userId, config)
+  const response = await API.delete(API_URL + `/${userId}/positions/${positionId}`, config)
   return response.data
 }
 

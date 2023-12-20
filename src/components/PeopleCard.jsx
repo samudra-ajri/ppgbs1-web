@@ -12,13 +12,12 @@ import {
   Typography,
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
-import capitalize from "capitalize"
 import moment from "moment"
 import { Link } from "react-router-dom"
 import PopDialog from "./PopDialog"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { moveUser } from "../features/users/userSlice"
+import { deleteUser, moveUser } from "../features/users/userSlice"
 
 function PeopleCard(props) {
   const dispatch = useDispatch()
@@ -33,7 +32,7 @@ function PeopleCard(props) {
 
   const onClickRemove = () => {
     dispatch(
-      moveUser({ userId: user._id, data: { ds: "MOVING", klp: "MOVING" } })
+      deleteUser({ userId: user.id, positionId: user.positions[0].positionId })
     )
   }
 
@@ -81,7 +80,7 @@ function PeopleCard(props) {
           </Grid>
         </CardContent>
       </Card>
-      
+
       <PopDialog title={`Hapus ${user.name}?`} openPopup={openPopup}>
         <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
           {isLoading ? (

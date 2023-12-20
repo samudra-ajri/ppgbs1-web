@@ -55,10 +55,10 @@ export const getUsersPaginate = createAsyncThunk(
 // Delete user
 export const deleteUser = createAsyncThunk(
   'users/delete',
-  async (userId, thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await userService.deleteUser(token, userId)
+      return await userService.deleteUser(token, params)
     } catch (error) {
       const message =
         (error.response &&
@@ -71,7 +71,6 @@ export const deleteUser = createAsyncThunk(
   }
 )
 
-// Move user (change user ds/klp to moving status it means nonactive user)
 export const moveUser = createAsyncThunk(
   'users/move',
   async ({ userId, data }, thunkAPI) => {
@@ -136,8 +135,9 @@ export const userSlice = createSlice({
         state.isLoading = false
         state.isSuccess = true
         state.users = state.users.filter(
-          (user) => user._id !== action.payload.id
+          (user) => user.id !== action.payload.userId
         )
+        state.totalCount = state.users.length
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false
