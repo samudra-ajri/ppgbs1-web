@@ -65,6 +65,7 @@ function PresenceList(props) {
     }
     return () => {
       dispatch(reset())
+      dispatch(resetSearch())
     }
   }, [dispatch, event.id, isSuccessCreatePresence])
 
