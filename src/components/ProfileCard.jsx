@@ -10,7 +10,7 @@ function ProfileCard(props) {
           <Grid container>
             <Grid item xs={10} md={11}>
               <Typography>
-                Hi, {user?.name}
+                {user?.name}
               </Typography>
               <Typography variant="caption">
                 {user?.currentPosition.positionName}
