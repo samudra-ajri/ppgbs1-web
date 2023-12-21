@@ -13,6 +13,9 @@ import Register from '../pages/Register'
 import ResetPassword from '../pages/ResetPassword'
 import UserCompletionByCategory from '../pages/UserCompletionByCategory'
 import InputCompletion from '../pages/InputCompletion'
+import PersonCompletion from '../pages/PersonCompletion'
+import PersonCompletionByCategory from '../pages/PersonCompletionByCategory'
+import PersonInputCompletion from '../pages/PersonInputCompletion'
 
 function ChildLayout() {
   return (
@@ -20,9 +23,20 @@ function ChildLayout() {
       <Routes>
         <Route exact path='/details/*' element={<InputTargets />} />
         <Route exact path='/detail-completion/*' element={<InputCompletion />} />
+        <Route exact path='/person-detail-completion/*' element={<PersonInputCompletion />} />
         <Route path='/targets/*' element={<DetailTargets />} />
         <Route path='/user-completion/*' element={<UserCompletionByCategory />} />
-        <Route path='/profile/*' element={<><BackHeader title='Profil' /><Profile /></>} />
+        <Route path='/person-completion/*' element={<PersonCompletionByCategory />} />
+        <Route path='/person-completion' element={
+          <>
+            <BackHeader title='Capaian User' />
+            <PersonCompletion />
+          </>} />
+        <Route path='/profile/*' element={
+          <>
+            <BackHeader title='Profil' />
+            <Profile />
+          </>} />
         <Route path='/targets-completed/*' element={<CompletedTargets />} />
         <Route path='/details-completed/*' element={<CompletedDetails />} />
         <Route path='/register/*' element={<Register />} />

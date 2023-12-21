@@ -2,8 +2,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import personService from './personService'
 
+const person = JSON.parse(localStorage.getItem('person'))
+
 const initialState = {
-  person: null,
+  person: person ? person : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -43,7 +45,7 @@ export const personSlice = createSlice({
       .addCase(getUserById.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.person = action.payload
+        state.person = action.payload.data
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.isLoading = false

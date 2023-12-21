@@ -18,6 +18,7 @@ import PopDialog from "./PopDialog"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { deleteUser } from "../features/users/userSlice"
+import { getUserById } from "../features/persons/personSlice"
 
 function PeopleCard(props) {
   const dispatch = useDispatch()
@@ -36,6 +37,10 @@ function PeopleCard(props) {
     )
   }
 
+  const handleClickCard = () => {
+    dispatch(getUserById(user.id))
+  }
+
   return (
     <>
       <Card sx={{ mb: 0.5, cursor: "pointer" }}>
@@ -49,7 +54,7 @@ function PeopleCard(props) {
         >
           <Grid container>
             <Grid item xs={10} md={11}>
-              <Link to={`/c/profile/${user.id}`} component={CardActionArea}>
+              <Link to={`/c/person-completion`} component={CardActionArea} onClick={handleClickCard}>
                 <Grid container>
                   <Grid item>
                     <Typography variant='body2'>{user.name}</Typography>
