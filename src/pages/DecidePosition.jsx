@@ -10,16 +10,19 @@ function DecidePosition() {
   const navigate = useNavigate()
   const { user, alreadyDecidedPosition } = useSelector((state) => state.auth)
 
+  const navigationPath =
+    user.currentPosition.type === "GENERUS" ? "/user-completion" : "/"
+
   useEffect(() => {
     if (!user) navigate("/login")
 
     if (user.positions.length === 1) {
       dispatch(decidePosition(user.positions[0].positionId))
-      navigate("/user-completion")
+      navigate(navigationPath)
     }
-    if (alreadyDecidedPosition) navigate("/user-completion")
+    if (alreadyDecidedPosition) navigate(navigationPath)
     dispatch(reset())
-  }, [user, alreadyDecidedPosition, navigate, dispatch])
+  }, [user, alreadyDecidedPosition, navigate, dispatch, navigationPath])
 
   return (
     <>
