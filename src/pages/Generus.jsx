@@ -90,6 +90,14 @@ function Generus() {
   const setFilterObject = (key, value) => (event) => {
     dispatch(reset())
 
+    // reset the garade filter regarding to the positionType
+    if (filters.positionType === "PENGAJAR") {
+      setFilters((prevState) => ({
+        ...prevState,
+        grade: "",
+      }))
+    }
+
     // reset the organizationId filter regarding to the ancestorid
     if (filters.ancestorId === value) {
       setFilters((prevState) => ({
@@ -165,22 +173,24 @@ function Generus() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={1} pb={3} pl={1}>
-        {Object.keys(gradeEnum).map((key) => (
-          <Grid item key={key}>
-            <Chip
-              label={gradeEnum[key]}
-              color='info'
-              variant={filters.grade === key ? "solid" : "outlined"}
-              onClick={setFilterObject("grade", key)}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      {filters.positionType !== "PENGAJAR" && (
+        <Grid container spacing={1} pb={3} pl={1}>
+          {Object.keys(gradeEnum).map((key) => (
+            <Grid item key={key}>
+              <Chip
+                label={gradeEnum[key]}
+                color='info'
+                variant={filters.grade === key ? "solid" : "outlined"}
+                onClick={setFilterObject("grade", key)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
 
-      <Grid container spacing={1} pb={3} pl={1}>
-        {isPPG &&
-          ppdList?.data.map((ppd) => (
+      {isPPG && (
+        <Grid container spacing={1} pb={3} pl={1}>
+          {ppdList?.data.map((ppd) => (
             <Grid item key={ppd.id}>
               <Chip
                 label={ppd.name}
@@ -190,12 +200,12 @@ function Generus() {
               />
             </Grid>
           ))}
-      </Grid>
+        </Grid>
+      )}
 
-      <Grid container spacing={1} pb={3} pl={1}>
-        {filters.ancestorId &&
-          (isPPG || isPPDOrTeacher) &&
-          ppkList?.data.map((ppk) => (
+      {filters.ancestorId && (isPPG || isPPDOrTeacher) && (
+        <Grid container spacing={1} pb={3} pl={1}>
+          {ppkList?.data.map((ppk) => (
             <Grid item key={ppk.id}>
               <Chip
                 label={ppk.name}
@@ -207,7 +217,8 @@ function Generus() {
               />
             </Grid>
           ))}
-      </Grid>
+        </Grid>
+      )}
     </>
   )
 
