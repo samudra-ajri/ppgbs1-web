@@ -1,4 +1,5 @@
 import {
+  AppBar,
   Button,
   Card,
   CardContent,
@@ -9,6 +10,7 @@ import {
   Grid,
   IconButton,
   TextField,
+  Toolbar,
   Typography,
 } from "@mui/material"
 import FilterIcon from "@mui/icons-material/FilterListRounded"
@@ -219,6 +221,25 @@ function Generus() {
           ))}
         </Grid>
       )}
+
+      <Grid pb={10} />
+
+      <AppBar position='fixed' color='inherit' sx={{ top: 'auto', bottom: 0 }}>
+        <Toolbar>
+          <Grid container justifyContent='center' style={{ width: "100%" }}>
+            <Grid item xs={12}>
+              <Button
+                variant='contained'
+                color='info'
+                fullWidth
+                onClick={toggleDrawer(false)}
+              >
+                Lihat
+              </Button>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
     </>
   )
 
