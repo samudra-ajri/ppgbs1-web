@@ -101,7 +101,7 @@ function Generus() {
     }
 
     // reset the organizationId filter regarding to the ancestorid
-    if (filters.ancestorId === value) {
+    if (key === "ancestorId") {
       setFilters((prevState) => ({
         ...prevState,
         organizationId: "",
@@ -224,7 +224,7 @@ function Generus() {
 
       <Grid pb={10} />
 
-      <AppBar position='fixed' color='inherit' sx={{ top: 'auto', bottom: 0 }}>
+      <AppBar position='fixed' color='inherit' sx={{ top: "auto", bottom: 0 }}>
         <Toolbar>
           <Grid container justifyContent='center' style={{ width: "100%" }}>
             <Grid item xs={12}>
