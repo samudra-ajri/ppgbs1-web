@@ -55,9 +55,18 @@ function PeopleCard(props) {
                     <Typography variant='body2'>{user.name}</Typography>
                   </Grid>
                 </Grid>
-                <Typography fontSize={10} component='p' color='text.secondary'>
-                  {user.positions[0].positionName}
-                </Typography>
+
+                {user.positions.map((position, index) => (
+                  <Typography
+                    key={index}
+                    fontSize={10}
+                    component='p'
+                    color='text.secondary'
+                  >
+                    {position.positionName}
+                  </Typography>
+                ))}
+
                 <Typography fontSize={10} component='p' color='text.secondary'>
                   {(user.sex === 1 ? "Laki-laki" : "Perempuan") +
                     `${
