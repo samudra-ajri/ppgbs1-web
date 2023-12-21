@@ -1,7 +1,7 @@
 
 import API from '../../api'
 
-const API_URL = '/api/users/'
+const API_URL = '/users/'
 
 // Get user by id
 const getUserById = async (token, userId) => {

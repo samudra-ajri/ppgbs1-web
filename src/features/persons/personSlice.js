@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import personService from './personService'
 
 const initialState = {
-  user: null,
+  person: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -12,11 +12,11 @@ const initialState = {
 
 // Get user by id
 export const getUserById = createAsyncThunk(
-  'user/getOne',
-  async (suerId, thunkAPI) => {
+  'person/getOne',
+  async (userId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await personService.getUserById(token, suerId)
+      return await personService.getUserById(token, userId)
     } catch (error) {
       const message =
         (error.response &&
@@ -43,7 +43,7 @@ export const personSlice = createSlice({
       .addCase(getUserById.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.user = action.payload
+        state.person = action.payload
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.isLoading = false

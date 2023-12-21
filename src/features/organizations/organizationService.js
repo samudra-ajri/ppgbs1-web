@@ -1,6 +1,6 @@
 import API from '../../api'
 
-const API_URL = 'organizations'
+const API_URL = '/organizations'
 
 // Get all Ds
 const getppd = async () => {
