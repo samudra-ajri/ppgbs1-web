@@ -24,7 +24,7 @@ const login = async (userData) => {
             return user
         }
     } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Gagal melakukan login.'
+        const errorMessage = error.response?.data?.message
         throw new Error(errorMessage)
     }
 }
@@ -80,7 +80,7 @@ const decidePosition = async (positionId, token) => {
             return user
         }
     } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Gagal melakukan login.'
+        const errorMessage = error.response?.data?.message
         throw new Error(errorMessage)
     }
 }
