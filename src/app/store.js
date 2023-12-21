@@ -32,7 +32,7 @@ export const store = configureStore({
     completionScores: completionScoresReducer,
     users: userReducer,
     usersCounter: userCounterReducer,
-    persons: personReducer,
+    person: personReducer,
     completedTargets: completedTargetReducer,
     dashboard: dashboardReducer,
     events: eventReducer,
