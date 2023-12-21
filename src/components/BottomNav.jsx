@@ -2,7 +2,7 @@ import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material"
 import LoginIcon from '@mui/icons-material/LoginRounded'
 import PersonIcon from '@mui/icons-material/PersonRounded'
 import ProfileIcon from '@mui/icons-material/FaceOutlined'
-import PeopleListIcon from '@mui/icons-material/FaceOutlined'
+import PeopleListIcon from '@mui/icons-material/PersonSearchOutlined'
 import EventIcon from '@mui/icons-material/EventRounded'
 import HomeIcon from '@mui/icons-material/HomeMaxRounded'
 import CompletionIcon from '@mui/icons-material/GradingOutlined'
