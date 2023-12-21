@@ -25,7 +25,7 @@ function Menu() {
 
   return (
     <>
-      <Typography variant='body2'>
+      <Typography variant='body2' align='center'>
         <b>Hi, {stringCast.ppg(user.name)}</b>
       </Typography>
       <Box sx={{ flexGrow: 1 }} paddingTop={5}>
