@@ -2,7 +2,7 @@ import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material"
 import LoginIcon from '@mui/icons-material/LoginRounded'
 import PersonIcon from '@mui/icons-material/PersonRounded'
 import ProfileIcon from '@mui/icons-material/FaceOutlined'
-import DashboardIcon from '@mui/icons-material/DataUsageRounded'
+import PeopleListIcon from '@mui/icons-material/FaceOutlined'
 import EventIcon from '@mui/icons-material/EventRounded'
 import HomeIcon from '@mui/icons-material/HomeMaxRounded'
 import CompletionIcon from '@mui/icons-material/GradingOutlined'
@@ -31,7 +31,7 @@ function BottomNav() {
           {user && alreadyDecidedPosition ? (
               user.currentPosition.type !== 'GENERUS' ? [
                 <BottomNavigationAction key="menu" component={Link} to="/" label="Menu" value="menu" icon={pathname === '/' ? <HomeIcon fontSize="small"/> : <ArrowBackIcon fontSize="small"/>} />,
-                <BottomNavigationAction key="dashboard" component={Link} to="/dashboard" label="Dashboard" value="dashboard" icon={<DashboardIcon fontSize="small"/>} />,
+                <BottomNavigationAction key="users" component={Link} to="/users" label="Users" value="users" icon={<PeopleListIcon fontSize="small"/>} />,
                 <BottomNavigationAction key="kegiatan" component={Link} to="/events" label="Kegiatan" value="kegiatan" icon={<EventIcon fontSize="small"/>} />,
                 <BottomNavigationAction key="profile" component={Link} to="/profile" label="Profile" value="profile" icon={<ProfileIcon fontSize="small"/>} />,
               ] : [

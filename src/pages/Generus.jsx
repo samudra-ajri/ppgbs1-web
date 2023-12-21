@@ -11,14 +11,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
+import FilterIcon from "@mui/icons-material/FilterListRounded"
+import CloseIcon from "@mui/icons-material/CloseRounded"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import InfiniteScroll from "react-infinite-scroll-component"
 import PeopleCard from "../components/PeopleCard"
 import { getUsersPaginate, reset } from "../features/users/userSlice"
-import FilterIcon from "@mui/icons-material/FilterListRounded"
-import CloseIcon from "@mui/icons-material/CloseRounded"
+import { getppd, getppk } from "../features/organizations/organizationSlice"
+
 import gradeEnum from "../enums/gradeEnum"
 
 function Generus() {
@@ -26,11 +28,28 @@ function Generus() {
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
   const { users, totalCount, isLoading } = useSelector((state) => state.users)
+  const { ppd: ppdList, ppk: ppkList } = useSelector(
+    (state) => state.organizations
+  )
+
+  const isPPG = user.currentPosition.organizationLevel === 0
+  const isPPDOrTeacher =
+    user.currentPosition.organizationLevel === 1 ||
+    user.currentPosition.type === "PENGAJAR"
+
+  const initialAncestorIdFilter = () => {
+    const isPPD = user.currentPosition.organizationLevel === 1
+    if (!isPPDOrTeacher) return ""
+    if (isPPD) return user.currentPosition.organizationId
+    return user.currentPosition.organizationAncestorId // return the PPD organizationId
+  }
+
   const [searchBar, setSearchBar] = useState("")
   const [stateDrawer, setStateDrawer] = useState(false)
   const [filters, setFilters] = useState({
     page: 1,
     positionType: "GENERUS",
+    ancestorId: initialAncestorIdFilter(),
     organizationId: "",
     sex: "",
     grade: "",
@@ -43,14 +62,19 @@ function Generus() {
 
   useEffect(() => {
     if (!user) navigate("/login")
+    if (!ppdList && isPPG) dispatch(getppd())
     return () => {
       dispatch(reset())
     }
-  }, [user, navigate, dispatch])
+  }, [user, navigate, dispatch, ppdList, isPPG])
 
   useEffect(() => {
     dispatch(getUsersPaginate(filters))
   }, [dispatch, filters])
+
+  useEffect(() => {
+    if (filters.ancestorId) dispatch(getppk(filters.ancestorId))
+  }, [dispatch, filters.ancestorId])
 
   const loadMoreUsers = () => {
     setFilters((prevState) => ({
@@ -65,6 +89,15 @@ function Generus() {
 
   const setFilterObject = (key, value) => (event) => {
     dispatch(reset())
+
+    // reset the organizationId filter regarding to the ancestorid
+    if (filters.ancestorId === value) {
+      setFilters((prevState) => ({
+        ...prevState,
+        organizationId: "",
+      }))
+    }
+
     setFilters((prevState) => ({
       ...prevState,
       [key]: value === filters[key] ? "" : value,
@@ -94,7 +127,7 @@ function Generus() {
         </Typography>
       </Grid>
 
-      <Grid container spacing={0.5} pb={3} pl={1}>
+      <Grid container spacing={1} pb={3} pl={1}>
         <Grid item>
           <Chip
             label='Generus'
@@ -113,7 +146,7 @@ function Generus() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={0.5} pb={3} pl={1}>
+      <Grid container spacing={1} pb={3} pl={1}>
         <Grid item>
           <Chip
             label='Laki-laki'
@@ -132,7 +165,7 @@ function Generus() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={0.5} pb={3} pl={1}>
+      <Grid container spacing={1} pb={3} pl={1}>
         {Object.keys(gradeEnum).map((key) => (
           <Grid item key={key}>
             <Chip
@@ -143,6 +176,37 @@ function Generus() {
             />
           </Grid>
         ))}
+      </Grid>
+
+      <Grid container spacing={1} pb={3} pl={1}>
+        {isPPG &&
+          ppdList?.data.map((ppd) => (
+            <Grid item key={ppd.id}>
+              <Chip
+                label={ppd.name}
+                color='info'
+                variant={filters.ancestorId === ppd.id ? "solid" : "outlined"}
+                onClick={setFilterObject("ancestorId", ppd.id)}
+              />
+            </Grid>
+          ))}
+      </Grid>
+
+      <Grid container spacing={1} pb={3} pl={1}>
+        {filters.ancestorId &&
+          (isPPG || isPPDOrTeacher) &&
+          ppkList?.data.map((ppk) => (
+            <Grid item key={ppk.id}>
+              <Chip
+                label={ppk.name}
+                color='info'
+                variant={
+                  filters.organizationId === ppk.id ? "solid" : "outlined"
+                }
+                onClick={setFilterObject("organizationId", ppk.id)}
+              />
+            </Grid>
+          ))}
       </Grid>
     </>
   )

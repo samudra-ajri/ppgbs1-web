@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { Box, Grid, Typography } from "@mui/material"
 import stringCast from "../utils/stringCast"
 import BarIcon from "@mui/icons-material/EqualizerRounded"
-import DashboardIcon from "@mui/icons-material/DataUsageRounded"
 import PeopleListIcon from '@mui/icons-material/FaceOutlined'
 import EventIcon from "@mui/icons-material/EventRounded"
 import RestPasswordIcon from "@mui/icons-material/LockResetRounded"
@@ -29,10 +28,6 @@ function Menu() {
       <Typography variant='body2'><b>Hi, {stringCast.ppg(user.name)}</b></Typography>
       <Box sx={{ flexGrow: 1 }} paddingTop={5}>
         <Grid container spacing={2}>
-          <Grid item xs={4} textAlign='center' component={Link} to='/dashboard'>
-            <DashboardIcon fontSize='large' color='info'/>
-            <Typography sx={{fontSize: '12px'}}>Dashboard</Typography>
-          </Grid>
           <Grid item xs={4} textAlign='center' component={Link} to='/events'>
             <EventIcon fontSize='large' color='info'/>
             <Typography sx={{fontSize: '12px'}}>Kegiatan</Typography>

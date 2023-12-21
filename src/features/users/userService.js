@@ -7,6 +7,7 @@ const API_URL = '/users'
 const getUsers = async (token, {
   page = 1,
   positionType = '',
+  ancestorId = '',
   organizationId = '',
   sex = '',
   grade = '',
@@ -21,6 +22,7 @@ const getUsers = async (token, {
     isActive: true,
     search,
     positionType,
+    ancestorId,
     organizationId,
     sex,
     grade
