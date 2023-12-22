@@ -4,7 +4,7 @@ const API_URL = 'completions/'
 
 // Get all users completions scores
 const getAllCompletionsScores = async (filters, token) => {
-  const { ds='', klp='', field='', category='' } = filters
+  const { ds = '', klp = '', field = '', category = '' } = filters
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -44,10 +44,33 @@ const getSumCompletions = async (token, filters) => {
   return response.data
 }
 
+// Get group sum completions
+const getGroupSumCompletions = async (token, filters) => {
+  const { structure, grade, subject, category, subcategory, ancestorId, organizationId, usersGrade } = filters
+
+  const queryFilters = []
+  if (grade) queryFilters.push(`grade=${grade}`)
+  if (subject) queryFilters.push(`subject=${subject}`)
+  if (category) queryFilters.push(`category=${category}`)
+  if (subcategory) queryFilters.push(`subcategory=${subcategory}`)
+  if (ancestorId) queryFilters.push(`ancestorId=${ancestorId}`)
+  if (organizationId) queryFilters.push(`organizationId=${organizationId}`)
+  if (usersGrade) queryFilters.push(`usersGrade=${usersGrade}`)
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(API_URL + `sum/${structure}/users?${queryFilters.join('&')}`, config)
+  return response.data
+}
+
 const completionScoreService = {
   getCompletionsScoresByUserId,
   getAllCompletionsScores,
   getSumCompletions,
+  getGroupSumCompletions,
 }
 
 export default completionScoreService

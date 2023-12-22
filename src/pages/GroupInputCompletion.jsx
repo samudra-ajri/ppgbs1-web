@@ -15,11 +15,10 @@ import BackHeader from "../components/BackHeader"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import SumCompletionCard from "../components/SumCompletionCard"
 import {
-  getSumCompletions,
+  getGroupSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
 import gradeEnum from "../enums/gradeEnum"
-import { createInitialData } from "../features/initialData/initialDataSlice"
 import { toast } from "react-toastify"
 import { logout } from "../features/auth/authSlice"
 
@@ -50,9 +49,8 @@ function GroupInputCompletion() {
       return
     }
     dispatch(
-      getSumCompletions({
+      getGroupSumCompletions({
         structure: "material",
-        userId: person.id,
         subcategory: subcategory,
       })
     )
@@ -69,18 +67,6 @@ function GroupInputCompletion() {
     message,
   ])
 
-  useEffect(() => {
-    if (sumCompletions) {
-      const completionInputs = sumCompletions.reduce((acc, item) => {
-        acc[item.materialId] = item.completionCount
-        return acc
-      }, {})
-
-      dispatch(createInitialData({ completionInputs }))
-      setInputs(completionInputs)
-    }
-  }, [dispatch, sumCompletions])
-
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.completionCount,
@@ -92,7 +78,9 @@ function GroupInputCompletion() {
     )
     const totalPercentage =
       totalCompletionCount && totalMaterialCount
-        ? (totalCompletionCount / totalMaterialCount) * 100
+        ? (totalCompletionCount /
+            (totalMaterialCount * sumCompletions[0].materialsMultiplier)) *
+          100
         : 0
     return Number(totalPercentage.toFixed(2))
   }
@@ -101,9 +89,8 @@ function GroupInputCompletion() {
     const grade = e.target.value === "initial" ? null : e.target.value
     setFilterGrade(e.target.value)
     dispatch(
-      getSumCompletions({
+      getGroupSumCompletions({
         structure: "material",
-        userId: person.id,
         subcategory: subcategory,
         grade: grade,
       })
@@ -116,11 +103,35 @@ function GroupInputCompletion() {
   }
 
   const cardColor = (sumCompletion) => {
-    const background = inputs[sumCompletion.materialId] && "#2E7D32"
-    const font = inputs[sumCompletion.materialId] && "#F0F6F0"
-    return {
-      background,
-      font,
+    const styles = [
+      { threshold: 20, background: "#a31545" },
+      { threshold: 30, background: "#e91e63" },
+      { threshold: 40, background: "#ed4b82" },
+      { threshold: 50, background: "#ffd453" },
+      { threshold: 60, background: "#ffca28" },
+      { threshold: 70, background: "#b28d1c" },
+      { threshold: 80, background: "#33ab9f" },
+      { threshold: 90, background: "#009688" },
+    ]
+
+    const defaultStyle = { background: "#00695f", font: "#f0f6f0" }
+    const style =
+      styles.find((style) => sumCompletion.percentage < style.threshold) ||
+      defaultStyle
+    return { ...style, font: "#f0f6f0" }
+  }
+
+  const onClickInput = (completion) => {
+    if (inputs[completion.materialId]) {
+      setInputs((prevState) => ({
+        ...prevState,
+        [completion.materialId]: 0,
+      }))
+    } else {
+      setInputs((prevState) => ({
+        ...prevState,
+        [completion.materialId]: 1,
+      }))
     }
   }
 
@@ -183,17 +194,21 @@ function GroupInputCompletion() {
                     : 12
                 }
                 key={index}
+                onClick={() => onClickInput(sumCompletion)}
               >
                 <SumCompletionCard
                   key={index}
                   percentage={sumCompletion.percentage}
-                  title={sumCompletion.material}
+                  title={
+                    inputs[sumCompletion.materialId]
+                      ? sumCompletion.percentage + "%"
+                      : sumCompletion.material
+                  }
                   link='#'
                   structure='material'
                   grade={isQuranHaditsCategory ? null : sumCompletion.grade}
                   backgroundColor={cardColor(sumCompletion).background}
                   fontColor={cardColor(sumCompletion).font}
-                  disabled={true}
                 />
               </Grid>
             ))}

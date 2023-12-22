@@ -15,7 +15,7 @@ import { Box } from "@mui/system"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import SumCompletionCard from "../components/SumCompletionCard"
 import {
-  getSumCompletions,
+  getGroupSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
 import gradeEnum from "../enums/gradeEnum"
@@ -26,7 +26,6 @@ function GroupCompletionByCategory() {
   const navigate = useNavigate()
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
-  const { person } = useSelector((state) => state.person)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores
   )
@@ -40,14 +39,13 @@ function GroupCompletionByCategory() {
       return
     }
     dispatch(
-      getSumCompletions({
+      getGroupSumCompletions({
         structure: "subcategory",
-        userId: person.id,
         category: category,
       })
     )
     dispatch(reset())
-  }, [navigate, dispatch, category, isError, message, person])
+  }, [navigate, dispatch, category, isError, message])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
@@ -60,7 +58,7 @@ function GroupCompletionByCategory() {
     )
     const totalPercentage =
       totalCompletionCount && totalMaterialCount
-        ? (totalCompletionCount / totalMaterialCount) * 100
+        ? (totalCompletionCount / (totalMaterialCount * sumCompletions[0].materialsMultiplier)) * 100
         : 0
     return Number(totalPercentage.toFixed(2))
   }
@@ -69,9 +67,8 @@ function GroupCompletionByCategory() {
     const grade = e.target.value === "initial" ? null : e.target.value
     setFilterGrade(e.target.value)
     dispatch(
-      getSumCompletions({
+      getGroupSumCompletions({
         structure: "subcategory",
-        userId: person.id,
         category: category,
         grade: grade,
       })
