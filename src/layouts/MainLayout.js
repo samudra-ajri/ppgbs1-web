@@ -13,6 +13,7 @@ import Menu from '../pages/Menu'
 import ResetPasswordList from '../pages/ResetPasswordList'
 import DecidePosition from '../pages/DecidePosition'
 import UserCompletion from '../pages/UserCompletion'
+import GroupCompletion from '../pages/GroupCompletion'
 import Profile from '../pages/Profile'
 import Footer from '../components/Footer'
 
@@ -26,6 +27,7 @@ function MainLayout() {
         <Route path='/completion' element={<CompletionDashboard />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/user-completion' element={<UserCompletion />} />
+        <Route path='/group-completion' element={<GroupCompletion />} />
         <Route path='/login' element={<Login />} />
         <Route path='/forgot-password' element={<FortgotPassword />} />
         <Route path='/register' element={<Register />} />

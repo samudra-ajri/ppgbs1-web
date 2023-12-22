@@ -16,6 +16,8 @@ import InputCompletion from '../pages/InputCompletion'
 import PersonCompletion from '../pages/PersonCompletion'
 import PersonCompletionByCategory from '../pages/PersonCompletionByCategory'
 import PersonInputCompletion from '../pages/PersonInputCompletion'
+import GroupCompletionByCategory from '../pages/GroupCompletionByCategory'
+import GroupInputCompletion from '../pages/GroupInputCompletion'
 
 function ChildLayout() {
   return (
@@ -23,15 +25,17 @@ function ChildLayout() {
       <Routes>
         <Route exact path='/details/*' element={<InputTargets />} />
         <Route exact path='/detail-completion/*' element={<InputCompletion />} />
-        <Route exact path='/person-detail-completion/*' element={<PersonInputCompletion />} />
         <Route path='/targets/*' element={<DetailTargets />} />
         <Route path='/user-completion/*' element={<UserCompletionByCategory />} />
+        <Route path='/group-completion/*' element={<GroupCompletionByCategory />} />
+        <Route exact path='/group-detail-completion/*' element={<GroupInputCompletion />} />
         <Route path='/person-completion/*' element={<PersonCompletionByCategory />} />
         <Route path='/person-completion' element={
           <>
             <BackHeader title='Capaian User' />
             <PersonCompletion />
           </>} />
+        <Route exact path='/person-detail-completion/*' element={<PersonInputCompletion />} />
         <Route path='/profile/*' element={
           <>
             <BackHeader title='Profil' />

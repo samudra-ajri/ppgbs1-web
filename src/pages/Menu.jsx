@@ -39,7 +39,7 @@ function Menu() {
             xs={4}
             textAlign='center'
             component={Link}
-            to='/completion'
+            to='/group-completion'
           >
             <BarIcon fontSize='large' color='info' />
             <Typography sx={{ fontSize: "12px" }}>Materi</Typography>
