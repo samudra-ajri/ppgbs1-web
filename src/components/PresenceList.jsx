@@ -47,21 +47,21 @@ function PresenceList(props) {
   const [openPopup, setOpenPopup] = useState(false)
   const [removeId, setRemoveId] = useState("")
   const [stateDrawer, setStateDrawer] = useState(false)
+  const { ppd: ppdList, ppk: ppkList } = useSelector(
+    (state) => state.organizations
+  )
+
+  const isPPGevent = event.organizationLevel === 0
+  const isPPDevent = event.organizationLevel === 1
   const [filters, setFilters] = useState({
     page: 1,
     positionType: "GENERUS",
-    ancestorOrganizationId: "",
+    ancestorOrganizationId: isPPDevent ? event.organizationId : "",
     organizationId: "",
     sex: "",
     grade: "",
     eventId: event.id,
   })
-
-  const isPPGevent = event.organizationLevel === 0
-  const isPPDevent = event.organizationLevel === 1
-  const { ppd: ppdList, ppk: ppkList } = useSelector(
-    (state) => state.organizations
-  )
 
   const {
     isError,
@@ -84,6 +84,10 @@ function PresenceList(props) {
   useEffect(() => {
     if (isSuccessCreatePresence) {
       toast.success("kehadiran behasil ditambah.")
+      setFilters((prevState) => ({
+        ...prevState,
+        page: 1,
+      }))
     }
     return () => {
       dispatch(reset())
@@ -150,10 +154,6 @@ function PresenceList(props) {
     }
     dispatch(createPresenceByAdmin(data))
     setSearchValue(null)
-    setFilters((prevState) => ({
-      ...prevState,
-      page: 1,
-    }))
   }
 
   const onClickRemove = () => {
