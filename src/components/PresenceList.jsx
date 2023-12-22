@@ -1,16 +1,23 @@
 import {
+  AppBar,
   Autocomplete,
   Box,
   Button,
   Card,
   CardContent,
+  Chip,
   CircularProgress,
+  Container,
+  Drawer,
   Grid,
   IconButton,
   Stack,
   TextField,
+  Toolbar,
   Typography,
 } from "@mui/material"
+import CloseIcon from "@mui/icons-material/CloseRounded"
+import FilterIcon from "@mui/icons-material/FilterListRounded"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -29,16 +36,32 @@ import {
   reset as resetSearch,
 } from "../features/users/userSlice"
 import PopDialog from "./PopDialog"
+import { getppd, getppk } from "../features/organizations/organizationSlice"
 
 function PresenceList(props) {
   const { event, user } = props
   const dispatch = useDispatch()
   const { users } = useSelector((state) => state.users)
-  const [page, setPage] = useState(1)
   const [search, setSearch] = useState("")
   const [searchValue, setSearchValue] = useState(null)
   const [openPopup, setOpenPopup] = useState(false)
   const [removeId, setRemoveId] = useState("")
+  const [stateDrawer, setStateDrawer] = useState(false)
+  const [filters, setFilters] = useState({
+    page: 1,
+    positionType: "GENERUS",
+    ancestorOrganizationId: "",
+    organizationId: "",
+    sex: "",
+    grade: "",
+    eventId: event.id,
+  })
+
+  const isPPGevent = event.organizationLevel === 0
+  const isPPDevent = event.organizationLevel === 1
+  const { ppd: ppdList, ppk: ppkList } = useSelector(
+    (state) => state.organizations
+  )
 
   const {
     isError,
@@ -55,25 +78,33 @@ function PresenceList(props) {
   useEffect(() => {
     if (isError) toast.error(message)
     if (isSuccess) toast.success("behasil.")
-  }, [isError, isSuccess, message])
+    if (!ppdList && isPPGevent) dispatch(getppd())
+  }, [dispatch, isError, isPPGevent, isSuccess, message, ppdList])
 
   useEffect(() => {
     if (isSuccessCreatePresence) {
       toast.success("kehadiran behasil ditambah.")
-    } else {
-      dispatch(getPresencesByEventId({ page: 1, eventId: event.id }))
     }
     return () => {
       dispatch(reset())
       dispatch(resetSearch())
     }
-  }, [dispatch, event.id, isSuccessCreatePresence])
+  }, [dispatch, isSuccessCreatePresence])
+
+  useEffect(() => {
+    dispatch(getPresencesByEventId(filters))
+  }, [dispatch, filters])
+
+  useEffect(() => {
+    if (filters.ancestorOrganizationId)
+      dispatch(getppk(filters.ancestorOrganizationId))
+  }, [dispatch, filters.ancestorOrganizationId])
 
   const fetchMoreAttenders = () => {
-    if (hasNextPage) {
-      setPage((prevPage) => prevPage + 1)
-      dispatch(getPresencesByEventId({ page: page + 1, eventId: event.id }))
-    }
+    setFilters((prevState) => ({
+      ...prevState,
+      page: prevState.page + 1,
+    }))
   }
 
   useEffect(() => {
@@ -88,6 +119,10 @@ function PresenceList(props) {
 
     return () => clearTimeout(timeoutId)
   }, [dispatch, event.organizationId, search])
+
+  const toggleDrawer = (open) => (event) => {
+    setStateDrawer(open)
+  }
 
   const eventTime = () => {
     const startDateObject = moment(new Date(Number(event.startDate)))
@@ -106,14 +141,19 @@ function PresenceList(props) {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    setSearch("-")
+
+    dispatch(reset())
+    setSearch("")
     const data = {
       eventId: event.id,
       userId: searchValue?.id,
     }
     dispatch(createPresenceByAdmin(data))
-    setPage(1)
     setSearchValue(null)
+    setFilters((prevState) => ({
+      ...prevState,
+      page: 1,
+    }))
   }
 
   const onClickRemove = () => {
@@ -124,6 +164,113 @@ function PresenceList(props) {
     dispatch(removeAttender(data))
     setOpenPopup(false)
   }
+
+  const setFilterObject = (key, value) => (event) => {
+    dispatch(reset())
+
+    // reset the organizationId filter regarding to the ancestorid
+    if (key === "ancestorOrganizationId") {
+      setFilters((prevState) => ({
+        ...prevState,
+        organizationId: "",
+      }))
+    }
+
+    setFilters((prevState) => ({
+      ...prevState,
+      [key]: value === filters[key] ? "" : value,
+    }))
+  }
+
+  const filterList = () => (
+    <>
+      <Grid pt={3} sx={{ width: "100vw" }}>
+        <IconButton aria-label='delete' onClick={toggleDrawer(false)}>
+          <CloseIcon />
+        </IconButton>
+      </Grid>
+
+      <Grid item xs={12} pb={4}>
+        <Typography textAlign='center'>
+          <b>Filters</b>
+        </Typography>
+      </Grid>
+
+      <Grid container spacing={1} pb={3} pl={1}>
+        <Grid item>
+          <Chip
+            label='Laki-laki'
+            color='info'
+            variant={filters.sex === 1 ? "solid" : "outlined"}
+            onClick={setFilterObject("sex", 1)}
+          />
+        </Grid>
+        <Grid item>
+          <Chip
+            label='Perempuan'
+            color='info'
+            variant={filters.sex === 0 ? "solid" : "outlined"}
+            onClick={setFilterObject("sex", 0)}
+          />
+        </Grid>
+      </Grid>
+
+      {isPPGevent && (
+        <Grid container spacing={1} pb={3} pl={1}>
+          {ppdList?.data.map((ppd) => (
+            <Grid item key={ppd.id}>
+              <Chip
+                label={ppd.name}
+                color='info'
+                variant={
+                  filters.ancestorOrganizationId === ppd.id
+                    ? "solid"
+                    : "outlined"
+                }
+                onClick={setFilterObject("ancestorOrganizationId", ppd.id)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+
+      {filters.ancestorOrganizationId && (isPPGevent || isPPDevent) && (
+        <Grid container spacing={1} pb={3} pl={1}>
+          {ppkList?.data.map((ppk) => (
+            <Grid item key={ppk.id}>
+              <Chip
+                label={ppk.name}
+                color='info'
+                variant={
+                  filters.organizationId === ppk.id ? "solid" : "outlined"
+                }
+                onClick={setFilterObject("organizationId", ppk.id)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+
+      <Grid pb={10} />
+
+      <AppBar position='fixed' color='inherit' sx={{ top: "auto", bottom: 0 }}>
+        <Toolbar>
+          <Grid container justifyContent='center' style={{ width: "100%" }}>
+            <Grid item xs={12}>
+              <Button
+                variant='contained'
+                color='info'
+                fullWidth
+                onClick={toggleDrawer(false)}
+              >
+                Lihat
+              </Button>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+    </>
+  )
 
   return (
     <>
@@ -169,6 +316,11 @@ function PresenceList(props) {
                 }
               />
             )}
+            renderOption={(props, user) => (
+              <li {...props} key={user.id}>
+                {user.name}
+              </li>
+            )}
           />
         </Grid>
         <Grid item xs={4}>
@@ -185,6 +337,18 @@ function PresenceList(props) {
             Tambah
           </Button>
         </Grid>
+      </Grid>
+
+      <Grid pb={1}>
+        <Button
+          variant='text'
+          startIcon={<FilterIcon />}
+          onClick={toggleDrawer(true)}
+          size='small'
+          color='info'
+        >
+          FILTERS
+        </Button>
       </Grid>
 
       <InfiniteScroll
@@ -277,6 +441,10 @@ function PresenceList(props) {
           )}
         </Box>
       </PopDialog>
+
+      <Drawer anchor='left' open={stateDrawer} onClose={toggleDrawer(false)}>
+        <Container>{filterList()}</Container>
+      </Drawer>
     </>
   )
 }

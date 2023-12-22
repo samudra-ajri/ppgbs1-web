@@ -106,7 +106,7 @@ export const getPresencesByEventId = createAsyncThunk(
   async (params, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await presenceService.getPresencesByEventId(params, token)
+      return await presenceService.getPresencesByEventId(token, params)
     } catch (error) {
       const message =
         (error.response &&

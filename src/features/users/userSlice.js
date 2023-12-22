@@ -122,6 +122,7 @@ export const userSlice = createSlice({
         state.isSuccess = true
         state.users = [...state.users, ...action.payload.data]
         state.totalCount = action.payload.total
+        state.hasNextPage = action.payload.hasNextPage
       })
       .addCase(getUsersPaginate.rejected, (state, action) => {
         state.isLoading = false

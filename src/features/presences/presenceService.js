@@ -38,15 +38,26 @@ const removeAttender = async (data, token) => {
   return response.data
 }
 
-// Get presence by event id
-const getPresencesByEventId = async (data, token) => {
-  const { page, eventId } = data
+const getPresencesByEventId = async (token, {
+  page = 1,
+  eventId = '',
+  ancestorOrganizationId = '',
+  organizationId = '',
+  sex = '',
+} = {}) => {
   const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${token}` },
   }
-  const response = await API.get(`${API_URL}/${eventId}/presences?page=${page}`, config)
+
+  const queryParams = new URLSearchParams({
+    page,
+    ancestorOrganizationId,
+    isActive: true,
+    organizationId,
+    sex,
+  }).toString()
+
+  const response = await API.get(`${API_URL}/${eventId}/presences?${queryParams}`, config)
   return response.data
 }
 

@@ -29,7 +29,7 @@ function Generus() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { users, totalCount, isLoading } = useSelector((state) => state.users)
+  const { users, totalCount, hasNextPage, isLoading } = useSelector((state) => state.users)
   const { ppd: ppdList, ppk: ppkList } = useSelector(
     (state) => state.organizations
   )
@@ -125,7 +125,7 @@ function Generus() {
 
   const filterList = () => (
     <>
-      <Grid pt={3} sx={{ width: "250px" }}>
+      <Grid pt={3} sx={{ width: "100vw" }}>
         <IconButton aria-label='delete' onClick={toggleDrawer(false)}>
           <CloseIcon />
         </IconButton>
@@ -312,7 +312,7 @@ function Generus() {
       <InfiniteScroll
         dataLength={users.length}
         next={loadMoreUsers}
-        hasMore={users.length % 20 !== 0 || users.length === 0 ? false : true}
+        hasMore={hasNextPage}
         loader={
           <Grid align='center' sx={{ pt: 1.5 }}>
             <CircularProgress size={20} />
