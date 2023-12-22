@@ -95,7 +95,7 @@ function PersonCompletionByCategory() {
       {isQuranHaditsCategory && (
         <TextField
           name='grade'
-          label='Filter Kelas'
+          label='Filter Materi Kelas'
           value={filterGrade}
           onChange={onChangeFilter}
           variant='outlined'
