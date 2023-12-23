@@ -29,7 +29,9 @@ function Generus() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
-  const { users, totalCount, hasNextPage, isLoading } = useSelector((state) => state.users)
+  const { users, totalCount, hasNextPage, isLoading } = useSelector(
+    (state) => state.users
+  )
   const { ppd: ppdList, ppk: ppkList } = useSelector(
     (state) => state.organizations
   )
@@ -264,32 +266,34 @@ function Generus() {
         </CardContent>
       </Card>
 
-      <Grid container paddingBottom={2} paddingTop={5} spacing={2}>
-        <Grid item xs={9}>
-          <TextField
-            name='search'
-            placeholder={`Cari berdasarkan nama...`}
-            size='small'
-            value={searchBar}
-            onChange={onChange}
-            fullWidth
-            required
-          />
+      <form onSubmit={onSubmit}>
+        <Grid container paddingBottom={2} paddingTop={5} spacing={2}>
+          <Grid item xs={9}>
+            <TextField
+              name='search'
+              placeholder={`Cari berdasarkan nama...`}
+              size='small'
+              value={searchBar}
+              onChange={onChange}
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Button
+              size='small'
+              type='submit'
+              variant='contained'
+              color='info'
+              fullWidth
+              style={{ paddingTop: "9px", paddingBottom: "8px" }}
+              onClick={onSubmit}
+            >
+              Cari
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={3}>
-          <Button
-            size='small'
-            type='submit'
-            variant='contained'
-            color='info'
-            fullWidth
-            style={{ paddingTop: "9px", paddingBottom: "8px" }}
-            onClick={onSubmit}
-          >
-            Cari
-          </Button>
-        </Grid>
-      </Grid>
+      </form>
 
       <Grid pb={1}>
         <Button
