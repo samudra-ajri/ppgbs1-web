@@ -287,7 +287,6 @@ function Generus() {
               color='info'
               fullWidth
               style={{ paddingTop: "9px", paddingBottom: "8px" }}
-              onClick={onSubmit}
             >
               Cari
             </Button>
