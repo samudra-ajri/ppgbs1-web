@@ -9,7 +9,6 @@ import CompletionIcon from "@mui/icons-material/GradingOutlined"
 import ArrowBackIcon from "@mui/icons-material/ArrowBackRounded"
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { Box } from "@mui/system"
 import { useSelector } from "react-redux"
 
 function BottomNav() {
