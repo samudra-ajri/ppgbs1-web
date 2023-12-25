@@ -86,8 +86,8 @@ function Generus() {
   }, [dispatch, filters])
 
   useEffect(() => {
-    if (filters.ancestorId) dispatch(getppk(filters.ancestorId))
-  }, [dispatch, filters.ancestorId])
+    if (drawerFilters.ancestorId) dispatch(getppk(drawerFilters.ancestorId))
+  }, [dispatch, drawerFilters.ancestorId])
 
   const loadMoreUsers = () => {
     setFilters((prevState) => ({

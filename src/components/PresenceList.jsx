@@ -103,9 +103,9 @@ function PresenceList(props) {
   }, [dispatch, filters])
 
   useEffect(() => {
-    if (filters.ancestorOrganizationId)
-      dispatch(getppk(filters.ancestorOrganizationId))
-  }, [dispatch, filters.ancestorOrganizationId])
+    if (drawerFilters.ancestorOrganizationId)
+      dispatch(getppk(drawerFilters.ancestorOrganizationId))
+  }, [dispatch, drawerFilters.ancestorOrganizationId])
 
   const fetchMoreAttenders = () => {
     setFilters((prevState) => ({
@@ -160,7 +160,6 @@ function PresenceList(props) {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    dispatch(reset())
     setSearch("")
     const data = {
       eventId: event.id,
