@@ -384,7 +384,7 @@ function PresenceList(props) {
       >
         {isSuccessAttenders &&
           attenders.map((attender) => (
-            <Card key={attender.userId} sx={{ mb: 0.5 }} align='left'>
+            <Card variant='outlined' key={attender.userId} sx={{ mb: 0.5 }} align='left'>
               <Grid container>
                 <Grid item md={11} xs={10}>
                   <CardContent

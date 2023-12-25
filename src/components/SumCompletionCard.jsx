@@ -29,7 +29,7 @@ function SumCompletionCard(props) {
     </CardContent>
   )
   return (
-    <Card sx={{ backgroundColor }}>
+    <Card variant='outlined' sx={{ backgroundColor }}>
       {disabled ? (
         content()
       ) : (

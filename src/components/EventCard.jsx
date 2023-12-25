@@ -92,7 +92,7 @@ function EventCard(props) {
 
   return (
     <>
-      <Card sx={{ mb: 0.5, cursor: "pointer" }}>
+      <Card variant='outlined' sx={{ mb: 0.5, cursor: "pointer" }}>
         <CardContent
           sx={{
             padding: 2,
