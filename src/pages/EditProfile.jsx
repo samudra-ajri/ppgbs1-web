@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { logout, update, reset } from "../features/auth/authSlice"
-import { getppd, getppk, reset as resetOrganizations } from "../features/organizations/organizationSlice"
+import { getppd, getppk } from "../features/organizations/organizationSlice"
 import { getPositions } from "../features/positions/positionSlice"
 
 import {
@@ -242,13 +242,12 @@ function EditProfile(props) {
           fullWidth
           required
         >
-          {ppkList && (
+          {ppkList &&
             ppkList?.data.map((option) => (
               <MenuItem key={option.id} value={option.id}>
                 {option.name.replace("PPK ", "")}
               </MenuItem>
-            ))
-          )}
+            ))}
         </TextField>
       </Grid>
       <Grid item xs={12}>
