@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { logout, update, reset } from "../features/auth/authSlice"
-import { getppd, getppk } from "../features/organizations/organizationSlice"
+import { getppd, getppk, reset as resetOrganizations } from "../features/organizations/organizationSlice"
 import { getPositions } from "../features/positions/positionSlice"
 
 import {
@@ -75,17 +75,14 @@ function EditProfile(props) {
     if (orgError) toast.error(orgMessage)
     if (positionError) toast.error(positionMessage)
     if (isSuccess) toast.success("Update profile berhasil.")
-    if (!ppdList) dispatch(getppd())
-    if (!ppkList) dispatch(getppk(user.currentPosition.organizationId))
+    dispatch(getppd())
+    dispatch(getppk(user.currentPosition.organizationId))
     dispatch(reset())
   }, [
-    user,
+    user.currentPosition.organizationId,
     isError,
     isSuccess,
     message,
-    ppdList,
-    ppkList,
-    navigate,
     dispatch,
     orgError,
     orgMessage,
@@ -158,6 +155,222 @@ function EditProfile(props) {
     navigate("/")
   }
 
+  const adminForms = () => (
+    <Grid item xs={12}>
+      <TextField
+        name='name'
+        label='Nama'
+        placeholder='Nama'
+        value={name}
+        onChange={onChange}
+        variant='outlined'
+        fullWidth
+        required
+      />
+    </Grid>
+  )
+
+  const userForms = () => (
+    <>
+      <Grid item xs={12}>
+        <TextField
+          name='name'
+          label='Nama Lengkap'
+          placeholder='Nama'
+          value={name}
+          onChange={onChange}
+          variant='outlined'
+          fullWidth
+          required
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          name='phone'
+          label='Nomor HP'
+          placeholder='Nomor HP'
+          value={phone}
+          onChange={onChange}
+          variant='outlined'
+          fullWidth
+          disabled={user.phone ? true : false}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          name='email'
+          label='Email'
+          placeholder='Email'
+          value={email}
+          onChange={onChange}
+          variant='outlined'
+          fullWidth
+          disabled={user.email ? true : false}
+        />
+      </Grid>
+      <Grid xs={12} sm={6} item>
+        <TextField
+          name='ppd'
+          placeholder='PPD'
+          label='PPD'
+          value={ppd}
+          onChange={onChangePPD}
+          variant='outlined'
+          align='left'
+          select
+          fullWidth
+          required
+        >
+          {ppdList?.data.map((option) => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.name.replace("PPD ", "")}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+      <Grid xs={12} sm={6} item>
+        <TextField
+          name='ppk'
+          placeholder='PPK'
+          label='PPK'
+          value={ppk}
+          onChange={onChangePPK}
+          variant='outlined'
+          align='left'
+          disabled={ppkList ? false : true}
+          select
+          fullWidth
+          required
+        >
+          {ppkList && (
+            ppkList?.data.map((option) => (
+              <MenuItem key={option.id} value={option.id}>
+                {option.name.replace("PPK ", "")}
+              </MenuItem>
+            ))
+          )}
+        </TextField>
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          name='sex'
+          label='Gender'
+          placeholder='Gender'
+          value={sex}
+          onChange={onChange}
+          variant='outlined'
+          align='left'
+          select
+          fullWidth
+          required
+        >
+          {[
+            { value: 1, label: "Laki-Laki" },
+            { value: 0, label: "Perempuan" },
+          ].map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          name='isMuballigh'
+          label='Muballigh'
+          placeholder='Muballigh'
+          value={isMuballigh}
+          onChange={onChange}
+          variant='outlined'
+          align='left'
+          select
+          fullWidth
+          required
+        >
+          {[
+            { value: true, label: "Sudah" },
+            { value: false, label: "Belum" },
+          ].map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+      <Grid xs={12} sm={4} item>
+        <TextField
+          name='dayBirth'
+          placeholder='Tanggal'
+          label='Tgl Lahir'
+          value={dayBirth}
+          onChange={onChange}
+          variant='outlined'
+          align='left'
+          select
+          fullWidth
+          required
+        >
+          {Array.from(Array(31))
+            .map((_, i) => i + 1)
+            .map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+        </TextField>
+      </Grid>
+      <Grid xs={12} sm={4} item>
+        <TextField
+          name='monthBirth'
+          placeholder='Bulan'
+          label='Bulan Lahir'
+          value={monthBirth}
+          onChange={onChange}
+          variant='outlined'
+          align='left'
+          select
+          fullWidth
+          required
+        >
+          {Array.from(Array(12))
+            .map((_, i) => i + 1)
+            .map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+        </TextField>
+      </Grid>
+      <Grid xs={12} sm={4} item>
+        <TextField
+          name='yearBirth'
+          label='Tahun Lahir'
+          placeholder='Tahun'
+          value={yearBirth}
+          onChange={onChange}
+          type='number'
+          variant='outlined'
+          fullWidth
+          required
+        />
+      </Grid>
+
+      <Grid item xs={12}>
+        <Button
+          size='large'
+          style={{ margin: "20px auto" }}
+          type='submit'
+          variant='contained'
+          color='primary'
+          fullWidth
+          disabled={!isFormChanged}
+        >
+          Ubah
+        </Button>
+      </Grid>
+    </>
+  )
+
   return (
     <>
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>
@@ -172,203 +385,11 @@ function EditProfile(props) {
           <CardContent>
             <form onSubmit={onSubmit}>
               <Grid container spacing={2}>
+                {user.currentPosition.type === "ADMIN" && adminForms()}
+                {(user.currentPosition.type === "GENERUS" ||
+                  user.currentPosition.type === "PENGAJAR") &&
+                  userForms()}
                 <Grid item xs={12}>
-                  <TextField
-                    name='name'
-                    label='Nama Lengkap'
-                    placeholder='Nama'
-                    value={name}
-                    onChange={onChange}
-                    variant='outlined'
-                    fullWidth
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name='phone'
-                    label='Nomor HP'
-                    placeholder='Nomor HP'
-                    value={phone}
-                    onChange={onChange}
-                    variant='outlined'
-                    fullWidth
-                    disabled={user.phone ? true : false}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name='email'
-                    label='Email'
-                    placeholder='Email'
-                    value={email}
-                    onChange={onChange}
-                    variant='outlined'
-                    fullWidth
-                    disabled={user.email ? true : false}
-                  />
-                </Grid>
-                <Grid xs={12} sm={6} item>
-                  <TextField
-                    name='ppd'
-                    placeholder='PPD'
-                    label='PPD'
-                    value={ppd}
-                    onChange={onChangePPD}
-                    variant='outlined'
-                    align='left'
-                    select
-                    fullWidth
-                    required
-                  >
-                    {ppdList?.data.map((option) => (
-                      <MenuItem key={option.id} value={option.id}>
-                        {option.name.replace("PPD ", "")}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid xs={12} sm={6} item>
-                  <TextField
-                    name='ppk'
-                    placeholder='PPK'
-                    label='PPK'
-                    value={ppk}
-                    onChange={onChangePPK}
-                    variant='outlined'
-                    align='left'
-                    disabled={ppkList ? false : true}
-                    select
-                    fullWidth
-                    required
-                  >
-                    {ppkList ? (
-                      ppkList?.data.map((option) => (
-                        <MenuItem key={option.id} value={option.id}>
-                          {option.name.replace("PPK ", "")}
-                        </MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem></MenuItem>
-                    )}
-                  </TextField>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name='sex'
-                    label='Gender'
-                    placeholder='Gender'
-                    value={sex}
-                    onChange={onChange}
-                    variant='outlined'
-                    align='left'
-                    select
-                    fullWidth
-                    required
-                  >
-                    {[
-                      { value: 1, label: "Laki-Laki" },
-                      { value: 0, label: "Perempuan" },
-                    ].map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name='isMuballigh'
-                    label='Muballigh'
-                    placeholder='Muballigh'
-                    value={isMuballigh}
-                    onChange={onChange}
-                    variant='outlined'
-                    align='left'
-                    select
-                    fullWidth
-                    required
-                  >
-                    {[
-                      { value: true, label: "Sudah" },
-                      { value: false, label: "Belum" },
-                    ].map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid xs={12} sm={4} item>
-                  <TextField
-                    name='dayBirth'
-                    placeholder='Tanggal'
-                    label='Tgl Lahir'
-                    value={dayBirth}
-                    onChange={onChange}
-                    variant='outlined'
-                    align='left'
-                    select
-                    fullWidth
-                    required
-                  >
-                    {Array.from(Array(31))
-                      .map((_, i) => i + 1)
-                      .map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                  </TextField>
-                </Grid>
-                <Grid xs={12} sm={4} item>
-                  <TextField
-                    name='monthBirth'
-                    placeholder='Bulan'
-                    label='Bulan Lahir'
-                    value={monthBirth}
-                    onChange={onChange}
-                    variant='outlined'
-                    align='left'
-                    select
-                    fullWidth
-                    required
-                  >
-                    {Array.from(Array(12))
-                      .map((_, i) => i + 1)
-                      .map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                  </TextField>
-                </Grid>
-                <Grid xs={12} sm={4} item>
-                  <TextField
-                    name='yearBirth'
-                    label='Tahun Lahir'
-                    placeholder='Tahun'
-                    value={yearBirth}
-                    onChange={onChange}
-                    type='number'
-                    variant='outlined'
-                    fullWidth
-                    required
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Button
-                    size='large'
-                    style={{ margin: "20px auto" }}
-                    type='submit'
-                    variant='contained'
-                    color='primary'
-                    fullWidth
-                    disabled={!isFormChanged}
-                  >
-                    Ubah
-                  </Button>
                   <Typography
                     mt={1}
                     align='center'
