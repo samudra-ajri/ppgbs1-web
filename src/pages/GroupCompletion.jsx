@@ -2,12 +2,14 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import {
+  Button,
   Card,
   CardContent,
   CircularProgress,
   Grid,
   Typography,
 } from "@mui/material"
+import FilterIcon from "@mui/icons-material/FilterListRounded"
 import {
   getGroupSumCompletions,
   reset,
@@ -48,10 +50,24 @@ function GroupCompletion() {
           }}
         >
           <Typography variant='body1'>Jumlah</Typography>
-          <Typography variant='h5'>{sumCompletions ? sumCompletions[0].materialsMultiplier : 0}</Typography>
+          <Typography variant='h5'>
+            {sumCompletions ? sumCompletions[0].materialsMultiplier : 0}
+          </Typography>
           <Typography variant='body2'>Generus</Typography>
         </CardContent>
       </Card>
+
+      <Grid pt={1}>
+        <Button
+          variant='text'
+          startIcon={<FilterIcon />}
+          onClick={() => {}}
+          size='small'
+          color='info'
+        >
+          FILTERS
+        </Button>
+      </Grid>
 
       {!isSuccess ? (
         <Grid pb={10}>
@@ -62,7 +78,7 @@ function GroupCompletion() {
           </Card>
         </Grid>
       ) : (
-        <Grid container pb={10} pt={5} spacing={2}>
+        <Grid container pb={10} pt={3} spacing={2}>
           {sumCompletions.map((sumCompletion, index) => (
             <Grid item xs={6} key={index}>
               <SumCompletionCard

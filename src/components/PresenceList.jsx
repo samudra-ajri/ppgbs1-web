@@ -303,7 +303,7 @@ function PresenceList(props) {
         </CardContent>
       </Card>
 
-      <Grid container paddingBottom={5} paddingTop={5} spacing={2}>
+      <Grid container paddingBottom={2} paddingTop={5} spacing={2}>
         <Grid item xs={8}>
           <Autocomplete
             clearOnBlur
