@@ -118,7 +118,7 @@ function GroupInputCompletion() {
       { threshold: 30, background: "#e91e63" },
       { threshold: 40, background: "#ed4b82" },
       { threshold: 50, background: "#ffd453" },
-      { threshold: 60, background: "#ffca28" },
+      { threshold: 60, background: "#ffca28", font: "#212121" },
       { threshold: 70, background: "#b28d1c" },
       { threshold: 80, background: "#33ab9f" },
       { threshold: 90, background: "#009688" },
@@ -128,7 +128,7 @@ function GroupInputCompletion() {
     const style =
       styles.find((style) => sumCompletion.percentage < style.threshold) ||
       defaultStyle
-    return { ...style, font: "#f0f6f0" }
+    return { ...style, font: style.font || "#f0f6f0" }
   }
 
   const onClickInput = (completion) => {
