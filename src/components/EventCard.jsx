@@ -136,6 +136,7 @@ function EventCard(props) {
                     )}
                     {eventTime().keys}
                     <Typography sx={{ fontSize: "12px" }}>Lokasi</Typography>
+                    <Typography sx={{ fontSize: "12px" }}>Keterangan</Typography>
                   </Grid>
                   <Grid item xs={8}>
                     <Typography sx={{ fontSize: "12px" }}>
@@ -149,6 +150,9 @@ function EventCard(props) {
                     {eventTime().values}
                     <Typography sx={{ fontSize: "12px" }}>
                       : {event.location}
+                    </Typography>
+                    <Typography sx={{ fontSize: "12px" }}>
+                      : {event.description}
                     </Typography>
                   </Grid>
                 </Grid>
