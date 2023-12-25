@@ -31,12 +31,12 @@ function CreateEvent() {
 
   const [formData, setFormData] = useState({
     name: "",
-    passCode: "",
+    passcode: "",
     location: "",
     description: "",
   })
 
-  const { name, passCode, location, description } = formData
+  const { name, passcode, location, description } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
@@ -68,9 +68,9 @@ function CreateEvent() {
     e.preventDefault()
     const data = {
       name,
-      passCode,
-      startDate: startDate.format(),
-      endDate: endDate.format(),
+      passcode,
+      startDate: startDate.valueOf(),
+      endDate: endDate.valueOf(),
       location,
       description,
     }
@@ -112,10 +112,10 @@ function CreateEvent() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      name='passCode'
+                      name='passcode'
                       label='Kode Akses'
                       placeholder='Buat Kode Akses'
-                      value={passCode}
+                      value={passcode}
                       onChange={onChange}
                       variant='outlined'
                       fullWidth
