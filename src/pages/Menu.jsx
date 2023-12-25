@@ -29,7 +29,7 @@ function Menu() {
       </Typography>
       <Box sx={{ flexGrow: 1 }} paddingTop={5}>
         <Grid container spacing={2}>
-          <Grid item xs={4} textAlign='center' component={Link} to='/events'>
+          <Grid item xs={6} textAlign='center' component={Link} to='/events'>
             <EventIcon fontSize='large' color='info' />
             <Typography sx={{ fontSize: "12px" }}>Kegiatan</Typography>
           </Grid>
@@ -43,7 +43,7 @@ function Menu() {
             <BarIcon fontSize='large' color='info' />
             <Typography sx={{ fontSize: "12px" }}>Capaian Materi</Typography>
           </Grid>
-          <Grid item xs={4} textAlign='center' component={Link} to='/users'>
+          <Grid item xs={6} textAlign='center' component={Link} to='/users'>
             <PeopleListIcon fontSize='large' color='info' />
             <Typography sx={{ fontSize: "12px" }}>Users</Typography>
           </Grid>
@@ -59,7 +59,7 @@ function Menu() {
               Reset User Password
             </Typography>
           </Grid>
-          {/* <Grid item xs={4} textAlign='center'>
+          {/* <Grid item xs={6} textAlign='center'>
             <a
               href={kibanaUrl}
               target='_blank'
