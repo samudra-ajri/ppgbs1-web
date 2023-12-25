@@ -50,6 +50,10 @@ function Generus() {
 
   const [searchBar, setSearchBar] = useState("")
   const [stateDrawer, setStateDrawer] = useState(false)
+  const [drawerFilters, setDrawerFilters] = useState({
+    positionType: "GENERUS",
+    ancestorId: initialAncestorIdFilter(),
+  })
   const [filters, setFilters] = useState({
     page: 1,
     positionType: "GENERUS",
@@ -61,6 +65,11 @@ function Generus() {
   })
 
   const toggleDrawer = (open) => (event) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      ...drawerFilters,
+    }))
+    dispatch(reset())
     setStateDrawer(open)
   }
 
@@ -91,12 +100,10 @@ function Generus() {
     setSearchBar(e.target.value)
   }
 
-  const setFilterObject = (key, value) => (event) => {
-    dispatch(reset())
-
+  const handleFilterObject = (key, value) => (event) => {
     // reset the garade filter regarding to the positionType
-    if (filters.positionType === "PENGAJAR") {
-      setFilters((prevState) => ({
+    if (drawerFilters.positionType === "PENGAJAR") {
+      setDrawerFilters((prevState) => ({
         ...prevState,
         grade: "",
       }))
@@ -104,15 +111,15 @@ function Generus() {
 
     // reset the organizationId filter regarding to the ancestorid
     if (key === "ancestorId") {
-      setFilters((prevState) => ({
+      setDrawerFilters((prevState) => ({
         ...prevState,
         organizationId: "",
       }))
     }
 
-    setFilters((prevState) => ({
+    setDrawerFilters((prevState) => ({
       ...prevState,
-      [key]: value === filters[key] ? "" : value,
+      [key]: value === drawerFilters[key] ? "" : value,
     }))
   }
 
@@ -144,16 +151,20 @@ function Generus() {
           <Chip
             label='Generus'
             color='info'
-            variant={filters.positionType === "GENERUS" ? "solid" : "outlined"}
-            onClick={setFilterObject("positionType", "GENERUS")}
+            variant={
+              drawerFilters.positionType === "GENERUS" ? "solid" : "outlined"
+            }
+            onClick={handleFilterObject("positionType", "GENERUS")}
           />
         </Grid>
         <Grid item>
           <Chip
             label='Pengajar'
             color='info'
-            variant={filters.positionType === "PENGAJAR" ? "solid" : "outlined"}
-            onClick={setFilterObject("positionType", "PENGAJAR")}
+            variant={
+              drawerFilters.positionType === "PENGAJAR" ? "solid" : "outlined"
+            }
+            onClick={handleFilterObject("positionType", "PENGAJAR")}
           />
         </Grid>
       </Grid>
@@ -163,29 +174,29 @@ function Generus() {
           <Chip
             label='Laki-laki'
             color='info'
-            variant={filters.sex === 1 ? "solid" : "outlined"}
-            onClick={setFilterObject("sex", 1)}
+            variant={drawerFilters.sex === 1 ? "solid" : "outlined"}
+            onClick={handleFilterObject("sex", 1)}
           />
         </Grid>
         <Grid item>
           <Chip
             label='Perempuan'
             color='info'
-            variant={filters.sex === 0 ? "solid" : "outlined"}
-            onClick={setFilterObject("sex", 0)}
+            variant={drawerFilters.sex === 0 ? "solid" : "outlined"}
+            onClick={handleFilterObject("sex", 0)}
           />
         </Grid>
       </Grid>
 
-      {filters.positionType !== "PENGAJAR" && (
+      {drawerFilters.positionType !== "PENGAJAR" && (
         <Grid container spacing={1} pb={3} pl={1}>
           {Object.keys(gradeEnum).map((key) => (
             <Grid item key={key}>
               <Chip
                 label={gradeEnum[key]}
                 color='info'
-                variant={filters.grade === key ? "solid" : "outlined"}
-                onClick={setFilterObject("grade", key)}
+                variant={drawerFilters.grade === key ? "solid" : "outlined"}
+                onClick={handleFilterObject("grade", key)}
               />
             </Grid>
           ))}
@@ -199,15 +210,17 @@ function Generus() {
               <Chip
                 label={ppd.name}
                 color='info'
-                variant={filters.ancestorId === ppd.id ? "solid" : "outlined"}
-                onClick={setFilterObject("ancestorId", ppd.id)}
+                variant={
+                  drawerFilters.ancestorId === ppd.id ? "solid" : "outlined"
+                }
+                onClick={handleFilterObject("ancestorId", ppd.id)}
               />
             </Grid>
           ))}
         </Grid>
       )}
 
-      {filters.ancestorId && (isPPG || isPPDOrTeacher) && (
+      {drawerFilters.ancestorId && (isPPG || isPPDOrTeacher) && (
         <Grid container spacing={1} pb={3} pl={1}>
           {ppkList?.data.map((ppk) => (
             <Grid item key={ppk.id}>
@@ -215,9 +228,9 @@ function Generus() {
                 label={ppk.name}
                 color='info'
                 variant={
-                  filters.organizationId === ppk.id ? "solid" : "outlined"
+                  drawerFilters.organizationId === ppk.id ? "solid" : "outlined"
                 }
-                onClick={setFilterObject("organizationId", ppk.id)}
+                onClick={handleFilterObject("organizationId", ppk.id)}
               />
             </Grid>
           ))}

@@ -53,6 +53,9 @@ function PresenceList(props) {
 
   const isPPGevent = event.organizationLevel === 0
   const isPPDevent = event.organizationLevel === 1
+  const [drawerFilters, setDrawerFilters] = useState({
+    ancestorOrganizationId: isPPDevent ? event.organizationId : "",
+  })
   const [filters, setFilters] = useState({
     page: 1,
     positionType: "GENERUS",
@@ -114,7 +117,13 @@ function PresenceList(props) {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (search) {
-        dispatch(getUsersPaginate({ search, positionType: "GENERUS" }))
+        dispatch(
+          getUsersPaginate({
+            search,
+            positionType: "GENERUS",
+            ancestorId: event.organizationId,
+          })
+        )
         dispatch(resetSearch())
       } else {
         setSearch([])
@@ -125,6 +134,11 @@ function PresenceList(props) {
   }, [dispatch, event.organizationId, search])
 
   const toggleDrawer = (open) => (event) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      ...drawerFilters,
+    }))
+    dispatch(reset())
     setStateDrawer(open)
   }
 
@@ -165,20 +179,18 @@ function PresenceList(props) {
     setOpenPopup(false)
   }
 
-  const setFilterObject = (key, value) => (event) => {
-    dispatch(reset())
-
+  const handleFilterObject = (key, value) => (event) => {
     // reset the organizationId filter regarding to the ancestorid
     if (key === "ancestorOrganizationId") {
-      setFilters((prevState) => ({
+      setDrawerFilters((prevState) => ({
         ...prevState,
         organizationId: "",
       }))
     }
 
-    setFilters((prevState) => ({
+    setDrawerFilters((prevState) => ({
       ...prevState,
-      [key]: value === filters[key] ? "" : value,
+      [key]: value === drawerFilters[key] ? "" : value,
     }))
   }
 
@@ -201,16 +213,16 @@ function PresenceList(props) {
           <Chip
             label='Laki-laki'
             color='info'
-            variant={filters.sex === 1 ? "solid" : "outlined"}
-            onClick={setFilterObject("sex", 1)}
+            variant={drawerFilters.sex === 1 ? "solid" : "outlined"}
+            onClick={handleFilterObject("sex", 1)}
           />
         </Grid>
         <Grid item>
           <Chip
             label='Perempuan'
             color='info'
-            variant={filters.sex === 0 ? "solid" : "outlined"}
-            onClick={setFilterObject("sex", 0)}
+            variant={drawerFilters.sex === 0 ? "solid" : "outlined"}
+            onClick={handleFilterObject("sex", 0)}
           />
         </Grid>
       </Grid>
@@ -223,18 +235,18 @@ function PresenceList(props) {
                 label={ppd.name}
                 color='info'
                 variant={
-                  filters.ancestorOrganizationId === ppd.id
+                  drawerFilters.ancestorOrganizationId === ppd.id
                     ? "solid"
                     : "outlined"
                 }
-                onClick={setFilterObject("ancestorOrganizationId", ppd.id)}
+                onClick={handleFilterObject("ancestorOrganizationId", ppd.id)}
               />
             </Grid>
           ))}
         </Grid>
       )}
 
-      {filters.ancestorOrganizationId && (isPPGevent || isPPDevent) && (
+      {drawerFilters.ancestorOrganizationId && (isPPGevent || isPPDevent) && (
         <Grid container spacing={1} pb={3} pl={1}>
           {ppkList?.data.map((ppk) => (
             <Grid item key={ppk.id}>
@@ -242,9 +254,9 @@ function PresenceList(props) {
                 label={ppk.name}
                 color='info'
                 variant={
-                  filters.organizationId === ppk.id ? "solid" : "outlined"
+                  drawerFilters.organizationId === ppk.id ? "solid" : "outlined"
                 }
-                onClick={setFilterObject("organizationId", ppk.id)}
+                onClick={handleFilterObject("organizationId", ppk.id)}
               />
             </Grid>
           ))}
