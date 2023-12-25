@@ -121,8 +121,8 @@ export const listEventsSlice = createSlice({
       .addCase(deleteEvent.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.events = state.events.events.filter(
-          (event) => event._id !== action.payload.id
+        state.events = state.events.filter(
+          (event) => event.id !== action.payload.id
         )
       })
       .addCase(deleteEvent.rejected, (state, action) => {

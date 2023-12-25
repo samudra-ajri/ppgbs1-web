@@ -32,7 +32,7 @@ const deleteEvent = async (id, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.delete(API_URL + id, config)
+  const response = await API.delete(API_URL + `/${id}`, config)
   return response.data
 }
 

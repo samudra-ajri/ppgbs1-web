@@ -25,9 +25,8 @@ function EventCard(props) {
   const [openPopup, setOpenPopup] = useState(false)
 
   const canDelete = () => {
-    if (event.klp && user.role === "PPK") return true
-    if (!event.klp && event.ds && user.role === "PPD") return true
-    if (!event.klp && !event.ds && user.role === "PPG") return true
+    if (Number(event.organizationId) === user.currentPosition.organizationId)
+      return true
     return false
   }
 
@@ -36,7 +35,8 @@ function EventCard(props) {
   }
 
   const onClickRemove = () => {
-    dispatch(deleteEvent(event._id))
+    setOpenPopup(false)
+    dispatch(deleteEvent(event.id))
   }
 
   const isLoading = false
