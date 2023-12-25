@@ -39,7 +39,7 @@ function Event() {
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>
         Jadwal Kegiatan
       </Typography>
-      
+
       {!isSuccess && (
         <Grid align='center' sx={{ pt: 1.5 }}>
           <CircularProgress size={20} />

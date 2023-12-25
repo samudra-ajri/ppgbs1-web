@@ -48,10 +48,9 @@ function CreateEvent() {
   useEffect(() => {
     if (!user) navigate("/login")
     if (user?.role === "GENERUS") navigate("/user-completion")
-    if (isError) {
-      toast.error(message)
-    }
+    if (isError) toast.error(message)
     if (isSuccess) {
+      toast.success('berhasil.')
       navigate("/events")
     }
     dispatch(reset())
