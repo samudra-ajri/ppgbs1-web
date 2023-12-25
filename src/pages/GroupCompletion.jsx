@@ -25,6 +25,7 @@ import SumCompletionCard from "../components/SumCompletionCard"
 import { logout } from "../features/auth/authSlice"
 import { getppd, getppk } from "../features/organizations/organizationSlice"
 import gradeEnum from "../enums/gradeEnum"
+import { createInitialData } from "../features/initialData/initialDataSlice"
 
 function GroupCompletion() {
   const dispatch = useDispatch()
@@ -36,6 +37,8 @@ function GroupCompletion() {
   const { ppd: ppdList, ppk: ppkList } = useSelector(
     (state) => state.organizations
   )
+  const { initialData } = useSelector((state) => state.initialData)
+
 
   const isPPG = user.currentPosition.organizationLevel === 0
   const isPPDOrTeacher =
@@ -51,14 +54,15 @@ function GroupCompletion() {
 
   const [stateDrawer, setStateDrawer] = useState(false)
   const [drawerFilters, setDrawerFilters] = useState({
-    structure: "category",
-    ancestorId: initialAncestorIdFilter(),
+    ancestorId: initialData?.groupCompletionFilters?.ancestorId || initialAncestorIdFilter(),
+    organizationId: initialData?.groupCompletionFilters?.organizationId,
+    usersGrade: initialData?.groupCompletionFilters?.usersGrade,
   })
   const [filters, setFilters] = useState({
     structure: "category",
-    ancestorId: initialAncestorIdFilter(),
-    organizationId: "",
-    usersGrade: "",
+    ancestorId: initialData?.groupCompletionFilters?.ancestorId || initialAncestorIdFilter(),
+    organizationId: initialData?.groupCompletionFilters?.organizationId || "",
+    usersGrade: initialData?.groupCompletionFilters?.usersGrade || "",
   })
 
   useEffect(() => {
@@ -84,6 +88,7 @@ function GroupCompletion() {
       ...prevState,
       ...drawerFilters,
     }))
+    dispatch(createInitialData({ groupCompletionFilters: drawerFilters }))
     dispatch(reset())
     setStateDrawer(open)
   }
@@ -202,7 +207,7 @@ function GroupCompletion() {
         >
           <Typography variant='body1'>Jumlah</Typography>
           <Typography variant='h5'>
-            {sumCompletions ? sumCompletions[0].materialsMultiplier : 0}
+            {sumCompletions ? sumCompletions[0]?.materialsMultiplier : 0}
           </Typography>
           <Typography variant='body2'>Generus</Typography>
         </CardContent>

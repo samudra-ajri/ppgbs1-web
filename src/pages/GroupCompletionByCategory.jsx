@@ -29,6 +29,7 @@ function GroupCompletionByCategory() {
   const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores
   )
+  const { initialData } = useSelector((state) => state.initialData)
 
   const [filterGrade, setFilterGrade] = useState("initial")
 
@@ -42,10 +43,22 @@ function GroupCompletionByCategory() {
       getGroupSumCompletions({
         structure: "subcategory",
         category: category,
+        ancestorId: initialData?.groupCompletionFilters?.ancestorId,
+        organizationId: initialData?.groupCompletionFilters?.organizationId,
+        usersGrade: initialData?.groupCompletionFilters?.usersGrade,
       })
     )
     dispatch(reset())
-  }, [navigate, dispatch, category, isError, message])
+  }, [
+    navigate,
+    dispatch,
+    category,
+    isError,
+    message,
+    initialData?.groupCompletionFilters?.ancestorId,
+    initialData?.groupCompletionFilters?.organizationId,
+    initialData?.groupCompletionFilters?.usersGrade,
+  ])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
@@ -58,7 +71,9 @@ function GroupCompletionByCategory() {
     )
     const totalPercentage =
       totalCompletionCount && totalMaterialCount
-        ? (totalCompletionCount / (totalMaterialCount * sumCompletions[0].materialsMultiplier)) * 100
+        ? (totalCompletionCount /
+            (totalMaterialCount * sumCompletions[0].materialsMultiplier)) *
+          100
         : 0
     return Number(totalPercentage.toFixed(2))
   }
@@ -71,6 +86,9 @@ function GroupCompletionByCategory() {
         structure: "subcategory",
         category: category,
         grade: grade,
+        ancestorId: initialData?.groupCompletionFilters?.ancestorId,
+        organizationId: initialData?.groupCompletionFilters?.organizationId,
+        usersGrade: initialData?.groupCompletionFilters?.usersGrade,
       })
     )
   }

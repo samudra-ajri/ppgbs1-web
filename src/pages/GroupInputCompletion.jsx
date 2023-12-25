@@ -37,6 +37,7 @@ function GroupInputCompletion() {
     isError: isErrorUpdate,
     messaga: messagaUpdate,
   } = useSelector((state) => state.updateCompletion)
+  const { initialData } = useSelector((state) => state.initialData)
   const [filterGrade, setFilterGrade] = useState("initial")
   const [inputs, setInputs] = useState({})
 
@@ -52,6 +53,9 @@ function GroupInputCompletion() {
       getGroupSumCompletions({
         structure: "material",
         subcategory: subcategory,
+        ancestorId: initialData?.groupCompletionFilters?.ancestorId,
+        organizationId: initialData?.groupCompletionFilters?.organizationId,
+        usersGrade: initialData?.groupCompletionFilters?.usersGrade,
       })
     )
     dispatch(reset())
@@ -65,6 +69,9 @@ function GroupInputCompletion() {
     messagaUpdate,
     isError,
     message,
+    initialData?.groupCompletionFilters?.ancestorId,
+    initialData?.groupCompletionFilters?.organizationId,
+    initialData?.groupCompletionFilters?.usersGrade,
   ])
 
   const totalCategoryPercentage = () => {
@@ -93,6 +100,9 @@ function GroupInputCompletion() {
         structure: "material",
         subcategory: subcategory,
         grade: grade,
+        ancestorId: initialData?.groupCompletionFilters?.ancestorId,
+        organizationId: initialData?.groupCompletionFilters?.organizationId,
+        usersGrade: initialData?.groupCompletionFilters?.usersGrade,
       })
     )
   }
