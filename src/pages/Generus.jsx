@@ -276,7 +276,6 @@ function Generus() {
               value={searchBar}
               onChange={onChange}
               fullWidth
-              required
             />
           </Grid>
           <Grid item xs={3}>
