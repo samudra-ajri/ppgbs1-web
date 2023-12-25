@@ -7,9 +7,8 @@ import BarIcon from "@mui/icons-material/EqualizerRounded"
 import PeopleListIcon from "@mui/icons-material/PersonSearchOutlined"
 import EventIcon from "@mui/icons-material/EventRounded"
 import RestPasswordIcon from "@mui/icons-material/LockResetRounded"
-import DashboardActivity from "@mui/icons-material/TimelineRounded"
-
-import { kibanaUrl } from "../config"
+// import DashboardActivity from "@mui/icons-material/TimelineRounded"
+// import { kibanaUrl } from "../config"
 
 function Menu() {
   const dispatch = useDispatch()
@@ -42,7 +41,7 @@ function Menu() {
             to='/group-completion'
           >
             <BarIcon fontSize='large' color='info' />
-            <Typography sx={{ fontSize: "12px" }}>Materi</Typography>
+            <Typography sx={{ fontSize: "12px" }}>Capaian Materi</Typography>
           </Grid>
           <Grid item xs={4} textAlign='center' component={Link} to='/users'>
             <PeopleListIcon fontSize='large' color='info' />
@@ -60,7 +59,7 @@ function Menu() {
               Reset User Password
             </Typography>
           </Grid>
-          <Grid item xs={4} textAlign='center'>
+          {/* <Grid item xs={4} textAlign='center'>
             <a
               href={kibanaUrl}
               target='_blank'
@@ -70,7 +69,7 @@ function Menu() {
               <DashboardActivity fontSize='large' color='info' />
               <Typography sx={{ fontSize: "12px" }}>Log Aktivitas</Typography>
             </a>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </>
