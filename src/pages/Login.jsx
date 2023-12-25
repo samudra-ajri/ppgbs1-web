@@ -66,7 +66,7 @@ function Login() {
         >
           <CardContent>
             <form>
-              <Grid container spacing={1}>
+              <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
                     name='phoneOrEmail'
@@ -74,7 +74,7 @@ function Login() {
                     placeholder='Nomor HP atau Email'
                     value={phoneOrEmail}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     fullWidth
                     required
                   />
@@ -87,7 +87,7 @@ function Login() {
                     value={password}
                     onChange={onChange}
                     type='password'
-                    variant='standard'
+                    variant='outlined'
                     fullWidth
                     required
                   />

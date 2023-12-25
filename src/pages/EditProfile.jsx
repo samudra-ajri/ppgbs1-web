@@ -171,7 +171,7 @@ function EditProfile(props) {
         >
           <CardContent>
             <form onSubmit={onSubmit}>
-              <Grid container spacing={1}>
+              <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
                     name='name'
@@ -179,7 +179,7 @@ function EditProfile(props) {
                     placeholder='Nama'
                     value={name}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     fullWidth
                     required
                   />
@@ -191,7 +191,7 @@ function EditProfile(props) {
                     placeholder='Nomor HP'
                     value={phone}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     fullWidth
                     disabled={user.phone ? true : false}
                   />
@@ -203,7 +203,7 @@ function EditProfile(props) {
                     placeholder='Email'
                     value={email}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     fullWidth
                     disabled={user.email ? true : false}
                   />
@@ -215,7 +215,7 @@ function EditProfile(props) {
                     label='PPD'
                     value={ppd}
                     onChange={onChangePPD}
-                    variant='standard'
+                    variant='outlined'
                     align='left'
                     select
                     fullWidth
@@ -235,7 +235,7 @@ function EditProfile(props) {
                     label='PPK'
                     value={ppk}
                     onChange={onChangePPK}
-                    variant='standard'
+                    variant='outlined'
                     align='left'
                     disabled={ppkList ? false : true}
                     select
@@ -253,14 +253,14 @@ function EditProfile(props) {
                     )}
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
                     name='sex'
                     label='Gender'
                     placeholder='Gender'
                     value={sex}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     align='left'
                     select
                     fullWidth
@@ -276,14 +276,14 @@ function EditProfile(props) {
                     ))}
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                   <TextField
                     name='isMuballigh'
                     label='Muballigh'
                     placeholder='Muballigh'
                     value={isMuballigh}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     align='left'
                     select
                     fullWidth
@@ -306,7 +306,7 @@ function EditProfile(props) {
                     label='Tgl Lahir'
                     value={dayBirth}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     align='left'
                     select
                     fullWidth
@@ -328,7 +328,7 @@ function EditProfile(props) {
                     label='Bulan Lahir'
                     value={monthBirth}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     align='left'
                     select
                     fullWidth
@@ -351,7 +351,7 @@ function EditProfile(props) {
                     value={yearBirth}
                     onChange={onChange}
                     type='number'
-                    variant='standard'
+                    variant='outlined'
                     fullWidth
                     required
                   />
