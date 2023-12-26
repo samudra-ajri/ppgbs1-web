@@ -36,7 +36,7 @@ function Event() {
 
   return (
     <>
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>
+      <Typography variant='h6' align='center' sx={{ mb: 3 }}>
         Jadwal Kegiatan
       </Typography>
 

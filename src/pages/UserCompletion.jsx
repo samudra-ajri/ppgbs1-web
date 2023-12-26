@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import ProfileCard from "../components/ProfileCard"
-import { Card, CardContent, CircularProgress, Grid } from "@mui/material"
+import { Card, CardContent, CircularProgress, Grid, Typography } from "@mui/material"
 import {
   getSumCompletions,
   reset,
@@ -31,7 +31,10 @@ function UserCompletion() {
 
   return (
     <>
-      <ProfileCard user={user} />
+      <Typography variant='h6' align='center' sx={{ mb: 3 }}>
+        Capaian Materi
+      </Typography>
+
       {!isSuccess ? (
         <Grid pb={10}>
           <Card align='center'>

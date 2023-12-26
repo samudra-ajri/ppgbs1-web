@@ -100,7 +100,7 @@ function Dashboard() {
 
   return (
     <>
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Dashboard</Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 3 }}>Dashboard</Typography>
 
       {(user?.role === 'ADMIN' || user?.role === 'PPG') &&
         <Box pb={1}>

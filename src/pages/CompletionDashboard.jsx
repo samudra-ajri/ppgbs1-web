@@ -71,7 +71,7 @@ function CompletionDashboard() {
 
   return (
     <>
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Capaian Materi Generus</Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 3 }}>Capaian Materi Generus</Typography>
       {(user.role === 'ADMIN' || user.role === 'PPG') &&
         <Box pb={1}>
           <Typography variant='body2'>Filter Ds</Typography>

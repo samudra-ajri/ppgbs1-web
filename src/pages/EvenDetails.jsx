@@ -26,7 +26,7 @@ function EventPresence() {
   return (
     <>
       <BackHeader title='Kehadiran' />
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Daftar Hadir</Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 3 }}>Daftar Hadir</Typography>
       {isSuccess && <>
         <PresenceList event={event.data} user={user} />
       </>}

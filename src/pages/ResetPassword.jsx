@@ -49,7 +49,7 @@ function ResetPassword() {
   return (
     <>
       <BackHeader title='Reset Password' />
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>Reset Password</Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 3 }}>Reset Password</Typography>
       <Typography variant='body1' align='center' sx={{ mb: 1 }}>{userName}</Typography>
 
       <Grid>

@@ -80,7 +80,7 @@ function CreateEvent() {
     <>
       <BackHeader title='Kegiatan' />
 
-      <Typography variant='h6' align='center' sx={{ mb: 1 }}>
+      <Typography variant='h6' align='center' sx={{ mb: 3 }}>
         Buat Jadwal
       </Typography>
 
