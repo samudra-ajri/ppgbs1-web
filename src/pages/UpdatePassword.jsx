@@ -16,7 +16,6 @@ import BackHeader from "../components/BackHeader"
 
 function UpdatePassword() {
   const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.auth)
   const { isError, isSuccess, message } = useSelector((state) => state.auth)
 
   const initialFormData = {
@@ -50,7 +49,7 @@ function UpdatePassword() {
     setFormData(initialFormData)
   }
 
-  const userForms = () => (
+  const contentForms = () => (
     <>
       <Grid item xs={12}>
         <TextField
@@ -120,7 +119,7 @@ function UpdatePassword() {
           <CardContent>
             <form onSubmit={onSubmit}>
               <Grid container spacing={2}>
-                {user.currentPosition.type === "GENERUS" && userForms()}
+                {contentForms()}
               </Grid>
             </form>
           </CardContent>
