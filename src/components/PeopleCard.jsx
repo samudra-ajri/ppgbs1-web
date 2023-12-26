@@ -35,6 +35,7 @@ function PeopleCard(props) {
     dispatch(
       deleteUser({ userId: user.id, positionId: user.positions[0].positionId })
     )
+    setOpenPopup(false)
   }
 
   const handleClickCard = () => {
