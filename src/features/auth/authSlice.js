@@ -43,10 +43,25 @@ export const register = createAsyncThunk('auth/register', async (user, thunkAPI)
 })
 
 // Update my profile
-export const update = createAsyncThunk('auth/update', async (data, thunkAPI) => {
+export const update = createAsyncThunk('auth/update-profile', async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await authService.update(data, token)
+    } catch (error) {
+        const message = (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+        ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Update my student profile
+export const updateStudentProfile = createAsyncThunk('auth/update-student', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.updateStudentProfile(data, token)
     } catch (error) {
         const message = (
             error.response &&
@@ -157,6 +172,20 @@ export const authSlice = createSlice({
                 state.user = action.payload
             })
             .addCase(update.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+                state.user = null
+            })
+            .addCase(updateStudentProfile.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(updateStudentProfile.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.user = action.payload
+            })
+            .addCase(updateStudentProfile.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

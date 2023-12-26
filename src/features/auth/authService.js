@@ -43,7 +43,19 @@ const update = async (userData, token) => {
     }
     const response = await API.put('users/me', userData, config)
     if (response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
+        return decidePosition(userData.newPositionId, token)
+    }
+}
+
+// Update stdudent profile
+const updateStudentProfile = async (userData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await API.put('users/me/student', userData, config)
+    if (response.data) {
         return decidePosition(userData.newPositionId, token)
     }
 }
@@ -93,6 +105,7 @@ const authService = {
     forgotPassword,
     resetPassword,
     decidePosition,
+    updateStudentProfile,
 }
 
 export default authService

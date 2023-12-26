@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { toast } from "react-toastify"
-import { update, reset } from "../features/auth/authSlice"
+import { reset, updateStudentProfile } from "../features/auth/authSlice"
 
 import {
   Button,
@@ -33,7 +33,6 @@ function EditGrade() {
   }, [dispatch, isError, isSuccess, message])
 
   const checkFormChange = (newFormData) => {
-    console.log(initialFormData);
     const hasChanged = Object.keys(initialFormData).some(
       (key) => initialFormData[key] !== Number(newFormData[key])
     )
@@ -54,7 +53,7 @@ function EditGrade() {
   const onSubmit = (e) => {
     e.preventDefault()
     const userData = { grade }
-    dispatch(update(userData))
+    dispatch(updateStudentProfile(userData))
     setIsFormChanged(false)
   }
 
