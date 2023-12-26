@@ -26,7 +26,7 @@ function Profile() {
     user.currentPosition.type === "GENERUS" && (
       <>
         <ProfileMenuCard title='Biodata' link='/c/edit-profile' />
-        <ProfileMenuCard title='Kelas' link='#' />
+        <ProfileMenuCard title='Kelas' link='/c/edit-grade' />
       </>
     )
 

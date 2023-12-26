@@ -19,6 +19,7 @@ import PersonInputCompletion from '../pages/PersonInputCompletion'
 import GroupCompletionByCategory from '../pages/GroupCompletionByCategory'
 import GroupInputCompletion from '../pages/GroupInputCompletion'
 import EditProfile from '../pages/EditProfile'
+import EditGrade from '../pages/EditGrade'
 
 function ChildLayout() {
   return (
@@ -50,6 +51,7 @@ function ChildLayout() {
         <Route path='/event-presence/*' element={<EventPresence />} />
         <Route path='/reset-passwords/*' element={<ResetPassword />} />
         <Route path='/edit-profile' element={<EditProfile />} />
+        <Route path='/edit-grade' element={<EditGrade />} />
       </Routes>
     </>
   )
