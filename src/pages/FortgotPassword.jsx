@@ -39,7 +39,7 @@ function FortgotPassword() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const userData = { userData: phoneOrEmail }
+    const userData = { login: phoneOrEmail }
     dispatch(forgotPassword(userData))
   }
 
@@ -65,7 +65,7 @@ function FortgotPassword() {
                     placeholder='Nomor HP atau Email'
                     value={phoneOrEmail}
                     onChange={onChange}
-                    variant='standard'
+                    variant='outlined'
                     fullWidth
                     required
                     disabled={isSuccessForgotPassword}
@@ -81,18 +81,23 @@ function FortgotPassword() {
                     variant='contained'
                     color='primary'
                     fullWidth
-                    disabled={isSuccessForgotPassword}
+                    disabled={isSuccessForgotPassword || !phoneOrEmail}
                   >
                     Mohon Reset Password
                   </Button>
                   {isSuccessForgotPassword && (
                     <>
-                      <Typography mt={1} align='center' variant='body2' color='#198754'>
+                      <Typography
+                        mt={1}
+                        align='center'
+                        variant='body2'
+                        color='#198754'
+                      >
                         <b>Permohonan berhasil.</b>
                       </Typography>
                       <Typography mt={1} align='center' variant='body2'>
-                        Silakan hubungi pengurus PPD/PPK
-                        untuk mengetahui password baru.
+                        Silakan hubungi pengurus PPD/PPK untuk mengetahui
+                        password baru.
                       </Typography>
                     </>
                   )}

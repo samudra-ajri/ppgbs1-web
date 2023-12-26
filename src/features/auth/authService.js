@@ -73,7 +73,8 @@ const updateMyPassword = async (userData, token) => {
 
 // Forogt password
 const forgotPassword = async (userData) => {
-    const response = await API.put(API_URL + 'forgot-password', userData)
+    const { login } = userData
+    const response = await API.post(API_URL + 'forgot-password', { login })
     return response.data
 }
 
