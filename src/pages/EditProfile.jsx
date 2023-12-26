@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { logout, update, reset } from "../features/auth/authSlice"
+import { update, reset } from "../features/auth/authSlice"
 import { getppd, getppk } from "../features/organizations/organizationSlice"
 import { getPositions } from "../features/positions/positionSlice"
 
@@ -17,10 +16,10 @@ import {
 } from "@mui/material"
 
 import moment from "moment"
+import BackHeader from "../components/BackHeader"
 
-function EditProfile(props) {
-  const { user } = props
-  const navigate = useNavigate()
+function EditProfile() {
+  const { user } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
 
   const { isError, isSuccess, message } = useSelector((state) => state.auth)
@@ -149,12 +148,6 @@ function EditProfile(props) {
     setIsFormChanged(false)
   }
 
-  const onLogout = () => {
-    dispatch(logout())
-    dispatch(reset())
-    navigate("/")
-  }
-
   const adminForms = () => (
     <Grid item xs={12}>
       <TextField
@@ -166,6 +159,7 @@ function EditProfile(props) {
         variant='outlined'
         fullWidth
         required
+        disabled
       />
     </Grid>
   )
@@ -372,14 +366,14 @@ function EditProfile(props) {
 
   return (
     <>
+      <BackHeader title='Profile' />
       <Typography variant='h6' align='center' sx={{ mb: 1 }}>
-        Profile
+        Biodata
       </Typography>
 
       <Grid>
         <Card
           variant=''
-          style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}
         >
           <CardContent>
             <form onSubmit={onSubmit}>
@@ -388,18 +382,6 @@ function EditProfile(props) {
                 {(user.currentPosition.type === "GENERUS" ||
                   user.currentPosition.type === "PENGAJAR") &&
                   userForms()}
-                <Grid item xs={12}>
-                  <Typography
-                    mt={1}
-                    align='center'
-                    variant='subtitle1'
-                    color='red'
-                    style={{ cursor: "pointer", fontWeight: "bold" }}
-                    onClick={onLogout}
-                  >
-                    Logout
-                  </Typography>
-                </Grid>
               </Grid>
             </form>
           </CardContent>

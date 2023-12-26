@@ -1,25 +1,62 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import EditProfile from "./EditProfile"
-import {
-  reset,
-} from "../features/completionScores/completionScoreSlice"
+import { Typography } from "@mui/material"
+import ProfileMenuCard from "../components/ProfileMenuCard"
+import { logout, reset } from "../features/auth/authSlice"
+import ProfileCard from "../components/ProfileCard"
 
 function Profile() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const userId = window.location.pathname.split("/")[3]
   const { user } = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (!user) navigate("/login")
     dispatch(reset())
-  }, [user, userId, navigate, dispatch])
+  }, [user, navigate, dispatch])
+
+  const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())
+    navigate("/")
+  }
+
+  const generusCard = () =>
+    user.currentPosition.type === "GENERUS" && (
+      <>
+        <ProfileMenuCard title='Biodata' link='/c/edit-profile' />
+        <ProfileMenuCard title='Kelas' link='#' />
+      </>
+    )
+
+  const pengajarCard = () =>
+    user.currentPosition.type === "PENGAJAR" && (
+      <>
+        <ProfileMenuCard title='Biodata' link='/c/edit-profile' />
+        <ProfileMenuCard title='Kemuballighan' link='#' />
+      </>
+    )
 
   return (
     <>
-      <EditProfile user={user} />
+      <Typography variant='h6' align='center' sx={{ mb: 1 }}>
+        Profile
+      </Typography>
+      <ProfileCard user={user} />
+      {generusCard()}
+      {pengajarCard()}
+      <ProfileMenuCard title='Ubah Password' link='#' />
+      <Typography
+        mt={5}
+        align='center'
+        variant='subtitle1'
+        color='red'
+        style={{ cursor: "pointer", fontWeight: "bold" }}
+        onClick={onLogout}
+      >
+        Logout
+      </Typography>
     </>
   )
 }

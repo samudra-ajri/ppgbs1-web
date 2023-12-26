@@ -1,39 +1,42 @@
+import React from "react"
 import { Card, CardContent, Chip, Grid, Typography } from "@mui/material"
 import gradeEnum from "../enums/gradeEnum"
 
-function ProfileCard(props) {
-  const user = props.user
+function ProfileCard({ user }) {
+  const currentPosition =
+    user?.currentPosition ||
+    user?.positions?.find((position) => position.type === "GENERUS")
 
   return (
-    <>
-      <Card sx={{ marginBottom: 2, justifyItems: "center" }}>
-        <CardContent>
-          <Grid container>
-            <Grid item xs={10} md={11}>
-              <Typography>{user?.name}</Typography>
-              <Typography variant='caption'>
-                {user?.currentPosition?.positionName ||
-                  user?.positions?.find(
-                    (position) => position.type === "GENERUS"
-                  )?.positionName}
+    <Card sx={{ marginBottom: 2 }}>
+      <CardContent>
+        <Grid container justifyContent='center' alignItems='center'>
+          <Grid item xs={10} md={11}>
+            <Typography align='center'>{user?.name}</Typography>
+            {currentPosition && (
+              <Typography align='center' variant='subtitle2'>
+                {currentPosition.positionName}
               </Typography>
-            </Grid>
-            <Grid item xs={10} md={11} pt={1}>
+            )}
+          </Grid>
+          {user?.grade && currentPosition.type === "GENERUS" && (
+            <Grid item xs={10} md={11}>
               <Chip
                 size='small'
                 label={
                   <Typography variant='caption'>
-                    {gradeEnum[user?.grade]}
+                    {gradeEnum[user.grade]}
                   </Typography>
                 }
                 color='success'
                 variant='outlined'
+                sx={{ display: "flex", justifyContent: "center" }}
               />
             </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </>
+          )}
+        </Grid>
+      </CardContent>
+    </Card>
   )
 }
 

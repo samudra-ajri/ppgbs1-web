@@ -18,6 +18,7 @@ import PersonCompletionByCategory from '../pages/PersonCompletionByCategory'
 import PersonInputCompletion from '../pages/PersonInputCompletion'
 import GroupCompletionByCategory from '../pages/GroupCompletionByCategory'
 import GroupInputCompletion from '../pages/GroupInputCompletion'
+import EditProfile from '../pages/EditProfile'
 
 function ChildLayout() {
   return (
@@ -48,6 +49,7 @@ function ChildLayout() {
         <Route path='/event-details/*' element={<EventDetails />} />
         <Route path='/event-presence/*' element={<EventPresence />} />
         <Route path='/reset-passwords/*' element={<ResetPassword />} />
+        <Route path='/edit-profile' element={<EditProfile />} />
       </Routes>
     </>
   )
