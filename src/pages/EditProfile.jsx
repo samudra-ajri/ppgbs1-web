@@ -372,9 +372,7 @@ function EditProfile() {
       </Typography>
 
       <Grid>
-        <Card
-          variant=''
-        >
+        <Card variant=''>
           <CardContent>
             <form onSubmit={onSubmit}>
               <Grid container spacing={2}>

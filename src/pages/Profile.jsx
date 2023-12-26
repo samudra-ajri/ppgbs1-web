@@ -32,9 +32,10 @@ function Profile() {
 
   const pengajarCard = () =>
     user.currentPosition.type === "PENGAJAR" && (
+      // TODO: Update Kemuballighan
       <>
         <ProfileMenuCard title='Biodata' link='/c/edit-profile' />
-        <ProfileMenuCard title='Kemuballighan' link='#' />
+        {/* <ProfileMenuCard title='Kemuballighan' link='#' /> */}
       </>
     )
 
@@ -46,7 +47,7 @@ function Profile() {
       <ProfileCard user={user} />
       {generusCard()}
       {pengajarCard()}
-      <ProfileMenuCard title='Ubah Password' link='#' />
+      <ProfileMenuCard title='Ubah Password' link='/c/update-password' />
       <Typography
         mt={5}
         align='center'

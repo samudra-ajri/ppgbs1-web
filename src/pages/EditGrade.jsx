@@ -20,7 +20,7 @@ function EditGrade() {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
   const { isError, isSuccess, message } = useSelector((state) => state.auth)
-  
+
   const initialFormData = { grade: user.grade }
   const [formData, setFormData] = useState(initialFormData)
   const [isFormChanged, setIsFormChanged] = useState(false)
