@@ -11,7 +11,8 @@ const getUsers = async (token, {
   organizationId = '',
   sex = '',
   grade = '',
-  search = ''
+  search = '',
+  isForgotPassword ='',
 } = {}) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -25,10 +26,14 @@ const getUsers = async (token, {
     ancestorId,
     organizationId,
     sex,
-    grade
+    grade,
+    isForgotPassword,
   }).toString()
 
-  const response = await API.get(`${API_URL}?${queryParams}`, config)
+  let targetUrl = `${API_URL}?${queryParams}`
+  if (isForgotPassword) targetUrl = `${API_URL}/forgot-password?${queryParams}`
+  
+  const response = await API.get(targetUrl, config)
   return response.data
 }
 
