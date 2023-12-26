@@ -60,6 +60,17 @@ const updateStudentProfile = async (userData, token) => {
     }
 }
 
+// Update my password
+const updateMyPassword = async (userData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await API.put(API_URL + 'update-password', userData, config)
+    return response.data
+}
+
 // Forogt password
 const forgotPassword = async (userData) => {
     const response = await API.put(API_URL + 'forgot-password', userData)
@@ -106,6 +117,7 @@ const authService = {
     resetPassword,
     decidePosition,
     updateStudentProfile,
+    updateMyPassword,
 }
 
 export default authService

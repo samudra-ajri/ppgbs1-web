@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { toast } from "react-toastify"
-import { reset, updateStudentProfile } from "../features/auth/authSlice"
+import { reset, updateMyPassword } from "../features/auth/authSlice"
 
 import {
   Button,
@@ -22,14 +22,14 @@ function UpdatePassword() {
   const initialFormData = {
     currentPassword: "",
     newPassword: "",
-    newPassword2: "",
+    confirmNewPassword: "",
   }
   const [formData, setFormData] = useState(initialFormData)
-  const { currentPassword, newPassword, newPassword2 } = formData
+  const { currentPassword, newPassword, confirmNewPassword } = formData
 
   useEffect(() => {
     if (isError) toast.error(message)
-    if (isSuccess) toast.success("Update profile berhasil.")
+    if (isSuccess) toast.success("Update password berhasil.")
     dispatch(reset())
   }, [dispatch, isError, isSuccess, message])
 
@@ -45,8 +45,9 @@ function UpdatePassword() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const userData = { currentPassword, newPassword, newPassword2 }
-    dispatch(updateStudentProfile(userData))
+    const userData = { currentPassword, newPassword, confirmNewPassword }
+    dispatch(updateMyPassword(userData))
+    setFormData(initialFormData)
   }
 
   const userForms = () => (
@@ -61,6 +62,7 @@ function UpdatePassword() {
           variant='outlined'
           fullWidth
           required
+          type='password'
         />
       </Grid>
       <Grid item xs={12}>
@@ -73,18 +75,20 @@ function UpdatePassword() {
           variant='outlined'
           fullWidth
           required
+          type='password'
         />
       </Grid>
       <Grid item xs={12}>
         <TextField
-          name='newPassword2'
+          name='confirmNewPassword'
           label='Ulangi Password Baru'
           placeholder='Ulangi Password Baru'
-          value={newPassword2}
+          value={confirmNewPassword}
           onChange={onChange}
           variant='outlined'
           fullWidth
           required
+          type='password'
         />
       </Grid>
 
@@ -96,7 +100,7 @@ function UpdatePassword() {
           variant='contained'
           color='primary'
           fullWidth
-          disabled={!currentPassword || !newPassword || !newPassword2}
+          disabled={!currentPassword || !newPassword || !confirmNewPassword}
         >
           Ubah
         </Button>
