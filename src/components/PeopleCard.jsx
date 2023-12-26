@@ -22,7 +22,7 @@ import { getUserById } from "../features/persons/personSlice"
 
 function PeopleCard(props) {
   const dispatch = useDispatch()
-  const { user, canDelete } = props
+  const { user, canDelete, link } = props
   const age = moment(user.birthdate).fromNow().split(" ")[0]
   const [openPopup, setOpenPopup] = useState(false)
   const { isLoading } = useSelector((state) => state.users)
@@ -55,7 +55,7 @@ function PeopleCard(props) {
         >
           <Grid container>
             <Grid item xs={10} md={11}>
-              <Link to={`/c/person-completion`} component={CardActionArea} onClick={handleClickCard}>
+              <Link to={link} component={CardActionArea} onClick={handleClickCard}>
                 <Grid container>
                   <Grid item>
                     <Typography variant='body2'>{user.name}</Typography>

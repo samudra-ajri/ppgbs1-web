@@ -349,6 +349,12 @@ function Generus() {
             key={index}
             user={userDetail}
             canDelete={user?.currentPosition.type === "ADMIN"}
+            link={
+              userDetail.positions.length === 1 &&
+              userDetail.positions[0].type === "GENERUS"
+                ? `/c/person-completion`
+                : ""
+            }
           />
         ))}
       </InfiniteScroll>
