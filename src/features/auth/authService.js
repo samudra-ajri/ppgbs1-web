@@ -62,13 +62,24 @@ const updateStudentProfile = async (userData, token) => {
 
 // Update my password
 const updateMyPassword = async (userData, token) => {
+    const {
+        positionId,
+        currentPassword,
+        newPassword,
+        confirmNewPassword,
+    } = userData
+
+    const payload = { currentPassword, newPassword, confirmNewPassword }
+
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-    const response = await API.put(API_URL + 'update-password', userData, config)
-    return response.data
+    const response = await API.put(API_URL + 'update-password', payload, config)
+    if (response.data) {
+        return decidePosition(positionId, token)
+    }
 }
 
 // Forogt password

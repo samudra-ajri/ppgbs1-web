@@ -2,21 +2,17 @@ import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { toast } from "react-toastify"
 import { reset, updateMyPassword } from "../features/auth/authSlice"
-
-import {
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material"
+import { Button, Grid, TextField, Typography } from "@mui/material"
 
 import BackHeader from "../components/BackHeader"
+import { useNavigate } from "react-router-dom"
 
 function UpdatePassword() {
   const dispatch = useDispatch()
-  const { isError, isSuccess, message } = useSelector((state) => state.auth)
+  const navigate = useNavigate()
+  const { user, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  )
 
   const initialFormData = {
     currentPassword: "",
@@ -26,11 +22,19 @@ function UpdatePassword() {
   const [formData, setFormData] = useState(initialFormData)
   const { currentPassword, newPassword, confirmNewPassword } = formData
 
+  const isChangeTempPassword =
+    user.needUpdatePassword && user.resetPasswordToken
+
   useEffect(() => {
     if (isError) toast.error(message)
-    if (isSuccess) toast.success("Update password berhasil.")
-    dispatch(reset())
-  }, [dispatch, isError, isSuccess, message])
+    if (isSuccess) {
+      toast.success("Update password berhasil.")
+      navigate("/profile")
+    }
+    return () => {
+      dispatch(reset())
+    }
+  }, [dispatch, isError, isSuccess, message, navigate])
 
   const onChange = (e) => {
     setFormData((prevState) => {
@@ -44,7 +48,12 @@ function UpdatePassword() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const userData = { currentPassword, newPassword, confirmNewPassword }
+    const userData = {
+      positionId: user.currentPosition.positionId,
+      currentPassword,
+      newPassword,
+      confirmNewPassword,
+    }
     dispatch(updateMyPassword(userData))
     setFormData(initialFormData)
   }
@@ -111,19 +120,23 @@ function UpdatePassword() {
     <>
       <BackHeader title='Profile' />
       <Typography variant='h6' align='center' sx={{ mb: 3 }}>
-        Ubah Password
+        Update Password
       </Typography>
 
       <Grid>
-        <Card variant=''>
-          <CardContent>
-            <form onSubmit={onSubmit}>
-              <Grid container spacing={2}>
-                {contentForms()}
+        <form onSubmit={onSubmit}>
+          <Grid container spacing={2}>
+            {isChangeTempPassword && (
+              <Grid item>
+                <Typography variant='body2' color='#01579B'>
+                  Anda baru saja login menggunakan Password Sementara. Silakan
+                  lakukan update password sebelum melanjutkan.
+                </Typography>
               </Grid>
-            </form>
-          </CardContent>
-        </Card>
+            )}
+            {contentForms()}
+          </Grid>
+        </form>
       </Grid>
     </>
   )

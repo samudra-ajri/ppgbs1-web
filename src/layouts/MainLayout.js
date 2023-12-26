@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import BottomNav from '../components/BottomNav'
 import Header from '../components/Header'
@@ -16,8 +16,19 @@ import UserCompletion from '../pages/UserCompletion'
 import GroupCompletion from '../pages/GroupCompletion'
 import Profile from '../pages/Profile'
 import Footer from '../components/Footer'
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 function MainLayout() {
+  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    const isChangeTempPassword =
+      user?.needUpdatePassword && user?.resetPasswordToken
+    if (isChangeTempPassword) navigate("/c/update-password")
+  }, [user, navigate])
+
   return (
     <>
       <Header />
