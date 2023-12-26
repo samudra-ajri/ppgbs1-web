@@ -96,8 +96,8 @@ function FortgotPassword() {
                         <b>Permohonan berhasil.</b>
                       </Typography>
                       <Typography mt={1} align='center' variant='body2'>
-                        Silakan hubungi pengurus PPD/PPK untuk mengetahui
-                        password baru.
+                        Silakan hubungi pengurus PPD/PPK untuk mendapatkan
+                        password sementara.
                       </Typography>
                     </>
                   )}
