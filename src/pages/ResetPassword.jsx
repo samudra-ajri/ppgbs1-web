@@ -1,36 +1,30 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { resetPassword } from "../features/auth/authSlice"
+import { tempPassword, reset } from "../features/auth/authSlice"
 import Spinner from "../components/Spinner"
-import {
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material"
+import { Button, Grid, TextField, Typography } from "@mui/material"
 import BackHeader from "../components/BackHeader"
-import capitalize from "capitalize"
+import ProfileCard from "../components/ProfileCard"
 
 function ResetPassword() {
-  const location = useLocation()
-  const userName = capitalize.words(location.pathname.split('/')[3].split('-').join(' '))
-  const resetPasswordToken = location.pathname.split('/')[4]
-  const [formData, setFormData] = useState({ newPassword: '', newPassword2: '' })
+  const [formData, setFormData] = useState({
+    newPassword: "",
+    newPassword2: "",
+  })
   const { newPassword, newPassword2 } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user, isLoading, isError, isSuccessResetPassword, message } = useSelector(
-    (state) => state.auth
-  )
+  const { user, isLoading, isError, isSuccessResetPassword, message } =
+    useSelector((state) => state.auth)
+  const { person } = useSelector((state) => state.person)
 
   useEffect(() => {
     if (isError) toast.error(message)
-    if (user?.role === 'GENERUS') navigate('/')
-  }, [user, isError, message, navigate])
+    if (user?.currentPosition.type === "GENERUS") navigate("/")
+    dispatch(reset())
+  }, [user, isError, message, navigate, dispatch])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -41,76 +35,85 @@ function ResetPassword() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    if (newPassword !== newPassword2) toast.error('Ulangi password tidak sesuai.')
-    dispatch(resetPassword({ newPassword, resetPasswordToken }))
+    if (newPassword !== newPassword2)
+      toast.error("Ulangi password tidak sesuai.")
+    dispatch(
+      tempPassword({
+        tempPassword: newPassword,
+        resetPasswordToken: person.resetPasswordToken,
+      })
+    )
   }
 
   if (isLoading) return <Spinner />
+
   return (
     <>
       <BackHeader title='Reset Password' />
-      <Typography variant='h6' align='center' sx={{ mb: 3 }}>Reset Password</Typography>
-      <Typography variant='body1' align='center' sx={{ mb: 1 }}>{userName}</Typography>
+      <Typography variant='h6' align='center' sx={{ mb: 3 }}>
+        Reset Password
+      </Typography>
+      <ProfileCard user={person} />
 
       <Grid>
-        <Card
-          variant=''
-          style={{ maxWidth: 650, padding: "0 5px", margin: "0 auto" }}
-        >
-          <CardContent>
-            <form>
-              <Grid container spacing={1}>
-                <Grid item xs={12}>
-                  <TextField
-                    name='newPassword'
-                    label='Password baru'
-                    placeholder='Password baru'
-                    value={newPassword}
-                    onChange={onChange}
-                    type='password'
-                    variant='standard'
-                    fullWidth
-                    required
-                    disabled={isSuccessResetPassword}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name='newPassword2'
-                    label='Ulangi password'
-                    placeholder='Ulangi password baru'
-                    value={newPassword2}
-                    onChange={onChange}
-                    type='password'
-                    variant='standard'
-                    fullWidth
-                    required
-                    disabled={isSuccessResetPassword}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    onClick={onSubmit}
-                    size='large'
-                    style={{ margin: "20px auto" }}
-                    type='submit'
-                    variant='contained'
-                    color='primary'
-                    fullWidth
-                    disabled={isSuccessResetPassword}
-                  >
-                    Ubah
-                  </Button>
-                  {isSuccessResetPassword && (
-                    <Typography mt={1} align='center' variant='body2' color='#198754'>
-                      <b>Password berhasil diubah.</b>
-                    </Typography>
-                  )}
-                </Grid>
-              </Grid>
-            </form>
-          </CardContent>
-        </Card>
+        <form>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <TextField
+                name='newPassword'
+                label='Password baru'
+                placeholder='Password baru'
+                value={newPassword}
+                onChange={onChange}
+                type='password'
+                variant='outlined'
+                fullWidth
+                required
+                disabled={isSuccessResetPassword}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name='newPassword2'
+                label='Ulangi password'
+                placeholder='Ulangi password baru'
+                value={newPassword2}
+                onChange={onChange}
+                type='password'
+                variant='outlined'
+                fullWidth
+                required
+                disabled={isSuccessResetPassword}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                onClick={onSubmit}
+                size='large'
+                style={{ margin: "20px auto" }}
+                type='submit'
+                variant='contained'
+                color='primary'
+                fullWidth
+                disabled={
+                  isSuccessResetPassword || !newPassword || !newPassword2
+                }
+              >
+                Ubah
+              </Button>
+              {isSuccessResetPassword && (
+                <Typography
+                  mt={1}
+                  align='center'
+                  variant='body2'
+                  color='#198754'
+                >
+                  <b>Password berhasil diubah.</b>
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
+        </form>
       </Grid>
     </>
   )

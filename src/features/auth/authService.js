@@ -79,14 +79,14 @@ const forgotPassword = async (userData) => {
 }
 
 // Reset password
-const resetPassword = async (data, token) => {
-    const { resetPasswordToken, newPassword } = data
+const tempPassword = async (data, token) => {
+    const { resetPasswordToken, tempPassword } = data
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-    const response = await API.put(API_URL + 'reset-password/' + resetPasswordToken, { newPassword }, config)
+    const response = await API.post(API_URL + 'temp-password/' + resetPasswordToken, { tempPassword }, config)
     return response.data
 }
 
@@ -115,7 +115,7 @@ const authService = {
     logout,
     update,
     forgotPassword,
-    resetPassword,
+    tempPassword,
     decidePosition,
     updateStudentProfile,
     updateMyPassword,

@@ -69,7 +69,7 @@ function ResetPasswordList() {
         }
       >
         {users.map((userDetail, index) => (
-          <PeopleCard key={index} user={userDetail} link='#' />
+          <PeopleCard key={index} user={userDetail} link='/c/reset-passwords' />
         ))}
       </InfiniteScroll>
     </>
