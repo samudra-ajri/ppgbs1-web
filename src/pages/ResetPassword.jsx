@@ -35,14 +35,20 @@ function ResetPassword() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    if (newPassword !== newPassword2)
+    if (newPassword !== newPassword2) {
       toast.error("Ulangi password tidak sesuai.")
-    dispatch(
-      tempPassword({
-        tempPassword: newPassword,
-        resetPasswordToken: person.resetPasswordToken,
+    } else {
+      dispatch(
+        tempPassword({
+          tempPassword: newPassword,
+          resetPasswordToken: person.resetPasswordToken,
+        })
+      )
+      setFormData({
+        newPassword: "",
+        newPassword2: "",
       })
-    )
+    }
   }
 
   if (isLoading) return <Spinner />
@@ -69,7 +75,6 @@ function ResetPassword() {
                 variant='outlined'
                 fullWidth
                 required
-                disabled={isSuccessResetPassword}
               />
             </Grid>
             <Grid item xs={12}>
@@ -83,7 +88,6 @@ function ResetPassword() {
                 variant='outlined'
                 fullWidth
                 required
-                disabled={isSuccessResetPassword}
               />
             </Grid>
             <Grid item xs={12}>
@@ -95,9 +99,7 @@ function ResetPassword() {
                 variant='contained'
                 color='primary'
                 fullWidth
-                disabled={
-                  isSuccessResetPassword || !newPassword || !newPassword2
-                }
+                disabled={!newPassword || !newPassword2}
               >
                 Ubah
               </Button>
