@@ -110,7 +110,7 @@ function ResetPassword() {
                   variant='body2'
                   color='#198754'
                 >
-                  <b>Password berhasil diubah.</b>
+                  <b>Password berhasil diubah. Silakan hubungi {person.name}.</b>
                 </Typography>
               )}
             </Grid>
