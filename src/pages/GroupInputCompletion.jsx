@@ -107,7 +107,7 @@ function GroupInputCompletion() {
     )
   }
 
-  const isQuranHaditsCategory = category === "Alquran" || category === "Hadits"
+  const isQuranHaditsCategory = category === "Al-Quran" || category === "Hadits"
   const isPageNumber = (string) => {
     return /^\d+$/.test(string)
   }

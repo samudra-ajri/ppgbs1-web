@@ -79,7 +79,7 @@ function UserCompletionByCategory() {
     )
   }
 
-  const isQuranHaditsCategory = category === "Alquran" || category === "Hadits"
+  const isQuranHaditsCategory = category === "Al-Quran" || category === "Hadits"
 
   return (
     <>
