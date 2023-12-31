@@ -62,8 +62,8 @@ function EditGrade() {
       <Grid item xs={12}>
         <TextField
           name='grade'
-          label='Gender'
-          placeholder='Gender'
+          label='Kelas'
+          placeholder='Kelas'
           value={grade}
           onChange={onChange}
           variant='outlined'
