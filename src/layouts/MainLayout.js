@@ -24,8 +24,11 @@ function MainLayout() {
   const { user } = useSelector((state) => state.auth)
 
   useEffect(() => {
+    const now = Math.floor(Date.now() / 1000);
     const isChangeTempPassword =
       user?.needUpdatePassword && user?.resetPasswordToken
+
+    if (now >= user.exp) navigate("/login")
     if (isChangeTempPassword) navigate("/c/update-password")
   }, [user, navigate])
 
