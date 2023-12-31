@@ -28,7 +28,7 @@ function MainLayout() {
     const isChangeTempPassword =
       user?.needUpdatePassword && user?.resetPasswordToken
 
-    if (now >= user.exp) navigate("/login")
+    if (now >= user?.exp) navigate("/login")
     if (isChangeTempPassword) navigate("/c/update-password")
   }, [user, navigate])
 
