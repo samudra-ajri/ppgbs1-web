@@ -28,7 +28,8 @@ function Login() {
 
   useEffect(() => {
     if (isError) toast.error(message)
-    if (isSuccess || user) navigate("/decide-position")
+    if (!user?.exp) navigate("/login")
+    if (isSuccess || user?.exp) navigate("/decide-position")
     dispatch(reset())
     dispatch(resetCompletionScore())
   }, [user, isError, isSuccess, message, navigate, dispatch])

@@ -11,12 +11,12 @@ function DecidePosition() {
   const { user, alreadyDecidedPosition } = useSelector((state) => state.auth)
 
   const navigationPath =
-    user.currentPosition.type === "GENERUS" ? "/user-completion" : "/"
+    user?.currentPosition?.type === "GENERUS" ? "/user-completion" : "/"
 
   useEffect(() => {
-    if (!user) navigate("/login")
+    if (!user || !user?.name) navigate("/login")
 
-    if (user.positions.length === 1) {
+    if (user?.positions?.length === 1) {
       dispatch(decidePosition(user.positions[0].positionId))
       navigate(navigationPath)
     }
@@ -29,7 +29,7 @@ function DecidePosition() {
       <Typography variant='h5' align='center' sx={{ pb: 4 }}>
         Login dengan Akun
       </Typography>
-      {user.positions.map((position) => (
+      {user?.positions?.map((position) => (
         <DecidePositionCard position={position} key={position.positionId} />
       ))}
     </>

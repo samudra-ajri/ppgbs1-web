@@ -16,8 +16,8 @@ function Menu() {
   const { user } = useSelector((state) => state.auth)
 
   useEffect(() => {
-    if (!user) navigate("/login")
-    if (user?.currentPosition.type === "GENERUS") navigate("/user-completion")
+    if (!user || !user.exp) navigate("/login")
+    if (user?.currentPosition?.type === "GENERUS") navigate("/user-completion")
   }, [user, navigate, dispatch])
 
   if (!user) return
@@ -25,7 +25,7 @@ function Menu() {
   return (
     <>
       <Typography variant='body2' align='center'>
-        <b>Hi, {stringCast.ppg(user.name)}</b>
+        <b>Hi, {user?.name}</b>
       </Typography>
       <Box sx={{ flexGrow: 1 }} paddingTop={5}>
         <Grid container spacing={2}>
