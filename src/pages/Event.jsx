@@ -40,12 +40,6 @@ function Event() {
         Jadwal Kegiatan
       </Typography>
 
-      {!isSuccess && (
-        <Grid align='center' sx={{ pt: 1.5 }}>
-          <CircularProgress size={20} />
-        </Grid>
-      )}
-
       {user.currentPosition.type === "ADMIN" && (
         <Button
           size='medium'
@@ -59,6 +53,13 @@ function Event() {
           Tambah
         </Button>
       )}
+
+      {!isSuccess && (
+        <Grid align='center' sx={{ pt: 1.5 }}>
+          <CircularProgress size={20} />
+        </Grid>
+      )}
+
       <InfiniteScroll
         dataLength={events?.length || 0}
         next={fetchMoreEvents}
