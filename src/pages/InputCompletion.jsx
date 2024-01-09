@@ -63,11 +63,23 @@ function InputCompletion() {
         structure: "material",
         userId: user.id,
         subcategory: subcategory,
+        grade: filterGrade === "initial" ? null : filterGrade,
       })
     )
     dispatch(reset())
     dispatch(resetCompletionUpdate())
-  }, [user, navigate, dispatch, subcategory, isSuccessUpdate, isErrorUpdate, messagaUpdate, isError, message])
+  }, [
+    user,
+    navigate,
+    dispatch,
+    subcategory,
+    isSuccessUpdate,
+    isErrorUpdate,
+    messagaUpdate,
+    isError,
+    message,
+    filterGrade,
+  ])
 
   useEffect(() => {
     if (sumCompletions) {
