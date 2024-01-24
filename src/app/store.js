@@ -43,4 +43,8 @@ export const store = configureStore({
     initialData: initialDataReducer,
     updateCompletion: updateCompletionReducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 })

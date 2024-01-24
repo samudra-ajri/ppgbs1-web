@@ -73,12 +73,25 @@ const detail = async (params, token) => {
   return response.data
 }
 
+// Download presence data as Excel
+const downloadPresenceData = async (eventId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob',
+  }
+  const response = await API.get(`${API_URL}/${eventId}/presences/download`, config)
+  return response.data
+}
+
 const presenceService = {
   createPresence,
   createPresenceByAdmin,
   detail,
   getPresencesByEventId,
   removeAttender,
+  downloadPresenceData,
 }
 
 export default presenceService

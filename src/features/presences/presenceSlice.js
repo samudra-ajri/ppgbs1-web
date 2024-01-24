@@ -7,7 +7,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: '',
-  
+
   isSuccessPresentStatus: false,
   isLoadingPresentStatus: false,
   isSuccessCreatePresence: false,
@@ -22,6 +22,9 @@ const initialState = {
   currentPage: 1,
   totalPages: 1,
   hasNextPage: false,
+
+  isDownloading: false,
+  downloadError: null,
 }
 
 // Create presence
@@ -122,10 +125,30 @@ export const getPresencesByEventId = createAsyncThunk(
 // Get presence by roomId list with paginate
 export const getPresencesByRoomIdPaginate = createAsyncThunk(
   'presences/attendersPaginate',
-  async ({page, roomId}, thunkAPI) => {
+  async ({ page, roomId }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await presenceService.getPresencesByRoomId({page, roomId}, token)
+      return await presenceService.getPresencesByRoomId({ page, roomId }, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Download presence data as Excel
+export const downloadPresenceData = createAsyncThunk(
+  'presences/download',
+  async ({ eventId }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const data = await presenceService.downloadPresenceData(eventId, token)
+      return data // This will be a blob
     } catch (error) {
       const message =
         (error.response &&
@@ -248,6 +271,17 @@ export const presenceSlice = createSlice({
         state.isLoading = false
         state.isError = true
         state.message = action.payload
+      })
+      .addCase(downloadPresenceData.pending, (state) => {
+        state.isDownloading = true
+        state.downloadError = null
+      })
+      .addCase(downloadPresenceData.fulfilled, (state) => {
+        state.isDownloading = false
+      })
+      .addCase(downloadPresenceData.rejected, (state, action) => {
+        state.isDownloading = false
+        state.downloadError = action.payload
       })
   },
 })
