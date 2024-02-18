@@ -41,21 +41,22 @@ function ProfileCard({ user }) {
               </Typography>
             )}
           </Grid>
-          {user?.grade && currentPosition.type === "GENERUS" && (
-            <Grid item xs={10} md={11}>
-              <Chip
-                size='small'
-                label={
-                  <Typography variant='caption'>
-                    {gradeEnum[user.grade]}
-                  </Typography>
-                }
-                color='success'
-                variant='outlined'
-                sx={{ display: "flex", justifyContent: "center" }}
-              />
-            </Grid>
-          )}
+          {(user?.grade || user.grade === 0) &&
+            currentPosition.type === "GENERUS" && (
+              <Grid item xs={10} md={11}>
+                <Chip
+                  size='small'
+                  label={
+                    <Typography variant='caption'>
+                      {gradeEnum[user.grade]}
+                    </Typography>
+                  }
+                  color='success'
+                  variant='outlined'
+                  sx={{ display: "flex", justifyContent: "center" }}
+                />
+              </Grid>
+            )}
         </Grid>
       </CardContent>
     </Card>
