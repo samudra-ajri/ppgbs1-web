@@ -53,6 +53,7 @@ function Generus() {
   const [drawerFilters, setDrawerFilters] = useState({
     positionType: "GENERUS",
     ancestorId: initialAncestorIdFilter(),
+    grade: [],
   })
   const [filters, setFilters] = useState({
     page: 1,
@@ -117,10 +118,29 @@ function Generus() {
       }))
     }
 
-    setDrawerFilters((prevState) => ({
-      ...prevState,
-      [key]: value === drawerFilters[key] ? "" : value,
-    }))
+    if (key === "grade") {
+      // multiple grades filter
+      if (drawerFilters.grade.includes(value)) {
+        // Removes the value if it already exists in the grade array
+        const grades = drawerFilters.grade.filter((grade) => grade !== value)
+        setDrawerFilters((prevState) => ({
+          ...prevState,
+          grade: grades,
+        }))
+      } else {
+        // Adds the value if it doesn't exist in the grade array
+        setDrawerFilters((prevState) => ({
+          ...prevState,
+          grade: [...prevState.grade, value],
+        }))
+      }
+    } else {
+      // Handles other keys
+      setDrawerFilters((prevState) => ({
+        ...prevState,
+        [key]: value === prevState[key] ? "" : value,
+      }))
+    }
   }
 
   const onSubmit = (e) => {
@@ -195,7 +215,7 @@ function Generus() {
               <Chip
                 label={gradeEnum[key]}
                 color='info'
-                variant={drawerFilters.grade === key ? "solid" : "outlined"}
+                variant={drawerFilters.grade.includes(key) ? "solid" : "outlined"}
                 onClick={handleFilterObject("grade", key)}
               />
             </Grid>
