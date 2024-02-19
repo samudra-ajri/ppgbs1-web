@@ -56,13 +56,13 @@ function GroupCompletion() {
   const [drawerFilters, setDrawerFilters] = useState({
     ancestorId: initialData?.groupCompletionFilters?.ancestorId || initialAncestorIdFilter(),
     organizationId: initialData?.groupCompletionFilters?.organizationId,
-    usersGrade: initialData?.groupCompletionFilters?.usersGrade,
+    usersGrade: initialData?.groupCompletionFilters?.usersGrade || [],
   })
   const [filters, setFilters] = useState({
     structure: "category",
     ancestorId: initialData?.groupCompletionFilters?.ancestorId || initialAncestorIdFilter(),
     organizationId: initialData?.groupCompletionFilters?.organizationId || "",
-    usersGrade: initialData?.groupCompletionFilters?.usersGrade || "",
+    usersGrade: initialData?.groupCompletionFilters?.usersGrade || [],
   })
 
   useEffect(() => {
@@ -102,11 +102,32 @@ function GroupCompletion() {
       }))
     }
 
-    setDrawerFilters((prevState) => ({
-      ...prevState,
-      [key]: value === drawerFilters[key] ? "" : value,
-    }))
+    if (key === "usersGrade") {
+      // multiple grades filter
+      if (drawerFilters.usersGrade.includes(value)) {
+        // Removes the value if it already exists in the grade array
+        const grades = drawerFilters.usersGrade.filter((grade) => grade !== value)
+        setDrawerFilters((prevState) => ({
+          ...prevState,
+          usersGrade: grades,
+        }))
+      } else {
+        // Adds the value if it doesn't exist in the grade array
+        setDrawerFilters((prevState) => ({
+          ...prevState,
+          usersGrade: [...prevState.usersGrade, value],
+        }))
+      }
+    } else {
+      // Handles other keys
+      setDrawerFilters((prevState) => ({
+        ...prevState,
+        [key]: value === prevState[key] ? "" : value,
+      }))
+    }
   }
+
+  console.log(drawerFilters);
 
   const filterList = () => (
     <>
@@ -128,7 +149,7 @@ function GroupCompletion() {
             <Chip
               label={gradeEnum[key]}
               color='info'
-              variant={drawerFilters.usersGrade === key ? "solid" : "outlined"}
+              variant={drawerFilters.usersGrade.includes(key) ? "solid" : "outlined"}
               onClick={handleFilterObject("usersGrade", key)}
             />
           </Grid>
