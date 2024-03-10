@@ -7,6 +7,7 @@ import {
   CircularProgress,
   Container,
   Drawer,
+  Fab,
   Grid,
   IconButton,
   TextField,
@@ -15,12 +16,13 @@ import {
 } from "@mui/material"
 import FilterIcon from "@mui/icons-material/FilterListRounded"
 import CloseIcon from "@mui/icons-material/CloseRounded"
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import InfiniteScroll from "react-infinite-scroll-component"
 import PeopleCard from "../components/PeopleCard"
-import { getUsersPaginate, reset } from "../features/users/userSlice"
+import { downloadUsersData, getUsersPaginate, reset } from "../features/users/userSlice"
 import { getppd, getppk } from "../features/organizations/organizationSlice"
 
 import gradeEnum from "../enums/gradeEnum"
@@ -278,6 +280,35 @@ function Generus() {
     </>
   )
 
+  const onClickDownload = () => {
+    dispatch(downloadUsersData())
+      .unwrap()
+      .then((blob) => {
+        // Create a Blob from the response
+        const file = new Blob([blob], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        })
+
+        // Build a URL from the file
+        const fileURL = URL.createObjectURL(file)
+
+        // Create a temp <a> tag to download file
+        const link = document.createElement("a")
+        link.href = fileURL
+        link.setAttribute("download", `users-${Date.now()}.xlsx`) // Name the file
+        document.body.appendChild(link)
+        link.click()
+
+        // Cleanup
+        link.parentNode.removeChild(link)
+        URL.revokeObjectURL(fileURL)
+      })
+      .catch((error) => {
+        // Handle error here
+        console.error("Error downloading the file: ", error)
+      })
+  }
+
   return (
     <>
       <Typography variant='h6' align='center' sx={{ mb: 3 }}>
@@ -382,6 +413,16 @@ function Generus() {
       <Drawer anchor='left' open={stateDrawer} onClose={toggleDrawer(false)}>
         <Container>{filterList()}</Container>
       </Drawer>
+
+      <Fab
+        size='medium'
+        color='success'
+        aria-label='download excel'
+        onClick={onClickDownload}
+        sx={{ position: "fixed", bottom: 76, right: 16 }}
+      >
+        <FileDownloadOutlinedIcon />
+      </Fab>
     </>
   )
 }

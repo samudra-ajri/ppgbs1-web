@@ -11,7 +11,10 @@ const initialState = {
   currentPage: 1,
   totalPages: 1,
   hasNextPage: false,
-  totalCount: 0
+  totalCount: 0,
+
+  isDownloading: false,
+  downloadError: null,
 }
 
 // Get users list
@@ -77,6 +80,26 @@ export const moveUser = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token
       return await userService.updateUser(token, userId, data)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Download users data as Excel
+export const downloadUsersData = createAsyncThunk(
+  'users/download',
+  async (params, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const data = await userService.downloadUsersData(params, token)
+      return data // This will be a blob
     } catch (error) {
       const message =
         (error.response &&
@@ -159,6 +182,17 @@ export const userSlice = createSlice({
         state.isLoading = false
         state.isError = true
         state.message = action.payload
+      })
+      .addCase(downloadUsersData.pending, (state) => {
+        state.isDownloading = true
+        state.downloadError = null
+      })
+      .addCase(downloadUsersData.fulfilled, (state) => {
+        state.isDownloading = false
+      })
+      .addCase(downloadUsersData.rejected, (state, action) => {
+        state.isDownloading = false
+        state.downloadError = action.payload
       })
   },
 })

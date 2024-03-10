@@ -12,7 +12,7 @@ const getUsers = async (token, {
   sex = '',
   grade = '',
   search = '',
-  isForgotPassword ='',
+  isForgotPassword = '',
 } = {}) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -32,7 +32,7 @@ const getUsers = async (token, {
 
   let targetUrl = `${API_URL}?${queryParams}`
   if (isForgotPassword) targetUrl = `${API_URL}/forgot-password?${queryParams}`
-  
+
   const response = await API.get(targetUrl, config)
   return response.data
 }
@@ -61,10 +61,23 @@ const updateUser = async (token, userId, data) => {
   return response.data
 }
 
+// Download users data as Excel
+const downloadUsersData = async (params, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob',
+  }
+  const response = await API.get(`${API_URL}/download`, config)
+  return response.data
+}
+
 const userService = {
   getUsers,
   deleteUser,
-  updateUser
+  updateUser,
+  downloadUsersData,
 }
 
 export default userService
