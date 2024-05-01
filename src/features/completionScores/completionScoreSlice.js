@@ -8,6 +8,9 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: '',
+
+  isDownloading: false,
+  downloadError: null,
 }
 
 // Get all users completions scores
@@ -67,6 +70,26 @@ export const getGroupSumCompletions = createAsyncThunk(
   }
 )
 
+// Download completion data as Excel
+export const downloadCompletionData = createAsyncThunk(
+  'completions/download',
+  async ({ userId }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const data = await completionScoreService.downloadCompletionData(userId, token)
+      return data // This will be a blob
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const completionScoreSlice = createSlice({
   name: 'completion',
   initialState,
@@ -113,6 +136,17 @@ export const completionScoreSlice = createSlice({
         state.isLoading = false
         state.isError = true
         state.message = action.payload
+      })
+      .addCase(downloadCompletionData.pending, (state) => {
+        state.isDownloading = true
+        state.downloadError = null
+      })
+      .addCase(downloadCompletionData.fulfilled, (state) => {
+        state.isDownloading = false
+      })
+      .addCase(downloadCompletionData.rejected, (state, action) => {
+        state.isDownloading = false
+        state.downloadError = action.payload
       })
   },
 })

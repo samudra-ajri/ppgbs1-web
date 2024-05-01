@@ -66,11 +66,24 @@ const getGroupSumCompletions = async (token, filters) => {
   return response.data
 }
 
+// Download completion data as Excel
+const downloadCompletionData = async (userId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: 'blob',
+  }
+  const response = await API.get(`${API_URL}/users/${userId}/download`, config)
+  return response.data
+}
+
 const completionScoreService = {
   getCompletionsScoresByUserId,
   getAllCompletionsScores,
   getSumCompletions,
   getGroupSumCompletions,
+  downloadCompletionData,
 }
 
 export default completionScoreService

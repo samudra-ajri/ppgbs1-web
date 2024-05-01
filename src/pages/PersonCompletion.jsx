@@ -1,15 +1,18 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined"
 import ProfileCard from "../components/ProfileCard"
 import {
   Card,
   CardContent,
   CircularProgress,
+  Fab,
   Grid,
   Typography,
 } from "@mui/material"
 import {
+  downloadCompletionData,
   getSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
@@ -44,6 +47,35 @@ function UserCompletion() {
       return `${startDate} pkl. ${startTime}`
     }
     return "-"
+  }
+
+  const onClickDownload = () => {
+    dispatch(downloadCompletionData({ userId: person.id }))
+      .unwrap()
+      .then((blob) => {
+        // Create a Blob from the response
+        const file = new Blob([blob], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        })
+
+        // Build a URL from the file
+        const fileURL = URL.createObjectURL(file)
+
+        // Create a temp <a> tag to download file
+        const link = document.createElement("a")
+        link.href = fileURL
+        link.setAttribute("download", `capaian-materi-${person.name}.xlsx`) // Name the file
+        document.body.appendChild(link)
+        link.click()
+
+        // Cleanup
+        link.parentNode.removeChild(link)
+        URL.revokeObjectURL(fileURL)
+      })
+      .catch((error) => {
+        // Handle error here
+        console.error("Error downloading the file: ", error)
+      })
   }
 
   return (
@@ -83,6 +115,16 @@ function UserCompletion() {
               </Grid>
             ))}
           </Grid>
+
+          <Fab
+            size='medium'
+            color='success'
+            aria-label='download excel'
+            onClick={onClickDownload}
+            sx={{ position: "fixed", bottom: 16, right: 16 }}
+          >
+            <FileDownloadOutlinedIcon />
+          </Fab>
         </>
       )}
     </>
