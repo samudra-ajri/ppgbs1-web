@@ -23,7 +23,7 @@ import moment from "moment"
 function UserCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { person } = useSelector((state) => state.person)
+  const { person, isLoading } = useSelector((state) => state.person)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores
   )
@@ -80,7 +80,7 @@ function UserCompletion() {
 
   return (
     <>
-      <ProfileCard user={person} />
+      <ProfileCard user={person} isLoading={isLoading} />
       {!isSuccess ? (
         <Grid pb={10}>
           <Card align='center'>
