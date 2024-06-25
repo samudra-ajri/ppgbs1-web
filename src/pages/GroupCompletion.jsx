@@ -127,8 +127,6 @@ function GroupCompletion() {
     }
   }
 
-  console.log(drawerFilters);
-
   const filterList = () => (
     <>
       <Grid pt={3} sx={{ width: "100vw" }}>
