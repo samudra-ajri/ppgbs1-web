@@ -14,13 +14,13 @@ const initialState = {
   totalCount: 0,
 }
 
-// Get references list
-export const getReferences = createAsyncThunk(
-  'references/getAll',
-  async ({ page, search }, thunkAPI) => {
+// Get references list with paginate
+export const getReferencesPaginate = createAsyncThunk(
+  'references/getPaginate',
+  async (params, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await referenceService.getReferences(token, page, search)
+      return await referenceService.getReferences(token, params)
     } catch (error) {
       const message =
         (error.response &&
@@ -33,13 +33,13 @@ export const getReferences = createAsyncThunk(
   }
 )
 
-// Get references list with paginate
-export const getReferencesPaginate = createAsyncThunk(
-  'references/getPaginate',
-  async (params, thunkAPI) => {
+// Delete reference
+export const deleteReference = createAsyncThunk(
+  'references/delete',
+  async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await referenceService.getReferences(token, params)
+      return await referenceService.deleteReference(token, id)
     } catch (error) {
       const message =
         (error.response &&
@@ -60,23 +60,6 @@ export const referenceSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getReferences.pending, (state) => {
-        state.isLoading = true
-      })
-      .addCase(getReferences.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.isSuccess = true
-        state.references = [...state.references, ...action.payload.data]
-        state.currentPage = action.payload.currentPage
-        state.totalPages = Math.ceil(action.payload.total / action.payload.count)
-        state.hasNextPage = action.payload.hasNextPage
-      })
-      .addCase(getReferences.rejected, (state, action) => {
-        state.isLoading = false
-        state.isError = true
-        state.message = action.payload
-        state.hasNextPage = false
-      })
       .addCase(getReferencesPaginate.pending, (state) => {
         state.isLoading = true
       })
@@ -88,6 +71,22 @@ export const referenceSlice = createSlice({
         state.hasNextPage = action.payload.hasNextPage
       })
       .addCase(getReferencesPaginate.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(deleteReference.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteReference.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.references = state.references.filter(
+          (references) => references.id !== action.payload.id
+        )
+        state.totalCount = state.references.length
+      })
+      .addCase(deleteReference.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

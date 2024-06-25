@@ -14,21 +14,21 @@ import {
 import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
 import { useState } from "react"
 import {
-  // useDispatch,
+  useDispatch,
   useSelector,
 } from "react-redux"
-// import { deleteReference } from "../features/references/referenceSlice"
+import { deleteReference } from "../features/references/referenceSlice"
 import PopDialog from "./PopDialog"
 
 function ReferenceCard({ data, canDelete, link }) {
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const [openPopup, setOpenPopup] = useState(false)
   const { isLoading } = useSelector((state) => state.references)
 
   const handleDeleteClick = () => setOpenPopup(true)
 
   const handleConfirmDelete = () => {
-    // dispatch(deleteReference(data.id))
+    dispatch(deleteReference(data.id))
     setOpenPopup(false)
   }
 
