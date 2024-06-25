@@ -113,7 +113,7 @@ function References() {
           <ReferenceCard
             key={index}
             data={item}
-            canDelete={user?.currentPosition?.type === "ADMIN"}
+            canDelete={user?.currentPosition?.organizationLevel === 0}
             link={item.url}
           />
         ))}

@@ -37,7 +37,7 @@ function ReferenceCard({ data, canDelete, link }) {
       <Card variant='outlined' sx={{ mb: 0.5, cursor: "pointer" }}>
         <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
           <Grid container>
-            <Grid item xs={10} md={11}>
+            <Grid item xs={canDelete ? 10 : 12} md={11}>
               <a
                 href={link}
                 target='_blank'
