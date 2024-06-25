@@ -18,6 +18,7 @@ import Profile from '../pages/Profile'
 import Footer from '../components/Footer'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import References from '../pages/References'
 
 function MainLayout() {
   const navigate = useNavigate()
@@ -49,6 +50,7 @@ function MainLayout() {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/reset-passwords' element={<ResetPasswordList />} />
         <Route path='/decide-position' element={<DecidePosition />} />
+        <Route path='/references' element={<References />} />
         <Route path='/' element={<Menu />} />
       </Routes>
       <Footer />

@@ -19,6 +19,7 @@ import organizationsReducer from '../features/organizations/organizationSlice'
 import positionsReducer from '../features/positions/positionSlice'
 import initialDataReducer from '../features/initialData/initialDataSlice'
 import updateCompletionReducer from '../features/updateCompletion/updateCompletionSlice'
+import referencesReducer from '../features/references/referenceSlice'
 
 export const store = configureStore({
   reducer: {
@@ -42,6 +43,7 @@ export const store = configureStore({
     positions: positionsReducer,
     initialData: initialDataReducer,
     updateCompletion: updateCompletionReducer,
+    references: referencesReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

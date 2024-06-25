@@ -6,8 +6,7 @@ import BarIcon from "@mui/icons-material/EqualizerRounded"
 import PeopleListIcon from "@mui/icons-material/PersonSearchOutlined"
 import EventIcon from "@mui/icons-material/EventRounded"
 import RestPasswordIcon from "@mui/icons-material/LockResetRounded"
-// import DashboardActivity from "@mui/icons-material/TimelineRounded"
-// import { kibanaUrl } from "../config"
+import BookIcon from "@mui/icons-material/BookOutlined"
 
 function Menu() {
   const dispatch = useDispatch()
@@ -19,7 +18,35 @@ function Menu() {
     if (user?.currentPosition?.type === "GENERUS") navigate("/user-completion")
   }, [user, navigate, dispatch])
 
-  if (!user) return
+  if (!user) return null
+
+  const menuItems = [
+    {
+      to: "/events",
+      icon: <EventIcon fontSize='large' color='info' />,
+      text: "Kegiatan",
+    },
+    {
+      to: "/users",
+      icon: <PeopleListIcon fontSize='large' color='info' />,
+      text: "Users",
+    },
+    {
+      to: "/group-completion",
+      icon: <BarIcon fontSize='large' color='info' />,
+      text: "Capaian Materi",
+    },
+    {
+      to: "/references",
+      icon: <BookIcon fontSize='large' color='info' />,
+      text: "Pustaka",
+    },
+    {
+      to: "/reset-passwords",
+      icon: <RestPasswordIcon fontSize='large' color='info' />,
+      text: "Reset Password",
+    },
+  ]
 
   return (
     <>
@@ -28,47 +55,19 @@ function Menu() {
       </Typography>
       <Box sx={{ flexGrow: 1 }} paddingTop={5}>
         <Grid container spacing={2}>
-          <Grid item xs={6} textAlign='center' component={Link} to='/events'>
-            <EventIcon fontSize='large' color='info' />
-            <Typography sx={{ fontSize: "12px" }}>Kegiatan</Typography>
-          </Grid>
-          <Grid
-            item
-            xs={4}
-            textAlign='center'
-            component={Link}
-            to='/group-completion'
-          >
-            <BarIcon fontSize='large' color='info' />
-            <Typography sx={{ fontSize: "12px" }}>Capaian Materi</Typography>
-          </Grid>
-          <Grid item xs={6} textAlign='center' component={Link} to='/users'>
-            <PeopleListIcon fontSize='large' color='info' />
-            <Typography sx={{ fontSize: "12px" }}>Users</Typography>
-          </Grid>
-          <Grid
-            item
-            xs={4}
-            textAlign='center'
-            component={Link}
-            to='/reset-passwords'
-          >
-            <RestPasswordIcon fontSize='large' color='info' />
-            <Typography sx={{ fontSize: "12px" }}>
-              Reset User Password
-            </Typography>
-          </Grid>
-          {/* <Grid item xs={6} textAlign='center'>
-            <a
-              href={kibanaUrl}
-              target='_blank'
-              rel='noopener noreferrer'
-              style={{ textDecoration: "none", color: "inherit" }}
+          {menuItems.map((item, index) => (
+            <Grid
+              item
+              xs={4}
+              textAlign='center'
+              component={Link}
+              to={item.to}
+              key={index}
             >
-              <DashboardActivity fontSize='large' color='info' />
-              <Typography sx={{ fontSize: "12px" }}>Log Aktivitas</Typography>
-            </a>
-          </Grid> */}
+              {item.icon}
+              <Typography sx={{ fontSize: "12px" }}>{item.text}</Typography>
+            </Grid>
+          ))}
         </Grid>
       </Box>
     </>
