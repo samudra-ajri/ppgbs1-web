@@ -125,15 +125,17 @@ function References() {
         ))}
       </InfiniteScroll>
 
-      <Fab
-        size='medium'
-        color='info'
-        aria-label='add file'
-        onClick={onClickAddFile}
-        sx={{ position: "fixed", bottom: 76, right: 16 }}
-      >
-        <AddRoundedIcon />
-      </Fab>
+      {user?.currentPosition?.organizationLevel === 0 && (
+        <Fab
+          size='medium'
+          color='info'
+          aria-label='add file'
+          onClick={onClickAddFile}
+          sx={{ position: "fixed", bottom: 76, right: 16 }}
+        >
+          <AddRoundedIcon />
+        </Fab>
+      )}
     </>
   )
 }
