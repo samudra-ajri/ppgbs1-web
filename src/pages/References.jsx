@@ -1,6 +1,7 @@
 import {
   Button,
   CircularProgress,
+  Fab,
   Grid,
   TextField,
   Typography,
@@ -9,6 +10,7 @@ import { useEffect, useState, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import InfiniteScroll from "react-infinite-scroll-component"
+import AddRoundedIcon from "@mui/icons-material/AddRounded"
 import {
   getReferencesPaginate,
   reset,
@@ -48,6 +50,10 @@ function References() {
     e.preventDefault()
     setFilters({ page: 1, search: searchBar })
     dispatch(reset())
+  }
+
+  const onClickAddFile = () => {
+    navigate("/c/create-reference")
   }
 
   return (
@@ -118,6 +124,16 @@ function References() {
           />
         ))}
       </InfiniteScroll>
+
+      <Fab
+        size='medium'
+        color='info'
+        aria-label='add file'
+        onClick={onClickAddFile}
+        sx={{ position: "fixed", bottom: 76, right: 16 }}
+      >
+        <AddRoundedIcon />
+      </Fab>
     </>
   )
 }

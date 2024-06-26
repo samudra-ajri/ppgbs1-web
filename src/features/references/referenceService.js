@@ -22,9 +22,17 @@ const deleteReference = async (token, id) => {
   return response.data
 }
 
+// Create a reference
+const createReference = async (data, token) => {
+  const config = getConfig(token)
+  const response = await API.post(API_URL, data, config)
+  return response.data
+}
+
 const referenceService = {
   getReferences,
   deleteReference,
+  createReference,
 }
 
 export default referenceService

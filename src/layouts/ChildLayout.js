@@ -21,6 +21,7 @@ import GroupInputCompletion from '../pages/GroupInputCompletion'
 import EditProfile from '../pages/EditProfile'
 import EditGrade from '../pages/EditGrade'
 import UpdatePassword from '../pages/UpdatePassword'
+import CreateReference from '../pages/CreateReference'
 
 function ChildLayout() {
   return (
@@ -54,6 +55,7 @@ function ChildLayout() {
         <Route path='/edit-profile' element={<EditProfile />} />
         <Route path='/edit-grade' element={<EditGrade />} />
         <Route path='/update-password' element={<UpdatePassword />} />
+        <Route path='/create-reference' element={<CreateReference />} />
       </Routes>
     </>
   )
