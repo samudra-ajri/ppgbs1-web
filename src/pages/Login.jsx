@@ -71,8 +71,8 @@ function Login() {
                 <Grid item xs={12}>
                   <TextField
                     name='phoneOrEmail'
-                    label='Nomor HP atau Email'
-                    placeholder='Nomor HP atau Email'
+                    label='Nomor HP, email, atau username'
+                    placeholder='Nomor HP, email, atau username'
                     value={phoneOrEmail}
                     onChange={onChange}
                     variant='outlined'
