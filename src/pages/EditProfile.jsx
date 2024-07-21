@@ -137,6 +137,7 @@ function EditProfile() {
     const userData = {
       name,
       sex,
+      phone,
       email,
       isMuballigh,
       birthdate: `${yearBirth}-${month}-${day}`,
