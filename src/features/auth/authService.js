@@ -8,6 +8,15 @@ const register = async (userData) => {
     return response.data
 }
 
+// Register user by admin
+const registerByAdmin = async (userData, token) => {
+    const config = {
+        headers: { Authorization: `Bearer ${token}`},
+    }
+    const response = await API.post(API_URL + 'register-by-admin', userData, config)
+    return response.data
+}
+
 // Login user
 const login = async (userData) => {
     try {
@@ -130,6 +139,7 @@ const authService = {
     decidePosition,
     updateStudentProfile,
     updateMyPassword,
+    registerByAdmin,
 }
 
 export default authService

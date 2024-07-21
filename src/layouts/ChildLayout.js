@@ -22,6 +22,7 @@ import EditProfile from '../pages/EditProfile'
 import EditGrade from '../pages/EditGrade'
 import UpdatePassword from '../pages/UpdatePassword'
 import CreateReference from '../pages/CreateReference'
+import RegisterByAdmin from '../pages/RegisterByAdmin'
 
 function ChildLayout() {
   return (
@@ -48,6 +49,7 @@ function ChildLayout() {
         <Route path='/targets-completed/*' element={<CompletedTargets />} />
         <Route path='/details-completed/*' element={<CompletedDetails />} />
         <Route path='/register/*' element={<Register />} />
+        <Route path='/register-by-admin' element={<RegisterByAdmin />} />
         <Route path='/create-event' element={<CreateEvent />} />
         <Route path='/event-details/*' element={<EventDetails />} />
         <Route path='/event-presence/*' element={<EventPresence />} />

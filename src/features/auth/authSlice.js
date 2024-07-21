@@ -13,6 +13,7 @@ const initialState = {
     message: '',
     isSuccessForgotPassword: false,
     isSuccessResetPassword: false,
+    isSuccessRegisterByAdmin: false,
 }
 
 // Login user
@@ -32,6 +33,21 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
 export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
     try {
         return await authService.register(user)
+    } catch (error) {
+        const message = (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+        ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Register user by admin
+export const registerByAdmin = createAsyncThunk('auth/register-by-admin', async (user, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.registerByAdmin(user, token)
     } catch (error) {
         const message = (
             error.response &&
@@ -146,6 +162,7 @@ export const authSlice = createSlice({
             state.message = ''
             state.isSuccessForgotPassword = false
             state.isSuccessResetPassword = false
+            state.isSuccessRegisterByAdmin = false
         }
     },
     extraReducers: (builder) => {
@@ -163,6 +180,18 @@ export const authSlice = createSlice({
                 state.isError = true
                 state.message = action.payload
                 state.user = null
+            })
+            .addCase(registerByAdmin.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(registerByAdmin.fulfilled, (state) => {
+                state.isLoading = false
+                state.isSuccessRegisterByAdmin = true
+            })
+            .addCase(registerByAdmin.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
             })
             .addCase(login.pending, (state) => {
                 state.isLoading = true

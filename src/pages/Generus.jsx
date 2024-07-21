@@ -17,12 +17,17 @@ import {
 import FilterIcon from "@mui/icons-material/FilterListRounded"
 import CloseIcon from "@mui/icons-material/CloseRounded"
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined"
+import AddRoundedIcon from "@mui/icons-material/AddRounded"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import InfiniteScroll from "react-infinite-scroll-component"
 import PeopleCard from "../components/PeopleCard"
-import { downloadUsersData, getUsersPaginate, reset } from "../features/users/userSlice"
+import {
+  downloadUsersData,
+  getUsersPaginate,
+  reset,
+} from "../features/users/userSlice"
 import { getppd, getppk } from "../features/organizations/organizationSlice"
 
 import gradeEnum from "../enums/gradeEnum"
@@ -217,7 +222,9 @@ function Generus() {
               <Chip
                 label={gradeEnum[key]}
                 color='info'
-                variant={drawerFilters.grade.includes(key) ? "solid" : "outlined"}
+                variant={
+                  drawerFilters.grade.includes(key) ? "solid" : "outlined"
+                }
                 onClick={handleFilterObject("grade", key)}
               />
             </Grid>
@@ -279,6 +286,10 @@ function Generus() {
       </AppBar>
     </>
   )
+
+  const onClickCreateUser = () => {
+    navigate("/c/register-by-admin")
+  }
 
   const onClickDownload = () => {
     dispatch(downloadUsersData())
@@ -422,6 +433,16 @@ function Generus() {
         sx={{ position: "fixed", bottom: 76, right: 16 }}
       >
         <FileDownloadOutlinedIcon />
+      </Fab>
+
+      <Fab
+        size='large'
+        color='info'
+        aria-label='create user'
+        onClick={onClickCreateUser}
+        sx={{ position: "fixed", bottom: 136, right: 16 }}
+      >
+        <AddRoundedIcon fontSize='large' />
       </Fab>
     </>
   )
