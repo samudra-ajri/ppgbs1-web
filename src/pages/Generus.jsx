@@ -292,7 +292,7 @@ function Generus() {
   }
 
   const onClickDownload = () => {
-    dispatch(downloadUsersData())
+    dispatch(downloadUsersData(filters))
       .unwrap()
       .then((blob) => {
         // Create a Blob from the response

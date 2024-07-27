@@ -98,7 +98,7 @@ export const downloadUsersData = createAsyncThunk(
   async (params, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      const data = await userService.downloadUsersData(params, token)
+      const data = await userService.downloadUsersData(token, params)
       return data // This will be a blob
     } catch (error) {
       const message =

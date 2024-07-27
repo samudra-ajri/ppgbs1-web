@@ -62,14 +62,32 @@ const updateUser = async (token, userId, data) => {
 }
 
 // Download users data as Excel
-const downloadUsersData = async (params, token) => {
+const downloadUsersData = async (token, {
+  positionType = '',
+  ancestorId = '',
+  organizationId = '',
+  sex = '',
+  grade = '',
+  search = '',
+}) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     responseType: 'blob',
   }
-  const response = await API.get(`${API_URL}/download`, config)
+
+  const queryParams = new URLSearchParams({
+    isActive: true,
+    search,
+    positionType,
+    ancestorId,
+    organizationId,
+    sex,
+    grade,
+  }).toString()
+
+  const response = await API.get(`${API_URL}/download?${queryParams}`, config)
   return response.data
 }
 
