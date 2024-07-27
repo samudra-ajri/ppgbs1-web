@@ -32,10 +32,10 @@ function ProfileCard({ user, isLoading }) {
                 </Typography>
 
                 <Typography align='center' color='text.secondary' fontSize={12}>
-                  {user.positions[0].type !== "ADMIN"
-                    ? (user.sex === 1 ? "Laki-laki" : "Perempuan") +
+                  {user?.positions[0]?.type !== "ADMIN"
+                    ? (user?.sex === 1 ? "Laki-laki" : "Perempuan") +
                       ", " +
-                      moment(user.birthdate).fromNow().split(" ")[0] +
+                      moment(user?.birthdate).fromNow().split(" ")[0] +
                       " tahun"
                     : ""}
                 </Typography>
@@ -51,14 +51,14 @@ function ProfileCard({ user, isLoading }) {
                   </Typography>
                 )}
               </Grid>
-              {(user?.grade || user.grade === 0) &&
+              {(user?.grade || user?.grade === 0) &&
                 currentPosition.type === "GENERUS" && (
                   <Grid item xs={10} md={11}>
                     <Chip
                       size='small'
                       label={
                         <Typography variant='caption'>
-                          {gradeEnum[user.grade]}
+                          {gradeEnum[user?.grade]}
                         </Typography>
                       }
                       color='success'
