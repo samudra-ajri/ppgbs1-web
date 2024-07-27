@@ -9,7 +9,7 @@ const register = async (userData) => {
         userData.phone = contact
     } else if (isEmailAddress(contact)) {
         userData.email = contact
-    } else if (isUsername(contact)) {
+    } else {
         userData.username = contact
     }
 
@@ -148,12 +148,6 @@ const isEmailAddress = (input) => {
     // Regular expression to match email addresses
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(input)
-}
-
-const isUsername = (input) => {
-    // Regular expression to match usernames (alphanumeric and underscores, 3-255 characters)
-    const usernameRegex = /^[a-zA-Z0-9_]{3,255}$/
-    return usernameRegex.test(input)
 }
 
 const authService = {
