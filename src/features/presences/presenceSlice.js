@@ -144,10 +144,10 @@ export const getPresencesByRoomIdPaginate = createAsyncThunk(
 // Download presence data as Excel
 export const downloadPresenceData = createAsyncThunk(
   'presences/download',
-  async ({ eventId }, thunkAPI) => {
+  async ({ eventId, params }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      const data = await presenceService.downloadPresenceData(eventId, token)
+      const data = await presenceService.downloadPresenceData(eventId, token, params)
       return data // This will be a blob
     } catch (error) {
       const message =

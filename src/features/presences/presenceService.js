@@ -74,14 +74,25 @@ const detail = async (params, token) => {
 }
 
 // Download presence data as Excel
-const downloadPresenceData = async (eventId, token) => {
+const downloadPresenceData = async (eventId, token, {
+  sex = '',
+  ancestorOrganizationId = '',
+  organizationId = '',
+}) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     responseType: 'blob',
   }
-  const response = await API.get(`${API_URL}/${eventId}/presences/download`, config)
+
+  const queryParams = new URLSearchParams({
+    sex,
+    ancestorOrganizationId,
+    organizationId,
+  }).toString()
+
+  const response = await API.get(`${API_URL}/${eventId}/presences/download?${queryParams}`, config)
   return response.data
 }
 

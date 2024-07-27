@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Container,
   Drawer,
+  Fab,
   Grid,
   IconButton,
   Stack,
@@ -18,6 +19,7 @@ import {
 } from "@mui/material"
 import CloseIcon from "@mui/icons-material/CloseRounded"
 import FilterIcon from "@mui/icons-material/FilterListRounded"
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -26,6 +28,7 @@ import { toast } from "react-toastify"
 import DeleteIcon from "@mui/icons-material/CloseOutlined"
 import {
   createPresenceByAdmin,
+  downloadPresenceData,
   getPresencesByEventId,
   removeAttender,
   reset,
@@ -191,6 +194,38 @@ function PresenceList(props) {
       ...prevState,
       [key]: value === drawerFilters[key] ? "" : value,
     }))
+  }
+
+  const onClickDownload = () => {
+    dispatch(downloadPresenceData({ eventId: event.id, params: filters }))
+      .unwrap()
+      .then((blob) => {
+        // Create a Blob from the response
+        const file = new Blob([blob], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        })
+
+        // Build a URL from the file
+        const fileURL = URL.createObjectURL(file)
+
+        // Create a temp <a> tag to download file
+        const link = document.createElement("a")
+        link.href = fileURL
+        link.setAttribute(
+          "download",
+          `presensi-${event.name}-${Date.now()}.xlsx`
+        ) // Name the file
+        document.body.appendChild(link)
+        link.click()
+
+        // Cleanup
+        link.parentNode.removeChild(link)
+        URL.revokeObjectURL(fileURL)
+      })
+      .catch((error) => {
+        // Handle error here
+        console.error("Error downloading the file: ", error)
+      })
   }
 
   const filterList = () => (
@@ -384,7 +419,12 @@ function PresenceList(props) {
       >
         {isSuccessAttenders &&
           attenders.map((attender) => (
-            <Card variant='outlined' key={attender.userId} sx={{ mb: 0.5 }} align='left'>
+            <Card
+              variant='outlined'
+              key={attender.userId}
+              sx={{ mb: 0.5 }}
+              align='left'
+            >
               <Grid container>
                 <Grid item md={11} xs={10}>
                   <CardContent
@@ -456,6 +496,16 @@ function PresenceList(props) {
       <Drawer anchor='left' open={stateDrawer} onClose={toggleDrawer(false)}>
         <Container>{filterList()}</Container>
       </Drawer>
+
+      <Fab
+        size='medium'
+        color='success'
+        aria-label='download excel'
+        onClick={onClickDownload}
+        sx={{ position: "fixed", bottom: 16, right: 16 }}
+      >
+        <FileDownloadOutlinedIcon />
+      </Fab>
     </>
   )
 }
