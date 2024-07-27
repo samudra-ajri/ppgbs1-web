@@ -75,7 +75,7 @@ function Register() {
     if (positionError) toast.error(positionMessage)
     if (user) navigate("/decide-position")
     if (isSuccess) {
-      toast.success('Hore! Registrasi berhasil.')
+      toast.success("Hore! Registrasi berhasil.")
       navigate("/login")
     }
     if (!ppdList) dispatch(getppd())
@@ -135,8 +135,8 @@ function Register() {
     if (password !== password2) {
       toast.error("Konfirmasi password tidak sesuai")
     } else {
-      const month = monthBirth.toString().padStart(2, '0')
-      const day = dayBirth.toString().padStart(2, '0')
+      const month = monthBirth.toString().padStart(2, "0")
+      const day = dayBirth.toString().padStart(2, "0")
       const userData = {
         name,
         contact,
@@ -145,10 +145,16 @@ function Register() {
         birthdate: `${yearBirth}-${month}-${day}`,
         password,
         password2,
-        positionIds: [position1, position2].filter(item => item !== ''),
+        positionIds: [position1, position2].filter((item) => item !== ""),
       }
 
       dispatch(register(userData))
+    }
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === " ") {
+      event.preventDefault()
     }
   }
 
@@ -194,6 +200,8 @@ function Register() {
                       variant='outlined'
                       fullWidth
                       required
+                      onKeyDown={handleKeyDown}
+                      inputProps={{ pattern: "[^\\s]*" }}
                     />
                   </Grid>
                   <Grid item xs={12}>
