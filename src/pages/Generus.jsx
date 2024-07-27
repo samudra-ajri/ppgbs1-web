@@ -410,7 +410,10 @@ function Generus() {
           <PeopleCard
             key={index}
             user={userDetail}
-            canDelete={user?.currentPosition.type === "ADMIN"}
+            canDelete={
+              user?.currentPosition.type === "ADMIN" ||
+              userDetail.createdBy === user.id
+            }
             link={
               userDetail.positions.length === 1 &&
               userDetail.positions[0].type === "GENERUS"
