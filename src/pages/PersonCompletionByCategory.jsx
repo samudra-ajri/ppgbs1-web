@@ -27,6 +27,7 @@ function PersonCompletionByCategory() {
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const { person } = useSelector((state) => state.person)
+  const { user } = useSelector((state) => state.auth)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores
   )
@@ -129,7 +130,11 @@ function PersonCompletionByCategory() {
                 key={index}
                 percentage={sumCompletion.percentage}
                 title={sumCompletion.subcategory}
-                link={`/c/person-detail-completion/${category}/${sumCompletion.subcategory}`}
+                link={
+                  user.currentPosition.type === "ADMIN"
+                    ? `/c/person-detail-completion/${category}/${sumCompletion.subcategory}`
+                    : `/c/detail-completion/${category}/${sumCompletion.subcategory}`
+                }
               />
             </Grid>
           ))}

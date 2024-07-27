@@ -23,7 +23,9 @@ import gradeEnum from "../enums/gradeEnum"
 import { createInitialData } from "../features/initialData/initialDataSlice"
 import {
   createCompletion,
+  createCompletionByAdmin,
   deleteCompletion,
+  deleteCompletionByAdmin,
   reset as resetCompletionUpdate,
 } from "../features/updateCompletion/updateCompletionSlice"
 import { toast } from "react-toastify"
@@ -35,7 +37,11 @@ function InputCompletion() {
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const subcategory = pathnames[4]
-  const { user } = useSelector((state) => state.auth)
+
+  let { user } = useSelector((state) => state.auth)
+  const { person } = useSelector((state) => state.person)
+  user = user.currentPosition.type === "GENERUS" ? user : person
+
   const { initialData } = useSelector((state) => state.initialData)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores
@@ -163,14 +169,33 @@ function InputCompletion() {
     const newCompletions = Object.keys(inputs)
       .filter((key) => inputs[key] === 1)
       .map((key) => parseInt(key))
-    if (newCompletions.length > 0)
-      dispatch(createCompletion({ materialIds: newCompletions }))
+    if (newCompletions.length > 0) {
+      if (user.currentPosition?.type === "GENERUS") {
+        dispatch(createCompletion({ materialIds: newCompletions }))
+      } else {
+        dispatch(
+          createCompletionByAdmin({
+            userId: user.id,
+            materialIds: newCompletions,
+          })
+        )
+      }
+    }
 
     const removeCompletions = Object.keys(removeInputs)
       .filter((key) => removeInputs[key] === 1)
       .map((key) => parseInt(key))
     if (removeCompletions.length > 0)
-      dispatch(deleteCompletion({ materialIds: removeCompletions }))
+      if (user.currentPosition?.type === "GENERUS") {
+        dispatch(deleteCompletion({ materialIds: removeCompletions }))
+      } else {
+        dispatch(
+          deleteCompletionByAdmin({
+            userId: user.id,
+            materialIds: removeCompletions,
+          })
+        )
+      }
   }
 
   const isModified = () => {

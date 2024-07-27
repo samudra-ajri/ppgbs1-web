@@ -26,12 +26,48 @@ export const createCompletion = createAsyncThunk(
   }
 )
 
+export const createCompletionByAdmin = createAsyncThunk(
+  'updateCompletion/create-by-admin',
+  async ({ userId, materialIds }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await updateCompletionService.createCompletionByAdmin(userId, { materialIds }, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const deleteCompletion = createAsyncThunk(
   'updateCompletion/delete',
   async (data, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
       return await updateCompletionService.deleteCompletion(data, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const deleteCompletionByAdmin = createAsyncThunk(
+  'updateCompletion/delete-by-admin',
+  async ({ userId, materialIds }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await updateCompletionService.deleteCompletionByAdmin(userId, { materialIds }, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -69,6 +105,18 @@ export const updateCompletionSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
+      .addCase(createCompletionByAdmin.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(createCompletionByAdmin.fulfilled, (state) => {
+        state.isLoading = false
+        state.isSuccess = true
+      })
+      .addCase(createCompletionByAdmin.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
       .addCase(deleteCompletion.pending, (state) => {
         state.isLoading = true
       })
@@ -76,6 +124,17 @@ export const updateCompletionSlice = createSlice({
         state.isLoading = false
       })
       .addCase(deleteCompletion.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(deleteCompletionByAdmin.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteCompletionByAdmin.fulfilled, (state) => {
+        state.isLoading = false
+      })
+      .addCase(deleteCompletionByAdmin.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
