@@ -4,6 +4,15 @@ const API_URL = 'auths/'
 
 // Register user
 const register = async (userData) => {
+    const contact = userData.contact
+    if (isPhoneNumber(contact)) {
+        userData.phone = contact
+    } else if (isEmailAddress(contact)) {
+        userData.email = contact
+    } else if (isUsername(contact)) {
+        userData.username = contact
+    }
+
     const response = await API.post(API_URL + 'register', userData)
     return response.data
 }
@@ -11,7 +20,7 @@ const register = async (userData) => {
 // Register user by admin
 const registerByAdmin = async (userData, token) => {
     const config = {
-        headers: { Authorization: `Bearer ${token}`},
+        headers: { Authorization: `Bearer ${token}` },
     }
     const response = await API.post(API_URL + 'register-by-admin', userData, config)
     return response.data
@@ -127,6 +136,24 @@ const decidePosition = async (positionId, token) => {
         const errorMessage = error.response?.data?.message
         throw new Error(errorMessage)
     }
+}
+
+const isPhoneNumber = (input) => {
+    // Regular expression to match phone numbers in the format 082129379891
+    const phoneRegex = /^0\d{10,14}$/ // Starts with '0' followed by 10 to 14 digits
+    return phoneRegex.test(input)
+}
+
+const isEmailAddress = (input) => {
+    // Regular expression to match email addresses
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(input)
+}
+
+const isUsername = (input) => {
+    // Regular expression to match usernames (alphanumeric and underscores, 3-255 characters)
+    const usernameRegex = /^[a-zA-Z0-9_]{3,255}$/
+    return usernameRegex.test(input)
 }
 
 const authService = {

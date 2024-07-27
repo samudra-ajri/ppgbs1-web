@@ -28,7 +28,15 @@ function ProfileCard({ user, isLoading }) {
                 </Typography>
 
                 <Typography align='center' color='text.secondary' fontSize={12}>
-                  {user?.phone || user?.email}
+                  {user?.phone}
+                </Typography>
+
+                <Typography align='center' color='text.secondary' fontSize={12}>
+                  {user?.email}
+                </Typography>
+
+                <Typography align='center' color='text.secondary' fontSize={12}>
+                  {user?.username}
                 </Typography>
 
                 <Typography align='center' color='text.secondary' fontSize={12}>

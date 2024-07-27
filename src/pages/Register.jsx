@@ -24,7 +24,7 @@ function Register() {
   const [positionsCount, setPositionsCount] = useState([1])
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
+    contact: "",
     sex: "",
     isMuballigh: "",
     dayBirth: "",
@@ -40,7 +40,7 @@ function Register() {
 
   const {
     name,
-    phone,
+    contact,
     sex,
     isMuballigh,
     dayBirth,
@@ -139,7 +139,7 @@ function Register() {
       const day = dayBirth.toString().padStart(2, '0')
       const userData = {
         name,
-        phone,
+        contact,
         sex,
         isMuballigh,
         birthdate: `${yearBirth}-${month}-${day}`,
@@ -186,13 +186,12 @@ function Register() {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      name='phone'
-                      label='Nomor HP'
-                      placeholder='Nomor HP'
-                      value={phone}
+                      name='contact'
+                      label='Daftar dengan nomor HP, email, atau username'
+                      placeholder='Nomor HP, email, atau username'
+                      value={contact}
                       onChange={onChange}
                       variant='outlined'
-                      type='number'
                       fullWidth
                       required
                     />
