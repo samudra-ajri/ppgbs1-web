@@ -40,7 +40,7 @@ function EventPresence() {
         // Create a temp <a> tag to download file
         const link = document.createElement("a")
         link.href = fileURL
-        link.setAttribute("download", `presensi-${eventId}.xlsx`) // Name the file
+        link.setAttribute("download", `presensi-${event.data.name}-${Date.now()}.xlsx`) // Name the file
         document.body.appendChild(link)
         link.click()
 
