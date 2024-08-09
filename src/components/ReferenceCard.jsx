@@ -13,10 +13,7 @@ import {
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
 import { useState } from "react"
-import {
-  useDispatch,
-  useSelector,
-} from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { deleteReference } from "../features/references/referenceSlice"
 import PopDialog from "./PopDialog"
 
@@ -48,6 +45,9 @@ function ReferenceCard({ data, canDelete, link }) {
                   <Typography variant='body2'>{data.name}</Typography>
                   <Typography fontSize={10} color='text.secondary'>
                     {data.description}
+                  </Typography>
+                  <Typography fontSize={10} color='text.secondary'>
+                    {data.type === "PRIVATE" ? "(admin)" : ""}
                   </Typography>
                 </Box>
               </a>
