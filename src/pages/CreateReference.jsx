@@ -9,6 +9,7 @@ import {
   CardContent,
   CircularProgress,
   Grid,
+  MenuItem,
   TextField,
   Typography,
 } from "@mui/material"
@@ -19,9 +20,10 @@ function CreateReference() {
     name: "",
     url: "",
     description: "",
+    type: "PRIVATE",
   })
 
-  const { name, url, description } = formData
+  const { name, url, description, type } = formData
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
@@ -49,7 +51,7 @@ function CreateReference() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const data = { name, url, description }
+    const data = { name, url, description, type }
     dispatch(createReference(data))
   }
 
@@ -86,6 +88,7 @@ function CreateReference() {
                       required
                     />
                   </Grid>
+
                   <Grid item xs={12}>
                     <TextField
                       name='url'
@@ -98,6 +101,30 @@ function CreateReference() {
                       required
                       multiline
                     />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      name='type'
+                      label='Tipe akses'
+                      placeholder='Tipe akses'
+                      value={type}
+                      onChange={onChange}
+                      variant='outlined'
+                      align='left'
+                      select
+                      fullWidth
+                      required
+                    >
+                      {[
+                        { value: "PRIVATE", label: "Admin" },
+                        { value: "PUBLIC", label: "Umum" },
+                      ].map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   </Grid>
 
                   <Grid item xs={12}>
