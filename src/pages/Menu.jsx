@@ -6,6 +6,7 @@ import BarIcon from "@mui/icons-material/EqualizerRounded"
 import PeopleListIcon from "@mui/icons-material/PersonSearchOutlined"
 import EventIcon from "@mui/icons-material/EventRounded"
 import RestPasswordIcon from "@mui/icons-material/LockResetRounded"
+import QueryStatsIcon from "@mui/icons-material/QueryStatsRounded"
 import BookIcon from "@mui/icons-material/BookOutlined"
 
 function Menu() {
@@ -45,6 +46,11 @@ function Menu() {
       to: "/reset-passwords",
       icon: <RestPasswordIcon fontSize='large' color='info' />,
       text: "Reset Password",
+    },
+    {
+      to: "/activities-logs",
+      icon: <QueryStatsIcon fontSize='large' color='info' />,
+      text: "Log Aktivitas",
     },
   ]
 

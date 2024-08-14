@@ -19,6 +19,8 @@ import Footer from '../components/Footer'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import References from '../pages/References'
+import Kibana from '../components/Kibana'
+import { Container } from '@mui/material'
 
 function MainLayout() {
   const navigate = useNavigate()
@@ -36,23 +38,30 @@ function MainLayout() {
   return (
     <>
       <Header />
+      <Container maxWidth="sm" sx={{ pt: 11 }}>
+        <Routes>
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/users' element={<Generus />} />
+          <Route path='/completion' element={<CompletionDashboard />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/user-completion' element={<UserCompletion />} />
+          <Route path='/group-completion' element={<GroupCompletion />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/forgot-password' element={<FortgotPassword />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/events' element={<Event />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/reset-passwords' element={<ResetPasswordList />} />
+          <Route path='/decide-position' element={<DecidePosition />} />
+          <Route path='/references' element={<References />} />
+          <Route path='/' element={<Menu />} />
+        </Routes>
+      </Container>
+
       <Routes>
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/users' element={<Generus />} />
-        <Route path='/completion' element={<CompletionDashboard />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/user-completion' element={<UserCompletion />} />
-        <Route path='/group-completion' element={<GroupCompletion />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/forgot-password' element={<FortgotPassword />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/events' element={<Event />} />
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/reset-passwords' element={<ResetPasswordList />} />
-        <Route path='/decide-position' element={<DecidePosition />} />
-        <Route path='/references' element={<References />} />
-        <Route path='/' element={<Menu />} />
+        <Route path='/activities-logs' element={<Kibana />} />
       </Routes>
+
       <Footer />
       <BottomNav />
     </>

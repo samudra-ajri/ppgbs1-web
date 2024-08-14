@@ -1,5 +1,5 @@
-import { Container, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import ChildLayout from './layouts/ChildLayout'
@@ -25,14 +25,12 @@ function App() {
   return (
     <>
       <Router>
-      <ThemeProvider theme={theme}>
-      <CssBaseline />
-        <Container maxWidth="sm" sx={{ pt: 11 }}>
-        <Routes>
-          <Route path='/c/*' element={<ChildLayout />}/>
-          <Route path='/*' element={<MainLayout />}/>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Routes>
+            <Route path='/c/*' element={<ChildLayout />} />
+            <Route path='/*' element={<MainLayout />} />
           </Routes>
-        </Container>
         </ThemeProvider>
       </Router>
       <ToastContainer />

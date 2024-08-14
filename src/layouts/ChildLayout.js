@@ -23,42 +23,45 @@ import EditGrade from '../pages/EditGrade'
 import UpdatePassword from '../pages/UpdatePassword'
 import CreateReference from '../pages/CreateReference'
 import RegisterByAdmin from '../pages/RegisterByAdmin'
+import { Container } from '@mui/material'
 
 function ChildLayout() {
   return (
     <>
-      <Routes>
-        <Route exact path='/details/*' element={<InputTargets />} />
-        <Route exact path='/detail-completion/*' element={<InputCompletion />} />
-        <Route path='/targets/*' element={<DetailTargets />} />
-        <Route path='/user-completion/*' element={<UserCompletionByCategory />} />
-        <Route path='/group-completion/*' element={<GroupCompletionByCategory />} />
-        <Route exact path='/group-detail-completion/*' element={<GroupInputCompletion />} />
-        <Route path='/person-completion/*' element={<PersonCompletionByCategory />} />
-        <Route path='/person-completion' element={
-          <>
-            <BackHeader title='Capaian User' />
-            <PersonCompletion />
-          </>} />
-        <Route exact path='/person-detail-completion/*' element={<PersonInputCompletion />} />
-        <Route path='/profile/*' element={
-          <>
-            <BackHeader title='Profil' />
-            <Profile />
-          </>} />
-        <Route path='/targets-completed/*' element={<CompletedTargets />} />
-        <Route path='/details-completed/*' element={<CompletedDetails />} />
-        <Route path='/register/*' element={<Register />} />
-        <Route path='/register-by-admin' element={<RegisterByAdmin />} />
-        <Route path='/create-event' element={<CreateEvent />} />
-        <Route path='/event-details/*' element={<EventDetails />} />
-        <Route path='/event-presence/*' element={<EventPresence />} />
-        <Route path='/reset-passwords/*' element={<ResetPassword />} />
-        <Route path='/edit-profile' element={<EditProfile />} />
-        <Route path='/edit-grade' element={<EditGrade />} />
-        <Route path='/update-password' element={<UpdatePassword />} />
-        <Route path='/create-reference' element={<CreateReference />} />
-      </Routes>
+      <Container maxWidth="sm" sx={{ pt: 11 }}>
+        <Routes>
+          <Route exact path='/details/*' element={<InputTargets />} />
+          <Route exact path='/detail-completion/*' element={<InputCompletion />} />
+          <Route path='/targets/*' element={<DetailTargets />} />
+          <Route path='/user-completion/*' element={<UserCompletionByCategory />} />
+          <Route path='/group-completion/*' element={<GroupCompletionByCategory />} />
+          <Route exact path='/group-detail-completion/*' element={<GroupInputCompletion />} />
+          <Route path='/person-completion/*' element={<PersonCompletionByCategory />} />
+          <Route path='/person-completion' element={
+            <>
+              <BackHeader title='Capaian User' />
+              <PersonCompletion />
+            </>} />
+          <Route exact path='/person-detail-completion/*' element={<PersonInputCompletion />} />
+          <Route path='/profile/*' element={
+            <>
+              <BackHeader title='Profil' />
+              <Profile />
+            </>} />
+          <Route path='/targets-completed/*' element={<CompletedTargets />} />
+          <Route path='/details-completed/*' element={<CompletedDetails />} />
+          <Route path='/register/*' element={<Register />} />
+          <Route path='/register-by-admin' element={<RegisterByAdmin />} />
+          <Route path='/create-event' element={<CreateEvent />} />
+          <Route path='/event-details/*' element={<EventDetails />} />
+          <Route path='/event-presence/*' element={<EventPresence />} />
+          <Route path='/reset-passwords/*' element={<ResetPassword />} />
+          <Route path='/edit-profile' element={<EditProfile />} />
+          <Route path='/edit-grade' element={<EditGrade />} />
+          <Route path='/update-password' element={<UpdatePassword />} />
+          <Route path='/create-reference' element={<CreateReference />} />
+        </Routes>
+      </Container>
     </>
   )
 }
