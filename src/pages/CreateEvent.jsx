@@ -14,9 +14,16 @@ import {
   Grid,
   TextField,
   Typography,
+  Autocomplete,
 } from "@mui/material"
 import moment from "moment/moment"
 import BackHeader from "../components/BackHeader"
+import Checkbox from "@mui/material/Checkbox"
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
+import CheckBoxIcon from "@mui/icons-material/CheckBox"
+
+const icon = <CheckBoxOutlineBlankIcon fontSize='small' />
+const checkedIcon = <CheckBoxIcon fontSize='small' />
 
 function CreateEvent() {
   const [startDate, setStartTime] = useState(moment())
@@ -50,7 +57,7 @@ function CreateEvent() {
     if (user?.role === "GENERUS") navigate("/user-completion")
     if (isError) toast.error(message)
     if (isSuccess) {
-      toast.success('berhasil.')
+      toast.success("berhasil.")
       navigate("/events")
     }
     dispatch(reset())
@@ -75,6 +82,14 @@ function CreateEvent() {
     }
     dispatch(createEvent(data))
   }
+
+  const gradesGroup = [
+    { title: "cabe rawit" },
+    { title: "pra remaja" },
+    { title: "remaja" },
+    { title: "pra nikah" },
+    { title: "CUSTOM" },
+  ]
 
   return (
     <>
@@ -107,6 +122,37 @@ function CreateEvent() {
                       variant='outlined'
                       fullWidth
                       required
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Autocomplete
+                      multiple
+                      options={gradesGroup}
+                      disableCloseOnSelect
+                      getOptionLabel={(option) => option.title}
+                      renderOption={(props, option, { selected }) => {
+                        const { key, ...optionProps } = props
+                        return (
+                          <li key={key} {...optionProps}>
+                            <Checkbox
+                              icon={icon}
+                              checkedIcon={checkedIcon}
+                              style={{ marginRight: 8 }}
+                              checked={selected}
+                            />
+                            {option.title}
+                          </li>
+                        )
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          name='grade'
+                          label='Kelas'
+                          placeholder='Tambah Kelas'
+                          fullWidth
+                        />
+                      )}
                     />
                   </Grid>
                   <Grid item xs={12}>
