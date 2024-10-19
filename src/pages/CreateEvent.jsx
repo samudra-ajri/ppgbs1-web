@@ -77,11 +77,24 @@ function CreateEvent() {
     dispatch(createEvent(data))
   }
 
+  const [selectedGrades, setSelectedGrades] = useState([])
+  const handleGradeChange = (event, newValue) => {
+    if (selectedGrades.some((option) => option.title === "CUSTOM")) {
+      newValue = newValue.filter((option) => option.title !== "CUSTOM")
+    }
+
+    if (newValue.some((option) => option.title === "CUSTOM")) {
+      setSelectedGrades([{ title: "CUSTOM" }])
+    } else {
+      setSelectedGrades(newValue)
+    }
+  }
+
   const gradesGroup = [
-    { title: "cabe rawit" },
-    { title: "pra remaja" },
-    { title: "remaja" },
-    { title: "pra nikah" },
+    { title: "Cabe Rawit" },
+    { title: "Pra Remaja" },
+    { title: "Remaja" },
+    { title: "Pra Nikah" },
     { title: "CUSTOM" },
   ]
 
@@ -123,6 +136,8 @@ function CreateEvent() {
                       multiple
                       options={gradesGroup}
                       getOptionLabel={(option) => option.title}
+                      value={selectedGrades}
+                      onChange={handleGradeChange}
                       renderInput={(params) => (
                         <TextField
                           {...params}
