@@ -18,12 +18,6 @@ import {
 } from "@mui/material"
 import moment from "moment/moment"
 import BackHeader from "../components/BackHeader"
-import Checkbox from "@mui/material/Checkbox"
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
-import CheckBoxIcon from "@mui/icons-material/CheckBox"
-
-const icon = <CheckBoxOutlineBlankIcon fontSize='small' />
-const checkedIcon = <CheckBoxIcon fontSize='small' />
 
 function CreateEvent() {
   const [startDate, setStartTime] = useState(moment())
@@ -128,22 +122,7 @@ function CreateEvent() {
                     <Autocomplete
                       multiple
                       options={gradesGroup}
-                      disableCloseOnSelect
                       getOptionLabel={(option) => option.title}
-                      renderOption={(props, option, { selected }) => {
-                        const { key, ...optionProps } = props
-                        return (
-                          <li key={key} {...optionProps}>
-                            <Checkbox
-                              icon={icon}
-                              checkedIcon={checkedIcon}
-                              style={{ marginRight: 8 }}
-                              checked={selected}
-                            />
-                            {option.title}
-                          </li>
-                        )
-                      }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
