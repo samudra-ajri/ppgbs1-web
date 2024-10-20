@@ -136,14 +136,22 @@ function CreateEvent() {
                       multiple
                       options={gradesGroup}
                       getOptionLabel={(option) => option.title}
+                      disableCloseOnSelect
                       value={selectedGrades}
                       onChange={handleGradeChange}
+                      isOptionEqualToValue={(option, value) =>
+                        option.title === value.title
+                      }
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          name='grade'
-                          label='Kelas'
-                          placeholder='Tambah Kelas'
+                          name='groupGrades'
+                          label='Rombongan Belajar'
+                          placeholder={
+                            selectedGrades[0]?.title === "CUSTOM"
+                              ? ""
+                              : "Tambah Kelas"
+                          }
                           fullWidth
                         />
                       )}
