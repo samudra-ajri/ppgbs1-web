@@ -228,6 +228,7 @@ function CreateEvent() {
                         option.title === value.title
                       }
                       disabled={selectedGroupGrades[0]?.title !== "CUSTOM"}
+                      readOnly={selectedGroupGrades[0]?.title !== "CUSTOM"}
                       renderInput={(params) => (
                         <TextField
                           {...params}
