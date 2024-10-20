@@ -84,6 +84,7 @@ function CreateEvent() {
   const handleGroupGradesChange = (event, newValue) => {
     if (newValue.some((option) => option.title === "CUSTOM")) {
       setSelectedGroupGrades([{ title: "CUSTOM" }])
+      setSelectedGrades([]) // Initialize selectedGrades as an empty array
       return
     }
 
@@ -125,25 +126,25 @@ function CreateEvent() {
   ]
 
   const caberawit = [
-    { title: "TK" },
-    { title: "Cabe Rawit 1" },
-    { title: "Cabe Rawit 2" },
-    { title: "Cabe Rawit 3" },
-    { title: "Cabe Rawit 4" },
-    { title: "Cabe Rawit 5" },
-    { title: "Cabe Rawit 6" },
+    { title: "TK", grade: 0 },
+    { title: "Cabe Rawit 1", grade: 1 },
+    { title: "Cabe Rawit 2", grade: 2 },
+    { title: "Cabe Rawit 3", grade: 3 },
+    { title: "Cabe Rawit 4", grade: 4 },
+    { title: "Cabe Rawit 5", grade: 5 },
+    { title: "Cabe Rawit 6", grade: 6 },
   ]
 
   const praremaja = [
-    { title: "Pra Remaja 1" },
-    { title: "Pra Remaja 2" },
-    { title: "Pra Remaja 3" },
+    { title: "Pra Remaja 1", grade: 7 },
+    { title: "Pra Remaja 2", grade: 8 },
+    { title: "Pra Remaja 3", grade: 9 },
   ]
 
   const remaja = [
-    { title: "Remaja 1" },
-    { title: "Remaja 2" },
-    { title: "Remaja 3" },
+    { title: "Remaja 1", grade: 10 },
+    { title: "Remaja 2", grade: 11 },
+    { title: "Remaja 3", grade: 12 },
   ]
 
   const pranikah = [
@@ -190,7 +191,7 @@ function CreateEvent() {
                       multiple
                       options={gradesGroup}
                       getOptionLabel={(option) => option.title}
-                      disableCloseOnSelect
+                      fullWidth
                       value={selectedGroupGrades}
                       onChange={handleGroupGradesChange}
                       isOptionEqualToValue={(option, value) =>
@@ -206,8 +207,6 @@ function CreateEvent() {
                               ? ""
                               : "Tambah Kelas"
                           }
-                          fullWidth
-                          required
                         />
                       )}
                     />
@@ -221,13 +220,14 @@ function CreateEvent() {
                           : selectedGrades
                       }
                       getOptionLabel={(option) => option.title}
+                      fullWidth
                       disableCloseOnSelect
                       value={selectedGrades}
                       onChange={handleGradesChange}
                       isOptionEqualToValue={(option, value) =>
                         option.title === value.title
                       }
-                      readOnly={selectedGroupGrades[0]?.title !== "CUSTOM"}
+                      disabled={selectedGroupGrades[0]?.title !== "CUSTOM"}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -238,9 +238,6 @@ function CreateEvent() {
                               ? "Tambah Kelas"
                               : ""
                           }
-                          fullWidth
-                          required
-                          disabled={selectedGroupGrades[0]?.title !== "CUSTOM"}
                         />
                       )}
                     />
