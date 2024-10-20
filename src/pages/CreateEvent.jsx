@@ -73,12 +73,38 @@ function CreateEvent() {
       endDate: endDate.valueOf(),
       location,
       description,
+      selectedGrades,
     }
     dispatch(createEvent(data))
   }
 
+  const [selectedGroupGrades, setSelectedGroupGrades] = useState([])
   const [selectedGrades, setSelectedGrades] = useState([])
-  const handleGradeChange = (event, newValue) => {
+
+  const handleGroupGradesChange = (event, newValue) => {
+    if (newValue.some((option) => option.title === "CUSTOM")) {
+      setSelectedGroupGrades([{ title: "CUSTOM" }])
+      return
+    }
+
+    setSelectedGroupGrades(newValue)
+    let combinedGrades = []
+    if (newValue.find((option) => option.title === "Cabe Rawit")) {
+      combinedGrades = [...combinedGrades, ...caberawit]
+    }
+    if (newValue.find((option) => option.title === "Pra Remaja")) {
+      combinedGrades = [...combinedGrades, ...praremaja]
+    }
+    if (newValue.find((option) => option.title === "Remaja")) {
+      combinedGrades = [...combinedGrades, ...remaja]
+    }
+    if (newValue.find((option) => option.title === "Pra Nikah")) {
+      combinedGrades = [...combinedGrades, ...pranikah]
+    }
+    setSelectedGrades(combinedGrades)
+  }
+
+  const handleGradesChange = (event, newValue) => {
     if (selectedGrades.some((option) => option.title === "CUSTOM")) {
       newValue = newValue.filter((option) => option.title !== "CUSTOM")
     }
@@ -96,6 +122,34 @@ function CreateEvent() {
     { title: "Remaja" },
     { title: "Pra Nikah" },
     { title: "CUSTOM" },
+  ]
+
+  const caberawit = [
+    { title: "TK" },
+    { title: "Cabe Rawit 1" },
+    { title: "Cabe Rawit 2" },
+    { title: "Cabe Rawit 3" },
+    { title: "Cabe Rawit 4" },
+    { title: "Cabe Rawit 5" },
+    { title: "Cabe Rawit 6" },
+  ]
+
+  const praremaja = [
+    { title: "Pra Remaja 1" },
+    { title: "Pra Remaja 2" },
+    { title: "Pra Remaja 3" },
+  ]
+
+  const remaja = [
+    { title: "Remaja 1" },
+    { title: "Remaja 2" },
+    { title: "Remaja 3" },
+  ]
+
+  const pranikah = [
+    { title: "Pra Nikah 1" },
+    { title: "Pra Nikah 2" },
+    { title: "Pra Nikah 3" },
   ]
 
   return (
@@ -137,8 +191,8 @@ function CreateEvent() {
                       options={gradesGroup}
                       getOptionLabel={(option) => option.title}
                       disableCloseOnSelect
-                      value={selectedGrades}
-                      onChange={handleGradeChange}
+                      value={selectedGroupGrades}
+                      onChange={handleGroupGradesChange}
                       isOptionEqualToValue={(option, value) =>
                         option.title === value.title
                       }
@@ -148,12 +202,45 @@ function CreateEvent() {
                           name='groupGrades'
                           label='Rombongan Belajar'
                           placeholder={
-                            selectedGrades[0]?.title === "CUSTOM"
+                            selectedGroupGrades[0]?.title === "CUSTOM"
                               ? ""
                               : "Tambah Kelas"
                           }
                           fullWidth
                           required
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Autocomplete
+                      multiple
+                      options={
+                        selectedGroupGrades[0]?.title === "CUSTOM"
+                          ? [...caberawit, ...praremaja, ...remaja, ...pranikah]
+                          : selectedGrades
+                      }
+                      getOptionLabel={(option) => option.title}
+                      disableCloseOnSelect
+                      value={selectedGrades}
+                      onChange={handleGradesChange}
+                      isOptionEqualToValue={(option, value) =>
+                        option.title === value.title
+                      }
+                      readOnly={selectedGroupGrades[0]?.title !== "CUSTOM"}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          name='grades'
+                          label='Kelas'
+                          placeholder={
+                            selectedGroupGrades[0]?.title === "CUSTOM"
+                              ? "Tambah Kelas"
+                              : ""
+                          }
+                          fullWidth
+                          required
+                          disabled={selectedGroupGrades[0]?.title !== "CUSTOM"}
                         />
                       )}
                     />
