@@ -153,6 +153,7 @@ function CreateEvent() {
                               : "Tambah Kelas"
                           }
                           fullWidth
+                          required
                         />
                       )}
                     />
