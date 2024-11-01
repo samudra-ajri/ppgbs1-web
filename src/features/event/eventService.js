@@ -9,6 +9,7 @@ const createEvent = async (data, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
+  data.grades = data.selectedGrades.map(item => item.grade)
   const response = await API.post(API_URL, data, config)
   return response.data
 }
