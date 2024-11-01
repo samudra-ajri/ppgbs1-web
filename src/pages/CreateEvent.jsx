@@ -148,9 +148,9 @@ function CreateEvent() {
   ]
 
   const pranikah = [
-    { title: "Pra Nikah 1" },
-    { title: "Pra Nikah 2" },
-    { title: "Pra Nikah 3" },
+    { title: "Pra Nikah 1", grade: 13 },
+    { title: "Pra Nikah 2", grade: 14 },
+    { title: "Pra Nikah 3", grade: 15 },
   ]
 
   return (
