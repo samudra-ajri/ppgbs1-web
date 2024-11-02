@@ -40,6 +40,8 @@ import {
 } from "../features/users/userSlice"
 import PopDialog from "./PopDialog"
 import { getppd, getppk } from "../features/organizations/organizationSlice"
+import capitalize from "capitalize"
+import gradeShortEnum from "../enums/gradeShortEnum"
 
 function PresenceList(props) {
   const { event, user } = props
@@ -425,56 +427,82 @@ function PresenceList(props) {
               sx={{ mb: 0.5 }}
               align='left'
             >
-              <Grid container>
-                <Grid item md={11} xs={10}>
+              <Grid
+                container
+                alignItems='center'
+                justifyContent='space-between'
+              >
+                <Grid item xs={6}>
                   <CardContent
-                    sx={{ padding: 2, "&:last-child": { paddingBottom: 2 } }}
+                    sx={{
+                      paddingTop: 0.5,
+                      paddingBottom: 0.5,
+                      paddingLeft: 2,
+                      paddingRight: 2,
+                      "&:last-child": { paddingBottom: 0.5 },
+                    }}
                   >
+                    <Typography fontSize={14} variant='body1'>
+                      {attender.userName}
+                    </Typography>
                     <Typography
                       fontSize={10}
                       component='p'
                       color='text.secondary'
                     >
+                      PPK{" "}
+                      {capitalize.words(
+                        attender.organizationName.replace("PPK ", "")
+                      )}{" "}
+                      · {attender.grade ? gradeShortEnum[attender.grade] : ""} ·{" "}
                       {presenceTime(attender.createdAt)}
-                    </Typography>
-                    <Typography variant='body1'>{attender.userName}</Typography>
-                    <Typography
-                      fontSize={10}
-                      component='p'
-                      color='text.secondary'
-                    >
-                      {attender.organizationName}
-                    </Typography>
-                    <Typography
-                      fontSize={10}
-                      component='p'
-                      color='text.secondary'
-                    >
-                      {attender.userSex === 1 ? "Laki-laki" : "Perempuan"}
                     </Typography>
                   </CardContent>
                 </Grid>
-                {attender.createdBy === user.id ? (
-                  <Grid item>
+
+                <Grid
+                  item
+                  md={6}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                  }}
+                >
+                  <Chip
+                    size='small'
+                    label='hadir'
+                    color='success'
+                    variant={attender.status === "HADIR" ? "solid" : "outlined"}
+                    // onClick={handleFilterObject("sex", 1)}
+                    sx={{ mr: 1 }}
+                  />
+                  <Chip
+                    size='small'
+                    label='alpa'
+                    color='error'
+                    variant={attender.status === "ALPA" ? "solid" : "outlined"}
+                    // onClick={handleFilterObject("sex", 0)}
+                    sx={{ mr: 1 }}
+                  />
+                  {(event.organizationId === user.currentPosition.organizationId.toString()) && (
                     <IconButton
-                      align='right'
                       onClick={() => {
                         setOpenPopup(true)
                         setRemoveId(attender.userId)
                       }}
                     >
-                      <DeleteIcon fontSize='medium' color='error' />
+                      <DeleteIcon fontSize='small' />
                     </IconButton>
-                  </Grid>
-                ) : (
-                  ""
-                )}
+                  )}
+                </Grid>
               </Grid>
             </Card>
           ))}
       </InfiniteScroll>
+{console.log(user.currentPosition.organizationId)}
 
-      <PopDialog title={"Hapus kehadiran?"} openPopup={openPopup}>
+      <PopDialog title={"Hilangkan dari list?"} openPopup={openPopup}>
         <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
           {isLoading ? (
             <Grid align='center' sx={{ pt: 1.5 }}>
@@ -483,7 +511,7 @@ function PresenceList(props) {
           ) : (
             <Stack spacing={1} direction='row'>
               <Button variant='outlined' color='error' onClick={onClickRemove}>
-                Hapus
+                Ya
               </Button>
               <Button variant='contained' onClick={() => setOpenPopup(false)}>
                 Batal

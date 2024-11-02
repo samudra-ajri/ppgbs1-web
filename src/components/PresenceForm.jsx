@@ -90,7 +90,7 @@ function PresenceForm(props) {
         >
           <Typography variant='h5'>{event.name}</Typography>
           <Typography variant='body2'>{eventTime()}</Typography>
-          {isPresentStatus && isSuccessPresentStatus && (
+          {(isPresentStatus?.data.status === 'HADIR') && isSuccessPresentStatus && (
             <>
               <Typography pt={3} color='green'>
                 <CheckIcon fontSize='large' />
@@ -100,7 +100,7 @@ function PresenceForm(props) {
           )}
         </CardContent>
       </Card>
-      {!isPresentStatus && (
+      {(!isPresentStatus || isPresentStatus?.data.status !== 'HADIR') && (
         <>
           <Card
             variant=''
