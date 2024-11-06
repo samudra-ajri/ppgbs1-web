@@ -32,6 +32,7 @@ import {
   getPresencesByEventId,
   removeAttender,
   reset,
+  updatePresence,
 } from "../features/presences/presenceSlice"
 import translate from "../utils/translate"
 import {
@@ -56,15 +57,26 @@ function PresenceList(props) {
     (state) => state.organizations
   )
 
+  const isPPG = user.currentPosition.organizationLevel === 0
+  const isPPDOrTeacher =
+    user.currentPosition.organizationLevel === 1 ||
+    user.currentPosition.type === "PENGAJAR"
+  const isPPK = user.currentPosition.organizationLevel === 2
+
   const isPPGevent = event.organizationLevel === 0
   const isPPDevent = event.organizationLevel === 1
+
+  let initAncestorOrganizationId = isPPDevent ? event.organizationId : ""
+  if (isPPDOrTeacher)
+    initAncestorOrganizationId = user.currentPosition.organizationId
+
   const [drawerFilters, setDrawerFilters] = useState({
-    ancestorOrganizationId: isPPDevent ? event.organizationId : "",
+    ancestorOrganizationId: initAncestorOrganizationId,
   })
   const [filters, setFilters] = useState({
     page: 1,
     positionType: "GENERUS",
-    ancestorOrganizationId: isPPDevent ? event.organizationId : "",
+    ancestorOrganizationId: initAncestorOrganizationId,
     organizationId: "",
     sex: "",
     grade: "",
@@ -198,6 +210,10 @@ function PresenceList(props) {
     }))
   }
 
+  const updateStatus = (attender, status) => () => {
+    dispatch(updatePresence({ eventId: event.id, userId: attender.userId, status }))
+  }
+
   const onClickDownload = () => {
     dispatch(downloadPresenceData({ eventId: event.id, params: filters }))
       .unwrap()
@@ -263,7 +279,7 @@ function PresenceList(props) {
         </Grid>
       </Grid>
 
-      {isPPGevent && (
+      {isPPGevent && isPPG && (
         <Grid container spacing={1} pb={3} pl={1}>
           {ppdList?.data.map((ppd) => (
             <Grid item key={ppd.id}>
@@ -282,22 +298,26 @@ function PresenceList(props) {
         </Grid>
       )}
 
-      {drawerFilters.ancestorOrganizationId && (isPPGevent || isPPDevent) && (
-        <Grid container spacing={1} pb={3} pl={1}>
-          {ppkList?.data.map((ppk) => (
-            <Grid item key={ppk.id}>
-              <Chip
-                label={ppk.name}
-                color='info'
-                variant={
-                  drawerFilters.organizationId === ppk.id ? "solid" : "outlined"
-                }
-                onClick={handleFilterObject("organizationId", ppk.id)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
+      {drawerFilters.ancestorOrganizationId &&
+        (isPPGevent || isPPDevent) &&
+        !isPPK && (
+          <Grid container spacing={1} pb={3} pl={1}>
+            {ppkList?.data.map((ppk) => (
+              <Grid item key={ppk.id}>
+                <Chip
+                  label={ppk.name}
+                  color='info'
+                  variant={
+                    drawerFilters.organizationId === ppk.id
+                      ? "solid"
+                      : "outlined"
+                  }
+                  onClick={handleFilterObject("organizationId", ppk.id)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
 
       <Grid pb={10} />
 
@@ -471,10 +491,18 @@ function PresenceList(props) {
                 >
                   <Chip
                     size='small'
+                    label='izin'
+                    color='info'
+                    variant={attender.status === "IZIN" ? "solid" : "outlined"}
+                    onClick={updateStatus(attender, "IZIN")}
+                    sx={{ mr: 1 }}
+                  />
+                  <Chip
+                    size='small'
                     label='hadir'
                     color='success'
                     variant={attender.status === "HADIR" ? "solid" : "outlined"}
-                    // onClick={handleFilterObject("sex", 1)}
+                    onClick={updateStatus(attender, "HADIR")}
                     sx={{ mr: 1 }}
                   />
                   <Chip
@@ -482,10 +510,11 @@ function PresenceList(props) {
                     label='alpa'
                     color='error'
                     variant={attender.status === "ALPA" ? "solid" : "outlined"}
-                    // onClick={handleFilterObject("sex", 0)}
+                    onClick={updateStatus(attender, "ALPA")}
                     sx={{ mr: 1 }}
                   />
-                  {(event.organizationId === user.currentPosition.organizationId.toString()) && (
+                  {event.organizationId ===
+                    user.currentPosition.organizationId.toString() && (
                     <IconButton
                       onClick={() => {
                         setOpenPopup(true)
@@ -500,8 +529,6 @@ function PresenceList(props) {
             </Card>
           ))}
       </InfiniteScroll>
-{console.log(user.currentPosition.organizationId)}
-
       <PopDialog title={"Hilangkan dari list?"} openPopup={openPopup}>
         <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
           {isLoading ? (

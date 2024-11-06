@@ -96,6 +96,17 @@ const downloadPresenceData = async (eventId, token, {
   return response.data
 }
 
+const updatePresence = async (data, token) => {
+  const { eventId, userId, status } = data
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.put(`${API_URL}/${eventId}/presences/${userId}`, { status }, config)
+  return response.data
+}
+
 const presenceService = {
   createPresence,
   createPresenceByAdmin,
@@ -103,6 +114,7 @@ const presenceService = {
   getPresencesByEventId,
   removeAttender,
   downloadPresenceData,
+  updatePresence,
 }
 
 export default presenceService

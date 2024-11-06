@@ -23,6 +23,9 @@ const initialState = {
   totalPages: 1,
   hasNextPage: false,
 
+  isSuccessUpdate: false,
+  isLoadingUpdate: false,
+
   isDownloading: false,
   downloadError: null,
 }
@@ -161,6 +164,24 @@ export const downloadPresenceData = createAsyncThunk(
   }
 )
 
+export const updatePresence = createAsyncThunk(
+  'presences/updatePresence',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await presenceService.updatePresence(data, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const presenceSlice = createSlice({
   name: 'presence',
   initialState,
@@ -282,6 +303,17 @@ export const presenceSlice = createSlice({
       .addCase(downloadPresenceData.rejected, (state, action) => {
         state.isDownloading = false
         state.downloadError = action.payload
+      })
+      .addCase(updatePresence.pending, (state) => {
+        state.isLoadingUpdate = true
+      })
+      .addCase(updatePresence.fulfilled, (state) => {
+        state.isLoadingUpdate = false
+        state.isSuccessUpdate = true
+      })
+      .addCase(updatePresence.rejected, (state, action) => {
+        state.isLoadingUpdate = false
+        state.isSuccessUpdate = false
       })
   },
 })
