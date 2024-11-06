@@ -93,6 +93,7 @@ function PresenceList(props) {
     hasNextPage,
     isSuccessAttenders,
     isSuccessCreatePresence,
+    isLoadingUpdate,
   } = useSelector((state) => state.presences)
 
   useEffect(() => {
@@ -211,7 +212,10 @@ function PresenceList(props) {
   }
 
   const updateStatus = (attender, status) => () => {
-    dispatch(updatePresence({ eventId: event.id, userId: attender.userId, status }))
+    if (!isLoadingUpdate)
+      dispatch(
+        updatePresence({ eventId: event.id, userId: attender.userId, status })
+      )
   }
 
   const onClickDownload = () => {
@@ -474,8 +478,10 @@ function PresenceList(props) {
                       {capitalize.words(
                         attender.organizationName.replace("PPK ", "")
                       )}{" "}
-                      · {attender.grade ? gradeShortEnum[attender.grade] : ""} ·{" "}
-                      {presenceTime(attender.createdAt)}
+                      · {attender.grade ? gradeShortEnum[attender.grade] : ""}
+                      {attender.status === "ALPA" || attender.status === "IZIN" 
+                        ? ""
+                        : " · " + presenceTime(attender.createdAt)}
                     </Typography>
                   </CardContent>
                 </Grid>

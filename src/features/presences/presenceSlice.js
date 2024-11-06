@@ -204,6 +204,10 @@ export const presenceSlice = createSlice({
       state.hasNextPage = false
       state.attenders = []
       state.attendersCount = 0
+
+      state.isSuccessUpdate = false
+      state.isLoadingUpdate = false
+
     }
   },
   extraReducers: (builder) => {
@@ -307,14 +311,23 @@ export const presenceSlice = createSlice({
       .addCase(updatePresence.pending, (state) => {
         state.isLoadingUpdate = true
       })
-      .addCase(updatePresence.fulfilled, (state) => {
-        state.isLoadingUpdate = false
-        state.isSuccessUpdate = true
-      })
       .addCase(updatePresence.rejected, (state, action) => {
         state.isLoadingUpdate = false
         state.isSuccessUpdate = false
       })
+      .addCase(updatePresence.fulfilled, (state, action) => {
+        state.isLoadingUpdate = false
+        state.isSuccessUpdate = true
+
+        const index = state.attenders.findIndex(
+          (attender) => attender.userId === action.meta.arg.userId
+        )
+
+        if (index !== -1) {
+          state.attenders[index].status = action.meta.arg.status
+        }
+      })
+
   },
 })
 
