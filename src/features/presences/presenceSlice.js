@@ -19,6 +19,7 @@ const initialState = {
   isLoadingAttenders: false,
   messageAttenders: '',
   attendersCount: 0,
+  statusCount: null,
   currentPage: 1,
   totalPages: 1,
   hasNextPage: false,
@@ -204,6 +205,7 @@ export const presenceSlice = createSlice({
       state.hasNextPage = false
       state.attenders = []
       state.attendersCount = 0
+      state.statusCount = null
 
       state.isSuccessUpdate = false
       state.isLoadingUpdate = false
@@ -258,6 +260,7 @@ export const presenceSlice = createSlice({
         state.isSuccessAttenders = true
         state.attenders = [...state.attenders, ...action.payload.data]
         state.attendersCount = action.payload.total
+        state.statusCount = action.payload.totalStatus
         state.currentPage = action.payload.currentPage
         state.totalPages = Math.ceil(action.payload.total / action.payload.count)
         state.hasNextPage = action.payload.hasNextPage
@@ -319,15 +322,38 @@ export const presenceSlice = createSlice({
         state.isLoadingUpdate = false
         state.isSuccessUpdate = true
 
+        // Find the index of the attender and update their status
         const index = state.attenders.findIndex(
           (attender) => attender.userId === action.meta.arg.userId
         )
 
         if (index !== -1) {
-          state.attenders[index].status = action.meta.arg.status
+          const previousStatus = state.attenders[index].status
+          const newStatus = action.meta.arg.status
+
+          // Update attender's status
+          state.attenders[index].status = newStatus
+
+          // Update the status count
+          if (previousStatus !== newStatus) {
+            if (previousStatus === "IZIN") {
+              state.statusCount.izin -= 1
+            } else if (previousStatus === "HADIR") {
+              state.statusCount.hadir -= 1
+            } else if (previousStatus === "ALPA") {
+              state.statusCount.alpa -= 1
+            }
+
+            if (newStatus === "IZIN") {
+              state.statusCount.izin += 1
+            } else if (newStatus === "HADIR") {
+              state.statusCount.hadir += 1
+            } else if (newStatus === "ALPA") {
+              state.statusCount.alpa += 1
+            }
+          }
         }
       })
-
   },
 })
 

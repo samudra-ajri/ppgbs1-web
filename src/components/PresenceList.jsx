@@ -87,7 +87,7 @@ function PresenceList(props) {
     isError,
     message,
     attenders,
-    attendersCount,
+    statusCount,
     isSuccess,
     isLoading,
     hasNextPage,
@@ -357,10 +357,31 @@ function PresenceList(props) {
         >
           <Typography variant='h5'>{event.name}</Typography>
           <Typography variant='body2'>{eventTime()}</Typography>
-          <Typography variant='h5' pt={2}>
-            {attendersCount}
-          </Typography>
-          <Typography variant='body2'>Hadir</Typography>
+
+          <Box sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}>
+            <Box textAlign='center'>
+              <Typography variant='h5'>{statusCount?.izin}</Typography>
+              <Typography variant='body2'>Izin</Typography>
+            </Box>
+            <Box textAlign='center'>
+              <Typography
+                variant='h5'
+                sx={{ fontWeight: "bold", fontSize: "1.5rem" }}
+              >
+                {statusCount?.hadir}
+              </Typography>
+              <Typography
+                variant='body2'
+                sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+              >
+                Hadir
+              </Typography>
+            </Box>
+            <Box textAlign='center'>
+              <Typography variant='h5'>{statusCount?.alpa}</Typography>
+              <Typography variant='body2'>Alpa</Typography>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
 
@@ -479,7 +500,7 @@ function PresenceList(props) {
                         attender.organizationName.replace("PPK ", "")
                       )}{" "}
                       · {attender.grade ? gradeShortEnum[attender.grade] : ""}
-                      {attender.status === "ALPA" || attender.status === "IZIN" 
+                      {attender.status === "ALPA" || attender.status === "IZIN"
                         ? ""
                         : " · " + presenceTime(attender.createdAt)}
                     </Typography>
