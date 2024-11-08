@@ -290,6 +290,22 @@ export const presenceSlice = createSlice({
       .addCase(removeAttender.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
+        const removedAttender = state.attenders.find(
+          (attender) => attender.userId === action.payload.userId
+        )
+
+        // Update the counters based on the removed attendee's status
+        if (removedAttender) {
+          if (removedAttender.status === "IZIN") {
+            state.statusCount.izin -= 1
+          } else if (removedAttender.status === "HADIR") {
+            state.statusCount.hadir -= 1
+          } else if (removedAttender.status === "ALPA") {
+            state.statusCount.alpa -= 1
+          }
+        }
+
+        // Remove the attendee from the list
         state.attenders = state.attenders.filter(
           (attender) => attender.userId !== action.payload.userId
         )

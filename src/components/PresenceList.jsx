@@ -192,8 +192,9 @@ function PresenceList(props) {
       eventId: event.id,
       userId: removeId,
     }
-    dispatch(removeAttender(data))
-    setOpenPopup(false)
+    dispatch(removeAttender(data)).then(() => {
+      setOpenPopup(false)
+    })
   }
 
   const handleFilterObject = (key, value) => (event) => {
