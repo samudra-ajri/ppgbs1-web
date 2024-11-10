@@ -16,6 +16,7 @@ import {
 } from "@mui/material"
 import BackHeader from "../components/BackHeader"
 import { getPositions } from "../features/positions/positionSlice"
+import gradeEnum from "../enums/gradeEnum"
 
 function Register() {
   const navigate = useNavigate()
@@ -34,6 +35,7 @@ function Register() {
     password2: "",
     position1: "",
     position2: "",
+    grade: "",
   })
   const [ppd, setPPD] = useState("")
   const [ppk, setPPK] = useState("")
@@ -50,6 +52,7 @@ function Register() {
     password2,
     position1,
     position2,
+    grade,
   } = formData
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -126,6 +129,7 @@ function Register() {
       ...prevState,
       position1: "",
       position2: "",
+      grade: "",
     }))
     dispatch(getPositions(orgId))
   }
@@ -145,7 +149,10 @@ function Register() {
         birthdate: `${yearBirth}-${month}-${day}`,
         password,
         password2,
-        positionIds: [position1, position2].filter((item) => item !== ""),
+        positionIds: [position1, position2]
+          .filter((position) => position !== "")
+          .map((position) => position.id),
+        grade,
       }
 
       dispatch(register(userData))
@@ -395,7 +402,7 @@ function Register() {
                       >
                         {positionsList ? (
                           positionsList?.data.map((option) => (
-                            <MenuItem key={option.id} value={option.id}>
+                            <MenuItem key={option.id} value={option}>
                               {option.type}
                             </MenuItem>
                           ))
@@ -405,6 +412,31 @@ function Register() {
                       </TextField>
                     </Grid>
                   ))}
+
+                  {[position1, position2].some(
+                    (position) => position && position.type === "GENERUS"
+                  ) && (
+                    <Grid item xs={12}>
+                      <TextField
+                        name='grade'
+                        label='Kelas'
+                        placeholder='Kelas'
+                        value={grade}
+                        onChange={onChange}
+                        variant='outlined'
+                        align='left'
+                        select
+                        fullWidth
+                        required
+                      >
+                        {Object.keys(gradeEnum).map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {gradeEnum[option]}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                  )}
 
                   <Grid item xs={12}>
                     <Button
