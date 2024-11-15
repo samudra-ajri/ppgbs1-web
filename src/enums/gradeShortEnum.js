@@ -1,5 +1,5 @@
 const gradeShortEnum = {
-    0: 'Paud',
+    0: 'Paud/TK',
     1: 'CR1',
     2: 'CR2',
     3: 'CR3',

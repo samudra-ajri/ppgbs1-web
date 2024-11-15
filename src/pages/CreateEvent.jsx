@@ -126,7 +126,7 @@ function CreateEvent() {
   ]
 
   const caberawit = [
-    { title: "TK", grade: 0 },
+    { title: "PAUD/TK", grade: 0 },
     { title: "Cabe Rawit 1", grade: 1 },
     { title: "Cabe Rawit 2", grade: 2 },
     { title: "Cabe Rawit 3", grade: 3 },

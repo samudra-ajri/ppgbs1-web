@@ -1,5 +1,5 @@
 const gradeEnum = {
-    0: 'Paud',
+    0: 'Paud/TK',
     1: 'Cabe Rawit 1',
     2: 'Cabe Rawit 2',
     3: 'Cabe Rawit 3',
