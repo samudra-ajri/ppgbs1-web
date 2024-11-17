@@ -500,7 +500,8 @@ function PresenceList(props) {
                       {capitalize.words(
                         attender.organizationName.replace("PPK ", "")
                       )}{" "}
-                      · {attender.grade ? gradeShortEnum[attender.grade] : ""}
+                      · {attender.userSex ? "Lk" : "Pr"} ·{" "}
+                      {attender.grade ? gradeShortEnum[attender.grade] : ""}
                       {attender.status === "ALPA" || attender.status === "IZIN"
                         ? ""
                         : " · " + presenceTime(attender.createdAt)}
