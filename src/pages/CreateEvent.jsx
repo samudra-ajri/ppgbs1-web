@@ -151,6 +151,7 @@ function CreateEvent() {
     { title: "Pra Nikah 1", grade: 13 },
     { title: "Pra Nikah 2", grade: 14 },
     { title: "Pra Nikah 3", grade: 15 },
+    { title: "Pra Nikah 4", grade: 16 },
   ]
 
   return (
