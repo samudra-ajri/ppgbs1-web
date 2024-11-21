@@ -11,14 +11,16 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material"
-import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
+import DeleteIcon from "@mui/icons-material/CloseOutlined"
 import moment from "moment"
 import { Link } from "react-router-dom"
+import capitalize from "capitalize"
 import PopDialog from "./PopDialog"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { deleteUser } from "../features/users/userSlice"
 import { getUserById } from "../features/persons/personSlice"
+import gradeShortEnum from "../enums/gradeShortEnum"
 
 function PeopleCard(props) {
   const dispatch = useDispatch()
@@ -47,47 +49,50 @@ function PeopleCard(props) {
       <Card variant='outlined' sx={{ mb: 0.5, cursor: "pointer" }}>
         <CardContent
           sx={{
-            padding: 2,
-            "&:last-child": {
-              paddingBottom: 2,
-            },
+            paddingTop: 0.5,
+            paddingBottom: 0.5,
+            paddingLeft: 2,
+            paddingRight: 2,
+            "&:last-child": { paddingBottom: 0.5 },
           }}
         >
-          <Grid container>
+          <Grid container alignItems='center' justifyContent='space-between'>
             <Grid item xs={10} md={11}>
-              <Link to={link} component={CardActionArea} onClick={handleClickCard}>
+              <Link
+                to={link}
+                component={CardActionArea}
+                onClick={handleClickCard}
+              >
                 <Grid container>
                   <Grid item>
-                    <Typography variant='body2'>{user.name}</Typography>
+                    <Typography fontSize={14} variant='body1'>
+                      {user.name}
+                    </Typography>
                   </Grid>
                 </Grid>
 
-                {user.positions.map((position, index) => (
-                  <Typography
-                    key={index}
-                    fontSize={10}
-                    component='p'
-                    color='text.secondary'
-                  >
-                    {position.positionName}
-                  </Typography>
-                ))}
-
                 <Typography fontSize={10} component='p' color='text.secondary'>
-                  {(user.sex === 1 ? "Laki-laki" : "Perempuan") +
-                    `${
-                      user.positions[0].type !== "ADMIN"
-                        ? ", " + age + " tahun"
-                        : ""
-                    }`}
+                  {capitalize
+                    .words(user.positions[0].positionName)
+                    .replace("Ppk ", "PPK ")}
+                  {user.sex ? " · Lk" : " · Pr"}
+                  {user.grade ? ` · ${gradeShortEnum[user.grade]}` : ""}
+                  {user.birthdate ? ` · ${age} thn` : ""}
                 </Typography>
               </Link>
             </Grid>
             {canDelete && (
-              <Grid item>
+              <Grid
+                item
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
                 <Tooltip title='hapus user'>
                   <IconButton align='right' onClick={onClick}>
-                    <DeleteIcon fontSize='medium' color='error' />
+                    <DeleteIcon fontSize='small' />
                   </IconButton>
                 </Tooltip>
               </Grid>
