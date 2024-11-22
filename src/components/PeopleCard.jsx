@@ -76,7 +76,7 @@ function PeopleCard(props) {
                     .words(user.positions[0].positionName)
                     .replace("Ppk ", "PPK ")}
                   {user.sex ? " · Lk" : " · Pr"}
-                  {user.grade ? ` · ${gradeShortEnum[user.grade]}` : ""}
+                  {user.grade || user.grade === 0 ? ` · ${gradeShortEnum[user.grade]}` : ""}
                   {user.birthdate ? ` · ${age} thn` : ""}
                 </Typography>
               </Link>
