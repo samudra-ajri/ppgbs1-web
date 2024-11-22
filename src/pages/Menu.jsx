@@ -50,7 +50,7 @@ function Menu() {
     {
       to: "/activities-logs",
       icon: <QueryStatsIcon fontSize='large' color='info' />,
-      text: "Log Aktivitas",
+      text: "Dashboard",
     },
   ]
 
