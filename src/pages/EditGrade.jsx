@@ -15,11 +15,23 @@ import {
 
 import BackHeader from "../components/BackHeader"
 import gradeEnum from "../enums/gradeEnum"
+import { updateStudentByAdmin } from "../features/persons/personSlice"
 
 function EditGrade() {
   const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.auth)
+  const { user: session } = useSelector((state) => state.auth)
+  const { person } = useSelector((state) => state.person)
   const { isError, isSuccess, message } = useSelector((state) => state.auth)
+
+  let user = session
+  if (session.currentPosition?.type !== "GENERUS") {
+    user = {
+      ...person,
+      currentPosition: person.positions.find(
+        (position) => position.type === "GENERUS"
+      ),
+    }
+  }
 
   const initialFormData = { grade: user.grade }
   const [formData, setFormData] = useState(initialFormData)
@@ -53,7 +65,11 @@ function EditGrade() {
   const onSubmit = (e) => {
     e.preventDefault()
     const userData = { grade }
-    dispatch(updateStudentProfile(userData))
+    if (session.currentPosition?.type !== "GENERUS") {
+      dispatch(updateStudentByAdmin({ userId: user.id, payload: userData }))
+    } else {
+      dispatch(updateStudentProfile(userData))
+    }
     setIsFormChanged(false)
   }
 
@@ -100,7 +116,7 @@ function EditGrade() {
     <>
       <BackHeader title='Profile' />
       <Typography variant='h6' align='center' sx={{ mb: 3 }}>
-        Kelas
+        {session.currentPosition?.type !== "GENERUS" ? user.name : "Kelas"}
       </Typography>
 
       <Grid>

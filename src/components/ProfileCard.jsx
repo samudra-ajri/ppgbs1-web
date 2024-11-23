@@ -1,9 +1,25 @@
 import React from "react"
-import { Card, CardContent, Chip, CircularProgress, Grid, Typography } from "@mui/material"
+import {
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material"
+import EditIcon from "@mui/icons-material/BorderColorOutlined"
 import gradeEnum from "../enums/gradeEnum"
 import moment from "moment"
+import { useNavigate } from "react-router-dom"
 
 function ProfileCard({ user, isLoading }) {
+  const navigate = useNavigate()
+
+  const handleEditClick = () => {
+    navigate("/c/edit-grade")
+  }
+
   const currentPosition =
     user?.currentPosition ||
     user?.positions?.find((position) => position.type === "GENERUS")
@@ -61,18 +77,35 @@ function ProfileCard({ user, isLoading }) {
               </Grid>
               {(user?.grade || user?.grade === 0) &&
                 currentPosition.type === "GENERUS" && (
-                  <Grid item xs={10} md={11}>
-                    <Chip
-                      size='small'
-                      label={
-                        <Typography variant='caption'>
-                          {gradeEnum[user?.grade]}
-                        </Typography>
-                      }
-                      color='success'
-                      variant='outlined'
-                      sx={{ display: "flex", justifyContent: "center" }}
-                    />
+                  <Grid
+                    container
+                    item
+                    xs={12}
+                    justifyContent='center'
+                    alignItems='center'
+                    spacing={1}
+                  >
+                    <Grid item xs={1}></Grid>
+                    <Grid item md={10} xs={8}>
+                      <Chip
+                        size='medium'
+                        label={
+                          <Typography variant='caption'>
+                            {gradeEnum[user?.grade]}
+                          </Typography>
+                        }
+                        color='success'
+                        variant='outlined'
+                        sx={{ display: "flex", justifyContent: "center" }}
+                      />
+                    </Grid>
+                    <Grid item xs={1}>
+                      {user?.currentPosition?.type !== "GENERUS" && (
+                        <IconButton onClick={handleEditClick}>
+                          <EditIcon fontSize='small' color='inherit' />
+                        </IconButton>
+                      )}
+                    </Grid>
                   </Grid>
                 )}
             </Grid>

@@ -159,7 +159,7 @@ function CreateEvent() {
       <BackHeader title='Kegiatan' />
 
       <Typography variant='h6' align='center' sx={{ mb: 3 }}>
-        Buat Jadwal
+        Buat Kegiatan
       </Typography>
 
       <Grid>
