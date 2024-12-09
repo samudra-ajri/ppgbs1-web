@@ -23,6 +23,9 @@ import {
 import BackHeader from "../components/BackHeader"
 import { getPositions } from "../features/positions/positionSlice"
 import gradeEnum from "../enums/gradeEnum"
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
+import moment from "moment"
 
 function Register() {
   const navigate = useNavigate()
@@ -39,10 +42,32 @@ function Register() {
     password: "",
     password2: "",
     grade: "",
+
+    muballighStatus: "MT",
+    pondok: "",
+    kertosonoYear: "",
+    firstDutyYear: "",
+    timesDuties: 1,
+    education: "SD",
+    maritalStatus: "SINGLE",
+    children: 0,
+    job: "",
+    hasBpjs: true,
   })
   const [ppd, setPPD] = useState("")
   const [ppk, setPPK] = useState("")
   const [positions, setPositions] = useState([])
+  const [hadits, setHadits] = useState([])
+  const [scopes, setScopes] = useState([])
+
+  const [assignmentStartDate, setAssignmentStartDate] = useState(moment())
+  const handleStartTimeChange = (newValue) => {
+    setAssignmentStartDate(newValue)
+  }
+  const [assignmentFinishDate, setAssignmentFinishDate] = useState(moment())
+  const handleFinishTimeChange = (newValue) => {
+    setAssignmentFinishDate(newValue)
+  }
 
   const {
     name,
@@ -55,6 +80,16 @@ function Register() {
     password,
     password2,
     grade,
+    muballighStatus,
+    pondok,
+    kertosonoYear,
+    firstDutyYear,
+    timesDuties,
+    education,
+    maritalStatus,
+    children,
+    job,
+    hasBpjs,
   } = formData
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -144,17 +179,51 @@ function Register() {
           .filter((position) => position !== "")
           .map((position) => position.id),
         grade,
+        muballighStatus,
+        pondok,
+        kertosonoYear,
+        firstDutyYear,
+        timesDuties,
+        education,
+        maritalStatus,
+        children,
+        job,
+        hasBpjs,
+        greatHadiths: hadits,
+        scopes,
+        assignmentStartDate: moment(assignmentStartDate).unix(),
+        assignmentFinishDate: moment(assignmentFinishDate).unix(),
       }
 
       dispatch(register(userData))
     }
   }
-
+  
   const handleKeyDown = (event) => {
     if (event.key === " ") {
       event.preventDefault()
     }
   }
+
+  const haditsOptions = [
+    { id: "BUKHORI", type: "Bukhori" },
+    { id: "MUSLIM", type: "Muslim" },
+    { id: "NASAI", type: "Nasai" },
+    { id: "ABU DAWUD", type: "Abu Dawud" },
+    { id: "TIRMIDZI", type: "Tirmidzi" },
+    { id: "IBNU MAJAH", type: "Ibnu Majah" },
+  ]
+
+  const scopeOptions = [
+    { id: "KLP", type: "Kelompokan Rutin" },
+    { id: "CR", type: "Cabe Rawit" },
+    { id: "PR", type: "Pra Remaja" },
+    { id: "RM", type: "Remaja" },
+    { id: "PN", type: "Pra Nikah" },
+    { id: "LANSIA", type: "Lansia" },
+    { id: "PRIVATE", type: "Privat" },
+    { id: "RAMUTAN", type: "Ramutan" },
+  ]
 
   const handleChangePositions = (event) => {
     const {
@@ -162,6 +231,22 @@ function Register() {
     } = event
 
     setPositions(value)
+  }
+
+  const handleChangeHadits = (event) => {
+    const {
+      target: { value },
+    } = event
+
+    setHadits(typeof value === "string" ? value.split(",") : value)
+  }
+
+  const handleChangeScopes = (event) => {
+    const {
+      target: { value },
+    } = event
+
+    setScopes(typeof value === "string" ? value.split(",") : value)
   }
 
   const isSelected = (item) =>
@@ -437,6 +522,286 @@ function Register() {
                         ))}
                       </TextField>
                     </Grid>
+                  )}
+
+                  {positions.some(
+                    (position) => position && position.type === "PENGAJAR"
+                  ) && (
+                    <>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='muballighStatus'
+                          label='Status Kemuballighan'
+                          placeholder='Status'
+                          value={muballighStatus}
+                          onChange={onChange}
+                          variant='outlined'
+                          align='left'
+                          select
+                          fullWidth
+                          required
+                        >
+                          {[
+                            { value: "MT", label: "Tugasan" },
+                            { value: "MS", label: "Setempat" },
+                            { value: "MSS", label: "Sukarela" },
+                          ].map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControl fullWidth required>
+                          <InputLabel>Hatam Hadits Besar</InputLabel>
+                          <Select
+                            multiple
+                            value={hadits}
+                            onChange={handleChangeHadits}
+                            input={<OutlinedInput label='Hatam Hadits Besar' />}
+                            renderValue={(selected) => {
+                              const selectedTypes = selected
+                                .map(
+                                  (id) =>
+                                    haditsOptions.find((o) => o.id === id)?.type
+                                )
+                                .filter(Boolean)
+                              return selectedTypes.join(", ")
+                            }}
+                          >
+                            {haditsOptions.map((option) => (
+                              <MenuItem key={option.id} value={option.id}>
+                                <Checkbox
+                                  checked={hadits.includes(option.id)}
+                                />
+                                <ListItemText primary={option.type} />
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='pondok'
+                          label='Asal Pondok'
+                          placeholder='Asal Pondok'
+                          value={pondok}
+                          onChange={onChange}
+                          variant='outlined'
+                          fullWidth
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='kertosonoYear'
+                          label='Tahun Lulus Tes Muballigh'
+                          placeholder='Tahun'
+                          value={kertosonoYear}
+                          onChange={onChange}
+                          variant='outlined'
+                          type='number'
+                          fullWidth
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='firstDutyYear'
+                          label='Tahun Pertama Kali Tugasan'
+                          placeholder='Tahun'
+                          value={firstDutyYear}
+                          onChange={onChange}
+                          variant='outlined'
+                          type='number'
+                          fullWidth
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='timesDuties'
+                          label='Jumlah Pengalaman Tugasan'
+                          placeholder='Jumlah'
+                          value={timesDuties}
+                          onChange={onChange}
+                          variant='outlined'
+                          type='number'
+                          fullWidth
+                          required
+                        />
+                      </Grid>
+                      {muballighStatus === "MT" ? (
+                        <>
+                          <Grid item xs={12}>
+                            <LocalizationProvider dateAdapter={AdapterMoment}>
+                              <DatePicker
+                                name='assignmentStartDate'
+                                label='Tahun Mulai Tugasan Saat ini'
+                                value={assignmentStartDate}
+                                onChange={handleStartTimeChange}
+                                views={["year", "month"]}
+                                inputFormat='MM/YYYY'
+                                renderInput={(params) => (
+                                  <TextField {...params} fullWidth />
+                                )}
+                              />
+                            </LocalizationProvider>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <LocalizationProvider dateAdapter={AdapterMoment}>
+                              <DatePicker
+                                name='assignmentFinishDate'
+                                label='Tahun Selesai Tugasan Saat ini'
+                                value={assignmentFinishDate}
+                                onChange={handleFinishTimeChange}
+                                views={["year", "month"]}
+                                inputFormat='MM/YYYY'
+                                renderInput={(params) => (
+                                  <TextField {...params} fullWidth />
+                                )}
+                              />
+                            </LocalizationProvider>
+                          </Grid>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+
+                      <Grid item xs={12}>
+                        <FormControl fullWidth required>
+                          <InputLabel>Cakupan Mengajar</InputLabel>
+                          <Select
+                            multiple
+                            value={scopes}
+                            onChange={handleChangeScopes}
+                            input={<OutlinedInput label='Cakupan Mengajar' />}
+                            renderValue={(selected) => {
+                              const selectedTypes = selected
+                                .map(
+                                  (id) =>
+                                    scopeOptions.find((o) => o.id === id)?.type
+                                )
+                                .filter(Boolean)
+                              return selectedTypes.join(", ")
+                            }}
+                          >
+                            {scopeOptions.map((option) => (
+                              <MenuItem key={option.id} value={option.id}>
+                                <Checkbox
+                                  checked={scopes.includes(option.id)}
+                                />
+                                <ListItemText primary={option.type} />
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='education'
+                          label='Pendidikan Terakhir'
+                          placeholder='Pendidikan'
+                          value={education}
+                          onChange={onChange}
+                          variant='outlined'
+                          align='left'
+                          select
+                          fullWidth
+                          required
+                        >
+                          {[
+                            { value: "SD", label: "SD" },
+                            { value: "SMP", label: "SMP" },
+                            { value: "SMA", label: "SMA" },
+                            { value: "SMK", label: "SMK" },
+                            { value: "D1", label: "D1" },
+                            { value: "D2", label: "D2" },
+                            { value: "D3", label: "D3" },
+                            { value: "D4", label: "D4" },
+                            { value: "S1", label: "S1" },
+                            { value: "S2", label: "S2" },
+                            { value: "S3", label: "S3" },
+                          ].map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='maritalStatus'
+                          label='Status Pernikahan'
+                          placeholder='Status'
+                          value={maritalStatus}
+                          onChange={onChange}
+                          variant='outlined'
+                          align='left'
+                          select
+                          fullWidth
+                          required
+                        >
+                          {[
+                            { value: "SINGLE", label: "Lajang" },
+                            { value: "MARIED", label: "Menikah" },
+                            { value: "DIVORCED", label: "Cerai Hidup" },
+                            { value: "WIDOWED", label: "Cerai Mati" },
+                          ].map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='children'
+                          label='Jumlah Anak'
+                          placeholder='Jumlah'
+                          value={children}
+                          onChange={onChange}
+                          variant='outlined'
+                          type='number'
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='job'
+                          label='Maisyah Tambahan'
+                          placeholder='Maisyah Tambahan'
+                          value={job}
+                          onChange={onChange}
+                          variant='outlined'
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          name='hasBpjs'
+                          label='Memiliki BPJS'
+                          placeholder='Status'
+                          value={hasBpjs}
+                          onChange={onChange}
+                          variant='outlined'
+                          align='left'
+                          select
+                          fullWidth
+                          required
+                        >
+                          {[
+                            { value: true, label: "Ya" },
+                            { value: false, label: "Tidak" },
+                          ].map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
+                    </>
                   )}
 
                   <Grid item xs={12}>
