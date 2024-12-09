@@ -8,9 +8,15 @@ import {
   Button,
   Card,
   CardContent,
+  Checkbox,
   CircularProgress,
+  FormControl,
   Grid,
+  InputLabel,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
+  Select,
   TextField,
   Typography,
 } from "@mui/material"
@@ -22,7 +28,6 @@ function Register() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const [positionsCount, setPositionsCount] = useState([1])
   const [formData, setFormData] = useState({
     name: "",
     contact: "",
@@ -33,12 +38,11 @@ function Register() {
     yearBirth: "",
     password: "",
     password2: "",
-    position1: "",
-    position2: "",
     grade: "",
   })
   const [ppd, setPPD] = useState("")
   const [ppk, setPPK] = useState("")
+  const [positions, setPositions] = useState([])
 
   const {
     name,
@@ -50,8 +54,6 @@ function Register() {
     yearBirth,
     password,
     password2,
-    position1,
-    position2,
     grade,
   } = formData
 
@@ -97,17 +99,6 @@ function Register() {
     dispatch,
   ])
 
-  const addPositionForm = () => {
-    setPositionsCount([...positionsCount, positionsCount.length + 1])
-  }
-
-  const removePositionForm = () => {
-    const updatedPositions = [...positionsCount]
-    updatedPositions.pop()
-    setPositionsCount(updatedPositions)
-    setFormData((prevData) => ({ ...prevData, position2: "" }))
-  }
-
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -119,16 +110,16 @@ function Register() {
     const ppdId = e.target.value
     setPPD(ppdId)
     setPPK("")
+    setPositions([])
     dispatch(getppk(ppdId))
   }
 
   const onChangePPK = (e) => {
     const orgId = e.target.value
     setPPK(orgId)
+    setPositions([])
     setFormData((prevState) => ({
       ...prevState,
-      position1: "",
-      position2: "",
       grade: "",
     }))
     dispatch(getPositions(orgId))
@@ -149,7 +140,7 @@ function Register() {
         birthdate: `${yearBirth}-${month}-${day}`,
         password,
         password2,
-        positionIds: [position1, position2]
+        positionIds: positions
           .filter((position) => position !== "")
           .map((position) => position.id),
         grade,
@@ -164,6 +155,17 @@ function Register() {
       event.preventDefault()
     }
   }
+
+  const handleChangePositions = (event) => {
+    const {
+      target: { value },
+    } = event
+
+    setPositions(value)
+  }
+
+  const isSelected = (item) =>
+    positions.some((selectedItem) => selectedItem.id === item.id)
 
   return (
     <>
@@ -386,34 +388,33 @@ function Register() {
                     />
                   </Grid>
 
-                  {positionsCount.map((_, index) => (
-                    <Grid item xs={12} key={index}>
-                      <TextField
-                        name={`position${index + 1}`}
-                        label={`Posisi ${index === 0 ? "" : index + 1}`}
-                        placeholder={`Posisi ${index + 1}`}
-                        value={formData[`position${index + 1}`]}
-                        onChange={onChange}
-                        variant='outlined'
-                        align='left'
-                        select
-                        fullWidth
-                        required
+                  <Grid item xs={12}>
+                    <FormControl fullWidth required>
+                      <InputLabel>Posisi</InputLabel>
+                      <Select
+                        multiple
+                        value={positions}
+                        onChange={handleChangePositions}
+                        input={<OutlinedInput label='Posisi' />}
+                        renderValue={(selected) =>
+                          selected.map((item) => item.type).join(", ")
+                        }
                       >
                         {positionsList ? (
                           positionsList?.data.map((option) => (
                             <MenuItem key={option.id} value={option}>
-                              {option.type}
+                              <Checkbox checked={isSelected(option)} />
+                              <ListItemText primary={option.type} />
                             </MenuItem>
                           ))
                         ) : (
                           <MenuItem></MenuItem>
                         )}
-                      </TextField>
-                    </Grid>
-                  ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
 
-                  {[position1, position2].some(
+                  {positions.some(
                     (position) => position && position.type === "GENERUS"
                   ) && (
                     <Grid item xs={12}>
@@ -437,34 +438,6 @@ function Register() {
                       </TextField>
                     </Grid>
                   )}
-
-                  <Grid item xs={12}>
-                    <Button
-                      size='medium'
-                      // style={{ margin: "20px auto" }}
-                      variant='outlined'
-                      color='inherit'
-                      disabled={positionsCount.length < 2}
-                      onClick={removePositionForm}
-                      fullWidth
-                    >
-                      Kurangi Posisi
-                    </Button>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Button
-                      size='medium'
-                      // style={{ margin: "20px 5px" }}
-                      variant='outlined'
-                      color='inherit'
-                      disabled={positionsCount.length >= 2}
-                      onClick={addPositionForm}
-                      fullWidth
-                    >
-                      Tambah Posisi
-                    </Button>
-                  </Grid>
 
                   <Grid item xs={12}>
                     <Button
