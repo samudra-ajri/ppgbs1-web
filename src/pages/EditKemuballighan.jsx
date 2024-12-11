@@ -35,6 +35,8 @@ function EditKemuballighan() {
   const user = session
   const initialFormData = {
     ...user,
+    greatHadiths: user.greatHadiths ?? [],
+    scopes: user.scopes ?? [],
     assignmentStartDate: user.assignmentStartDate
       ? moment.unix(user.assignmentStartDate)
       : moment(),
