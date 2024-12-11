@@ -187,7 +187,7 @@ function EditKemuballighan() {
           >
             {haditsOptions.map((option) => (
               <MenuItem key={option.id} value={option.id}>
-                <Checkbox checked={greatHadiths.includes(option.id)} />
+                <Checkbox checked={greatHadiths?.includes(option.id)} />
                 <ListItemText primary={option.type} />
               </MenuItem>
             ))}
@@ -295,7 +295,7 @@ function EditKemuballighan() {
           >
             {scopeOptions.map((option) => (
               <MenuItem key={option.id} value={option.id}>
-                <Checkbox checked={scopes.includes(option.id)} />
+                <Checkbox checked={scopes?.includes(option.id)} />
                 <ListItemText primary={option.type} />
               </MenuItem>
             ))}
