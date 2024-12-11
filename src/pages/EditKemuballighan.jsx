@@ -253,7 +253,7 @@ function EditKemuballighan() {
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 name='assignmentStartDate'
-                label='Tahun Mulai Tugasan Saat ini'
+                label='Awal Periode Tugasan Saat ini'
                 value={assignmentStartDate}
                 onChange={handleStartTimeChange}
                 views={["year", "month"]}
@@ -266,7 +266,7 @@ function EditKemuballighan() {
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <DatePicker
                 name='assignmentFinishDate'
-                label='Tahun Selesai Tugasan Saat ini'
+                label='Akhir Periode Tugasan Saat ini'
                 value={assignmentFinishDate}
                 onChange={handleFinishTimeChange}
                 views={["year", "month"]}
