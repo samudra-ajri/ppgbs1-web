@@ -25,7 +25,7 @@ import gradeShortEnum from "../enums/gradeShortEnum"
 function PeopleCard(props) {
   const dispatch = useDispatch()
   const { user, canDelete, link } = props
-  const age = moment(user.birthdate).fromNow().split(" ")[0]
+  const age = moment().diff(user.birthdate, 'years')
   const [openPopup, setOpenPopup] = useState(false)
   const { isLoading } = useSelector((state) => state.users)
 

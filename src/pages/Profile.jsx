@@ -32,10 +32,9 @@ function Profile() {
 
   const pengajarCard = () =>
     user.currentPosition.type === "PENGAJAR" && (
-      // TODO: Update Kemuballighan
       <>
         <ProfileMenuCard title='Biodata' link='/c/edit-profile' />
-        {/* <ProfileMenuCard title='Kemuballighan' link='#' /> */}
+        <ProfileMenuCard title='Kemuballighan' link='/c/edit-kemuballighan' />
       </>
     )
 

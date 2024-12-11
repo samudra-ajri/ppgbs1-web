@@ -78,6 +78,19 @@ const updateStudentProfile = async (userData, token) => {
     }
 }
 
+// Update teacher profile
+const updateTeacherProfile = async (userData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await API.put('users/me/teacher', userData, config)
+    if (response.data) {
+        return decidePosition(userData.newPositionId, token)
+    }
+}
+
 // Update my password
 const updateMyPassword = async (userData, token) => {
     const {
@@ -161,6 +174,7 @@ const authService = {
     updateStudentProfile,
     updateMyPassword,
     registerByAdmin,
+    updateTeacherProfile,
 }
 
 export default authService

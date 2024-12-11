@@ -88,6 +88,21 @@ export const updateStudentProfile = createAsyncThunk('auth/update-student', asyn
     }
 })
 
+// Update my teacher profile
+export const updateTeacherProfile = createAsyncThunk('auth/update-teacher', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.updateTeacherProfile(data, token)
+    } catch (error) {
+        const message = (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+        ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 // Update my password
 export const updateMyPassword = createAsyncThunk('auth/update-password', async (data, thunkAPI) => {
     try {
@@ -229,6 +244,20 @@ export const authSlice = createSlice({
                 state.user = action.payload
             })
             .addCase(updateStudentProfile.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+                state.user = null
+            })
+            .addCase(updateTeacherProfile.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(updateTeacherProfile.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.user = action.payload
+            })
+            .addCase(updateTeacherProfile.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

@@ -26,6 +26,9 @@ import gradeEnum from "../enums/gradeEnum"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
 import moment from "moment"
+import haditsOptions from "../constants/haditsOptions"
+import scopeOptions from "../constants/scopeOptions"
+import maritalStatusOptions from "../constants/maritalStatusOptions"
 
 function Register() {
   const navigate = useNavigate()
@@ -198,32 +201,12 @@ function Register() {
       dispatch(register(userData))
     }
   }
-  
+
   const handleKeyDown = (event) => {
     if (event.key === " ") {
       event.preventDefault()
     }
   }
-
-  const haditsOptions = [
-    { id: "BUKHORI", type: "Bukhori" },
-    { id: "MUSLIM", type: "Muslim" },
-    { id: "NASAI", type: "Nasai" },
-    { id: "ABU DAWUD", type: "Abu Dawud" },
-    { id: "TIRMIDZI", type: "Tirmidzi" },
-    { id: "IBNU MAJAH", type: "Ibnu Majah" },
-  ]
-
-  const scopeOptions = [
-    { id: "KLP", type: "Kelompokan Rutin" },
-    { id: "CR", type: "Cabe Rawit" },
-    { id: "PR", type: "Pra Remaja" },
-    { id: "RM", type: "Remaja" },
-    { id: "PN", type: "Pra Nikah" },
-    { id: "LANSIA", type: "Lansia" },
-    { id: "PRIVATE", type: "Privat" },
-    { id: "RAMUTAN", type: "Ramutan" },
-  ]
 
   const handleChangePositions = (event) => {
     const {
@@ -553,7 +536,7 @@ function Register() {
                         </TextField>
                       </Grid>
                       <Grid item xs={12}>
-                        <FormControl fullWidth required>
+                        <FormControl fullWidth>
                           <InputLabel>Hatam Hadits Besar</InputLabel>
                           <Select
                             multiple
@@ -670,7 +653,7 @@ function Register() {
                       )}
 
                       <Grid item xs={12}>
-                        <FormControl fullWidth required>
+                        <FormControl fullWidth>
                           <InputLabel>Cakupan Mengajar</InputLabel>
                           <Select
                             multiple
@@ -743,12 +726,7 @@ function Register() {
                           fullWidth
                           required
                         >
-                          {[
-                            { value: "SINGLE", label: "Lajang" },
-                            { value: "MARIED", label: "Menikah" },
-                            { value: "DIVORCED", label: "Cerai Hidup" },
-                            { value: "WIDOWED", label: "Cerai Mati" },
-                          ].map((option) => (
+                          {maritalStatusOptions.map((option) => (
                             <MenuItem key={option.value} value={option.value}>
                               {option.label}
                             </MenuItem>

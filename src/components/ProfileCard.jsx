@@ -59,7 +59,7 @@ function ProfileCard({ user, isLoading }) {
                   {user?.positions[0]?.type !== "ADMIN"
                     ? (user?.sex === 1 ? "Laki-laki" : "Perempuan") +
                       ", " +
-                      moment(user?.birthdate).fromNow().split(" ")[0] +
+                      moment().diff(user?.birthdate, 'years') +
                       " tahun"
                     : ""}
                 </Typography>

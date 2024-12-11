@@ -24,6 +24,7 @@ import UpdatePassword from '../pages/UpdatePassword'
 import CreateReference from '../pages/CreateReference'
 import RegisterByAdmin from '../pages/RegisterByAdmin'
 import { Container } from '@mui/material'
+import EditKemuballighan from '../pages/EditKemuballighan'
 
 function ChildLayout() {
   return (
@@ -58,6 +59,7 @@ function ChildLayout() {
           <Route path='/reset-passwords/*' element={<ResetPassword />} />
           <Route path='/edit-profile' element={<EditProfile />} />
           <Route path='/edit-grade' element={<EditGrade />} />
+          <Route path='/edit-kemuballighan' element={<EditKemuballighan />} />
           <Route path='/update-password' element={<UpdatePassword />} />
           <Route path='/create-reference' element={<CreateReference />} />
         </Routes>
