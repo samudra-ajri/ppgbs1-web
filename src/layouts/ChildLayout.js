@@ -7,6 +7,7 @@ import CreateEvent from '../pages/CreateEvent'
 import DetailTargets from '../pages/DetailTargets'
 import EventDetails from '../pages/EvenDetails'
 import EventPresence from '../pages/EventPresence'
+import EventGroupPresence from '../pages/EventGroupPresence'
 import InputTargets from '../pages/InputTargets'
 import Profile from '../pages/Profile'
 import Register from '../pages/Register'
@@ -56,6 +57,7 @@ function ChildLayout() {
           <Route path='/create-event' element={<CreateEvent />} />
           <Route path='/event-details/*' element={<EventDetails />} />
           <Route path='/event-presence/*' element={<EventPresence />} />
+          <Route path='/event-group-presence/*' element={<EventGroupPresence />} />
           <Route path='/reset-passwords/*' element={<ResetPassword />} />
           <Route path='/edit-profile' element={<EditProfile />} />
           <Route path='/edit-grade' element={<EditGrade />} />

@@ -17,7 +17,9 @@ function Event() {
 
   useEffect(() => {
     if (!user) navigate("/login")
-    dispatch(listEvents({ page: 1 }))
+    user.currentPosition.type === "ADMIN"
+      ? dispatch(listEvents({ page: 1, isGroupHead: 'false' }))
+      : dispatch(listEvents({ page: 1, groupId: 'null' }))
     return () => {
       dispatch(reset())
     }
@@ -26,7 +28,9 @@ function Event() {
   const fetchMoreEvents = () => {
     if (hasNextPage) {
       setPage((prevPage) => prevPage + 1)
-      dispatch(listEvents({ page: page + 1 }))
+      user.currentPosition.type === "ADMIN"
+        ? dispatch(listEvents({ page: page + 1, isGroupHead: 'false' }))
+        : dispatch(listEvents({ page: page + 1, groupId: 'null' }))
     }
   }
 

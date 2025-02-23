@@ -88,6 +88,25 @@ export const removeAttender = createAsyncThunk(
   }
 )
 
+// Delete presence
+export const deletePresence = createAsyncThunk(
+  'presences/delete',
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await presenceService.deletePresence(data, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 // Check user presence status
 export const isPresent = createAsyncThunk(
   'presences/detail',
@@ -223,6 +242,19 @@ export const presenceSlice = createSlice({
         state.presence = action.payload
       })
       .addCase(createPresence.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(deletePresence.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deletePresence.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.presence = action.payload
+      })
+      .addCase(deletePresence.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

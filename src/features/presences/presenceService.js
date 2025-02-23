@@ -14,6 +14,18 @@ const createPresence = async (data, token) => {
   return response.data
 }
 
+// Delete presence
+const deletePresence = async (data, token) => {
+  const { eventId } = data
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.delete(API_URL + `/${eventId}/presences`, config)
+  return response.data
+}
+
 // Create presence by amdin
 const createPresenceByAdmin = async (data, token) => {
   const { eventId, userId } = data
@@ -44,6 +56,7 @@ const getPresencesByEventId = async (token, {
   ancestorOrganizationId = '',
   organizationId = '',
   sex = '',
+  userId = ''
 } = {}) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -55,6 +68,7 @@ const getPresencesByEventId = async (token, {
     isActive: true,
     organizationId,
     sex,
+    userId,
   }).toString()
 
   const response = await API.get(`${API_URL}/${eventId}/presences?${queryParams}`, config)
@@ -109,6 +123,7 @@ const updatePresence = async (data, token) => {
 
 const presenceService = {
   createPresence,
+  deletePresence,
   createPresenceByAdmin,
   detail,
   getPresencesByEventId,

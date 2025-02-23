@@ -15,13 +15,18 @@ const listEventsGenerus = async (token) => {
 
 // List evenets admin
 const listEvents = async (params, token) => {
-  const { page } = params
+  const { page, isGroupHead, groupId } = params
+  let queryParams = `?page=${page}`
+  if (isGroupHead) queryParams += `&isGroupHead=${isGroupHead}`
+  if (groupId) queryParams += `&groupId=${groupId}`
+  
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + `?page=${page}`, config)
+  // const response = await API.get(API_URL + `?page=${page}&isGroupHead=${isGroupHead}&groupId=${groupId}`, config)
+  const response = await API.get(API_URL + `${queryParams}`, config)
   return response.data
 }
 

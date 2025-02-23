@@ -62,12 +62,16 @@ function PresenceForm(props) {
   }
 
   const eventTime = () => {
-    const time = isPresentStatus?.data.createdAt || event.startDate
-    const startDateObject = moment(new Date(Number(time)))
-    const startDate = startDateObject.format("DD MMM YYYY")
+    const startDateObject = moment(new Date(Number(event.startDate)))
+    const endDateObject = moment(new Date(Number(event.endDate)))
+    const startDate = startDateObject.format("DD/MM/YY")
     const startTime = startDateObject.format("HH.mm")
+    const endDate = endDateObject.format("DD/MM/YY")
+    const endTime = endDateObject.format("HH.mm")
     const startDayName = translate.days(startDateObject.format("dddd"))
-    return `${startDayName}, ${startDate} pkl. ${startTime}`
+    const startEndName = translate.days(endDateObject.format("dddd"))
+    if (startDate === endDate) return `${startDayName}, ${startDate} pkl. ${startTime} - ${endTime}`
+    return `${startDayName}, ${startDate} pkl. ${startTime} - ${startEndName}, ${endDate} pkl. ${endTime}`
   }
 
   if (isLoadingPresentStatus)
@@ -90,17 +94,19 @@ function PresenceForm(props) {
         >
           <Typography variant='h5'>{event.name}</Typography>
           <Typography variant='body2'>{eventTime()}</Typography>
-          {(isPresentStatus?.data.status === 'HADIR') && isSuccessPresentStatus && (
-            <>
-              <Typography pt={3} color='green'>
-                <CheckIcon fontSize='large' />
-              </Typography>
-              <Typography variant='h5'>Hadir</Typography>
-            </>
-          )}
+          {event.description && <Typography mt={2} variant='body2'>{event.description}</Typography>}
+          {isPresentStatus?.data.status === "HADIR" &&
+            isSuccessPresentStatus && (
+              <>
+                <Typography pt={3} color='green'>
+                  <CheckIcon fontSize='large' />
+                </Typography>
+                <Typography variant='h5'>Hadir</Typography>
+              </>
+            )}
         </CardContent>
       </Card>
-      {(!isPresentStatus || isPresentStatus?.data.status !== 'HADIR') && (
+      {(!isPresentStatus || isPresentStatus?.data.status !== "HADIR") && (
         <>
           <Card
             variant=''

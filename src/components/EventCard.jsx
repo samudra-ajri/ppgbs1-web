@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
+import LayersIcon from "@mui/icons-material/LayersRounded"
 import moment from "moment"
 import { Link } from "react-router-dom"
 import translate from "../utils/translate"
@@ -50,6 +51,7 @@ function EventCard(props) {
     const endDate = endDateObject.format("DD/MM/YY")
     const endTime = endDateObject.format("HH.mm")
     const startDayName = translate.days(startDateObject.format("dddd"))
+    const startEndName = translate.days(endDateObject.format("dddd"))
     if (startDate === endDate) {
       eventTime.keys = (
         <>
@@ -70,19 +72,17 @@ function EventCard(props) {
     } else {
       eventTime.keys = (
         <>
-          <Typography sx={{ fontSize: "12px" }}>Hari</Typography>
           <Typography sx={{ fontSize: "12px" }}>Mulai</Typography>
           <Typography sx={{ fontSize: "12px" }}>Selesai</Typography>
         </>
       )
       eventTime.values = (
         <>
-          <Typography sx={{ fontSize: "12px" }}>: {startDayName}</Typography>
           <Typography sx={{ fontSize: "12px" }}>
-            : {startDate} pkl. {startTime}
+            : {startDayName}, {startDate} pkl. {startTime}
           </Typography>
           <Typography sx={{ fontSize: "12px" }}>
-            : {endDate} pkl. {endTime}
+            : {startEndName}, {endDate} pkl. {endTime}
           </Typography>
         </>
       )
@@ -106,12 +106,22 @@ function EventCard(props) {
               <Link
                 to={
                   user.currentPosition.type === "GENERUS"
-                    ? `/c/event-presence/${event.id}`
+                    ? event.isGroupHead
+                      ? `/c/event-group-presence/${event.id}`
+                      : `/c/event-presence/${event.id}`
                     : `/c/event-details/${event.id}`
                 }
                 component={CardActionArea}
               >
-                <Grid container>
+                <Grid container alignItems='center'>
+                  {event.isGroupHead && (
+                    <Grid item>
+                      <LayersIcon
+                        fontSize='small'
+                        sx={{ mr: 1, opacity: 0.3 }}
+                      />
+                    </Grid>
+                  )}
                   <Grid item>
                     <Typography variant='body2'>
                       <b>{event.name}</b>
@@ -128,7 +138,9 @@ function EventCard(props) {
 
                 <Grid container>
                   <Grid item xs={4}>
-                    <Typography sx={{ fontSize: "12px" }}>Room ID</Typography>
+                    {event.roomId && (
+                      <Typography sx={{ fontSize: "12px" }}>Room ID</Typography>
+                    )}
                     {event.passcode && (
                       <Typography sx={{ fontSize: "12px" }}>
                         Kode Akses
@@ -136,12 +148,18 @@ function EventCard(props) {
                     )}
                     {eventTime().keys}
                     <Typography sx={{ fontSize: "12px" }}>Lokasi</Typography>
-                    <Typography sx={{ fontSize: "12px" }}>Keterangan</Typography>
+                    {event.description && (
+                      <Typography sx={{ fontSize: "12px" }}>
+                        Keterangan
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item xs={8}>
-                    <Typography sx={{ fontSize: "12px" }}>
-                      : {event.roomId}
-                    </Typography>
+                    {event.roomId && (
+                      <Typography sx={{ fontSize: "12px" }}>
+                        : {event.roomId}
+                      </Typography>
+                    )}
                     {event.passcode && (
                       <Typography sx={{ fontSize: "12px" }}>
                         : {event.passcode}
@@ -151,9 +169,11 @@ function EventCard(props) {
                     <Typography sx={{ fontSize: "12px" }}>
                       : {event.location}
                     </Typography>
-                    <Typography sx={{ fontSize: "12px" }}>
-                      : {event.description}
-                    </Typography>
+                    {event.description && (
+                      <Typography sx={{ fontSize: "12px" }}>
+                        : {event.description}
+                      </Typography>
+                    )}
                   </Grid>
                 </Grid>
               </Link>

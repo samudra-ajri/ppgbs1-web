@@ -11,7 +11,7 @@ function DecidePosition() {
   const { user, alreadyDecidedPosition } = useSelector((state) => state.auth)
 
   const navigationPath =
-    user?.currentPosition?.type === "GENERUS" ? "/user-completion" : "/"
+    user?.currentPosition?.type === "GENERUS" ? "/events" : "/"
 
   useEffect(() => {
     if (!user || !user?.name) navigate("/login")
