@@ -125,10 +125,8 @@ const GroupPresenceForm = ({ event }) => {
 
   // Update attended event IDs when attenders data changes
   useEffect(() => {
-    console.log(123)
-
-    const newAttendedEventIds = attenders.reduce((acc, { eventId }) => {
-      acc[eventId] = true
+    const newAttendedEventIds = attenders.reduce((acc, { eventId, status }) => {
+      acc[eventId] = status
       return acc
     }, {})
     setAttendedEventIds(newAttendedEventIds)
