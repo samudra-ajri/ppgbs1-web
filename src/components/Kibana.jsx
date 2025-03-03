@@ -7,6 +7,7 @@ function Kibana() {
   const kibanaUrls = {
     "Kehadiran": process.env.REACT_APP_KIBANA_URL_PRESENCES,
     "Log Aktivitas": process.env.REACT_APP_KIBANA_URL_ACTIVITIES,
+    "Asrama Alquran Online": process.env.REACT_APP_KIBANA_URL_ASRAMA,
   }
 
   const handleMenuClick = (selectedMenu) => {
@@ -22,6 +23,14 @@ function Kibana() {
             color='info'
             variant={menu === "Kehadiran" ? "solid" : "outlined"}
             onClick={() => handleMenuClick("Kehadiran")}
+          />
+        </Grid>
+        <Grid item>
+          <Chip
+            label='Asrama Alquran Online'
+            color='info'
+            variant={menu === "Asrama Alquran Online" ? "solid" : "outlined"}
+            onClick={() => handleMenuClick("Asrama Alquran Online")}
           />
         </Grid>
         <Grid item>
