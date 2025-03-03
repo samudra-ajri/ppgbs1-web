@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux"
 import translate from "../utils/translate"
 import {
   createPresence,
-  deletePresence,
   getPresencesByEventId,
+  updatePresence,
 } from "../features/presences/presenceSlice"
 import { toast } from "react-toastify"
 
@@ -138,7 +138,13 @@ const GroupPresenceForm = ({ event }) => {
       if (prev[id]) {
         const updated = { ...prev }
         delete updated[id]
-        dispatch(deletePresence({ eventId: id }))
+        dispatch(
+          updatePresence({
+            eventId: id,
+            userId: user.id,
+            status: "",
+          })
+        )
         return updated
       }
       dispatch(createPresence({ eventId: id }))
