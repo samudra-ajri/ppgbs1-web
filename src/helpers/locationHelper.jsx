@@ -1,4 +1,4 @@
-import locations from '../enums/locations.js'
+import locations from '../enums/locations.jsx'
 
 const listDs = () => {
     const listDs = []

@@ -5,9 +5,9 @@ function Kibana() {
   const [menu, setMenu] = useState("Kehadiran")
 
   const kibanaUrls = {
-    "Kehadiran": process.env.REACT_APP_KIBANA_URL_PRESENCES,
-    "Log Aktivitas": process.env.REACT_APP_KIBANA_URL_ACTIVITIES,
-    "Asrama Alquran Online": process.env.REACT_APP_KIBANA_URL_ASRAMA,
+    "Kehadiran": import.meta.env.VITE_KIBANA_URL_PRESENCES,
+    "Log Aktivitas": import.meta.env.VITE_KIBANA_URL_ACTIVITIES,
+    "Asrama Alquran Online": import.meta.env.VITE_KIBANA_URL_ASRAMA,
   }
 
   const handleMenuClick = (selectedMenu) => {

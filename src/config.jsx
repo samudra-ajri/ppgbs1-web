@@ -1,0 +1,1 @@
+export const kibanaUrl = import.meta.env.VITE_KIBANA_URL

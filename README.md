@@ -15,7 +15,7 @@ $ npm install
 ```
 
 ## Important env settings
-- `REACT_APP_API_URL` : the API server
+- `VITE_API_URL` : the API server
 
 ## Running locally
 
