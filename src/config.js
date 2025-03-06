@@ -1,1 +1,0 @@
-export const kibanaUrl = process.env.REACT_APP_KIBANA_URL
