@@ -53,6 +53,18 @@ const deleteUser = async (token, params) => {
   return response.data
 }
 
+// Delete a user permanently
+const deleteUserPermanently = async (token, params) => {
+  const { userId, positionId } = params
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.delete(API_URL + `/${userId}/positions/${positionId}/hard-delete`, config)
+  return response.data
+}
+
 // Update a user
 const updateUser = async (token, userId, data) => {
   const config = {
@@ -102,6 +114,7 @@ const userService = {
   deleteUser,
   updateUser,
   downloadUsersData,
+  deleteUserPermanently,
 }
 
 export default userService

@@ -74,6 +74,25 @@ export const deleteUser = createAsyncThunk(
   }
 )
 
+// Delete user permanently
+export const deleteUserPermanently = createAsyncThunk(
+  'users/delete-permanently',
+  async (params, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await userService.deleteUserPermanently(token, params)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const moveUser = createAsyncThunk(
   'users/move',
   async ({ userId, data }, thunkAPI) => {
@@ -157,6 +176,19 @@ export const userSlice = createSlice({
         state.isSuccess = true
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(deleteUserPermanently.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.users = state.users.filter(
+          (user) => user.id !== action.payload.userId
+        )
+        state.totalCount = state.totalCount - 1
+      })
+      .addCase(deleteUserPermanently.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

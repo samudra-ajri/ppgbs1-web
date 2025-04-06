@@ -19,7 +19,7 @@ import capitalize from "capitalize"
 import PopDialog from "./PopDialog"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { deleteUser } from "../features/users/userSlice"
+import { deleteUser, deleteUserPermanently } from "../features/users/userSlice"
 import { getUserById } from "../features/persons/personSlice"
 import gradeShortEnum from "../enums/gradeShortEnum"
 
@@ -38,7 +38,7 @@ function PeopleCard(props) {
 
   const onClickRemove = () => {
     dispatch(
-      deleteUser({ userId: user.id, positionId: user.positions[0].positionId })
+      deleteUserPermanently({ userId: user.id, positionId: user.positions[0].positionId })
     )
     setOpenPopup(false)
   }
@@ -123,7 +123,7 @@ function PeopleCard(props) {
         </CardContent>
       </Card>
 
-      <PopDialog title={`Hapus ${user.name}?`} openPopup={openPopup}>
+      <PopDialog title={`Yakin hapus permanen ${user.name}?`} openPopup={openPopup}>
         <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
           {isLoading ? (
             <Grid align='center' sx={{ pt: 1.5 }}>
