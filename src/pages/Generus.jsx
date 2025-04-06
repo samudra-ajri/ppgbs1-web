@@ -70,6 +70,7 @@ function Generus() {
     sex: "",
     grade: "",
     search: "",
+    hasExistPosition: false,
   })
 
   const toggleDrawer = (open) => (event) => {

@@ -10,8 +10,9 @@ import {
   Stack,
   Tooltip,
   Typography,
+  Switch
 } from "@mui/material"
-import DeleteIcon from "@mui/icons-material/CloseOutlined"
+import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
 import moment from "moment"
 import { Link } from "react-router-dom"
 import capitalize from "capitalize"
@@ -29,6 +30,8 @@ function PeopleCard(props) {
   const [openPopup, setOpenPopup] = useState(false)
   const { isLoading } = useSelector((state) => state.users)
 
+  const [isActive, setIsActive] = useState(!user.positions[0].positionDeletedAt)
+
   const onClick = () => {
     setOpenPopup(true)
   }
@@ -44,6 +47,13 @@ function PeopleCard(props) {
     dispatch(getUserById(user.id))
   }
 
+  const handleSwitchChange = (e) => {
+    setIsActive(e.target.checked)
+    dispatch(
+      deleteUser({ userId: user.id, positionId: user.positions[0].positionId })
+    )
+  }
+
   return (
     <>
       <Card variant='outlined' sx={{ mb: 0.5, cursor: "pointer" }}>
@@ -57,7 +67,7 @@ function PeopleCard(props) {
           }}
         >
           <Grid container alignItems='center' justifyContent='space-between'>
-            <Grid item xs={10} md={11}>
+            <Grid item xs={9} md={10}>
               <Link
                 to={link}
                 component={CardActionArea}
@@ -81,6 +91,18 @@ function PeopleCard(props) {
                 </Typography>
               </Link>
             </Grid>
+            <Grid item>
+              <Stack direction='row' spacing={1} alignItems='center'>
+                <Tooltip title='aktifasi user'>
+                  <Switch
+                    checked={isActive}
+                    onChange={handleSwitchChange}
+                    size='small'
+                    color='success'
+                  />
+                </Tooltip>
+              </Stack>
+            </Grid>
             {canDelete && (
               <Grid
                 item
@@ -92,7 +114,7 @@ function PeopleCard(props) {
               >
                 <Tooltip title='hapus user'>
                   <IconButton align='right' onClick={onClick}>
-                    <DeleteIcon fontSize='small' />
+                    <DeleteIcon fontSize='small' color='error' />
                   </IconButton>
                 </Tooltip>
               </Grid>

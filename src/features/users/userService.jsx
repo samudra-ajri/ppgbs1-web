@@ -6,6 +6,7 @@ const API_URL = '/users'
 // Get users list
 const getUsers = async (token, {
   page = 1,
+  isActive = '',
   positionType = '',
   ancestorId = '',
   organizationId = '',
@@ -13,6 +14,7 @@ const getUsers = async (token, {
   grade = '',
   search = '',
   isForgotPassword = '',
+  hasExistPosition= '',
 } = {}) => {
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -20,7 +22,7 @@ const getUsers = async (token, {
 
   const queryParams = new URLSearchParams({
     page,
-    isActive: true,
+    isActive,
     search,
     positionType,
     ancestorId,
@@ -28,6 +30,7 @@ const getUsers = async (token, {
     sex,
     grade,
     isForgotPassword,
+    hasExistPosition,
   }).toString()
 
   let targetUrl = `${API_URL}?${queryParams}`
@@ -63,12 +66,14 @@ const updateUser = async (token, userId, data) => {
 
 // Download users data as Excel
 const downloadUsersData = async (token, {
+  isActive = '',
   positionType = '',
   ancestorId = '',
   organizationId = '',
   sex = '',
   grade = '',
   search = '',
+  hasExistPosition = '',
 }) => {
   const config = {
     headers: {
@@ -78,13 +83,14 @@ const downloadUsersData = async (token, {
   }
 
   const queryParams = new URLSearchParams({
-    isActive: true,
+    isActive,
     search,
     positionType,
     ancestorId,
     organizationId,
     sex,
     grade,
+    hasExistPosition,
   }).toString()
 
   const response = await API.get(`${API_URL}/download?${queryParams}`, config)
