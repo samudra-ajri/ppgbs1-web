@@ -12,7 +12,7 @@ function Kibana() {
   if (user.currentPosition.organizationLevel === 2) presenceUrl = import.meta.env.VITE_KIBANA_URL_PRESENCES_PPK
 
   const kibanaUrls = {
-    "Kehadiran": presenceUrl.replace(/<PPD_NAME>/g, user.currentPosition.organizationName),
+    "Kehadiran": presenceUrl.replace(/<ORGANIZATION_NAME>/g, user.currentPosition.organizationName),
     "Log Aktivitas": import.meta.env.VITE_KIBANA_URL_ACTIVITIES,
     "Asrama Alquran Online": import.meta.env.VITE_KIBANA_URL_ASRAMA,
   }
