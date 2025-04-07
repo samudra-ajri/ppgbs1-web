@@ -1,11 +1,18 @@
 import { useState } from "react"
 import { Chip, Grid } from "@mui/material"
+import { useSelector } from "react-redux"
 
 function Kibana() {
   const [menu, setMenu] = useState("Kehadiran")
+  const { user } = useSelector((state) => state.auth)
+  
+  let presenceUrl = ''
+  if (user.currentPosition.organizationLevel === 0) presenceUrl = import.meta.env.VITE_KIBANA_URL_PRESENCES_PPG
+  if (user.currentPosition.organizationLevel === 1) presenceUrl = import.meta.env.VITE_KIBANA_URL_PRESENCES_PPD
+  if (user.currentPosition.organizationLevel === 2) presenceUrl = import.meta.env.VITE_KIBANA_URL_PRESENCES_PPK
 
   const kibanaUrls = {
-    "Kehadiran": import.meta.env.VITE_KIBANA_URL_PRESENCES,
+    "Kehadiran": presenceUrl.replace(/<PPD_NAME>/g, user.currentPosition.organizationName),
     "Log Aktivitas": import.meta.env.VITE_KIBANA_URL_ACTIVITIES,
     "Asrama Alquran Online": import.meta.env.VITE_KIBANA_URL_ASRAMA,
   }
