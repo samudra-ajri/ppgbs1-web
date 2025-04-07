@@ -17,7 +17,7 @@ import moment from "moment"
 import { Link } from "react-router-dom"
 import capitalize from "capitalize"
 import PopDialog from "./PopDialog"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { deleteUser, deleteUserPermanently } from "../features/users/userSlice"
 import { getUserById } from "../features/persons/personSlice"
@@ -30,7 +30,10 @@ function PeopleCard(props) {
   const [openPopup, setOpenPopup] = useState(false)
   const { isLoading } = useSelector((state) => state.users)
 
-  const [isActive, setIsActive] = useState(!user.positions[0].positionDeletedAt)
+  const [isActive, setIsActive] = useState(!user.positions[0]?.positionDeletedAt)
+  useEffect(() => {
+    setIsActive(!user.positions[0]?.positionDeletedAt)
+  }, [user])
 
   const onClick = () => {
     setOpenPopup(true)
