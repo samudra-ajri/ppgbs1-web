@@ -200,6 +200,19 @@ function Generus() {
       <Grid container spacing={1} pb={3} pl={1}>
         <Grid item>
           <Chip
+            label='Status Aktif'
+            color='info'
+            variant={
+              drawerFilters.hasExistPosition === true ? "solid" : "outlined"
+            }
+            onClick={handleFilterObject("hasExistPosition", drawerFilters.hasExistPosition ? false : true)}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={1} pb={3} pl={1}>
+        <Grid item>
+          <Chip
             label='Laki-laki'
             color='info'
             variant={drawerFilters.sex === 1 ? "solid" : "outlined"}
