@@ -1,19 +1,19 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import personService from './personService'
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import personService from "./personService"
 
-const person = JSON.parse(localStorage.getItem('person'))
+const person = JSON.parse(localStorage.getItem("person"))
 
 const initialState = {
   person: person ? person : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
-  message: '',
+  message: "",
 }
 
 // Get user by id
 export const getUserById = createAsyncThunk(
-  'person/getOne',
+  "person/getOne",
   async (userId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
@@ -27,12 +27,12 @@ export const getUserById = createAsyncThunk(
         error.toString()
       return thunkAPI.rejectWithValue(message)
     }
-  }
+  },
 )
 
 // Update student by admin
 export const updateStudentByAdmin = createAsyncThunk(
-  'person/updateStudentByAdmin',
+  "person/updateStudentByAdmin",
   async ({ userId, payload }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
@@ -46,17 +46,23 @@ export const updateStudentByAdmin = createAsyncThunk(
         error.toString()
       return thunkAPI.rejectWithValue(message)
     }
-  }
+  },
 )
 
 export const personSlice = createSlice({
-  name: 'person',
+  name: "person",
   initialState,
   reducers: {
     reset: (state) => {
       // Reset state and clear localStorage
-      localStorage.removeItem('person')
+      localStorage.removeItem("person")
       return initialState
+    },
+    resetStatus: (state) => {
+      state.isError = false
+      state.isSuccess = false
+      state.isLoading = false
+      state.message = ""
     },
   },
   extraReducers: (builder) => {
@@ -70,12 +76,18 @@ export const personSlice = createSlice({
         state.person = action.payload.data
 
         // Update localStorage when user data is fetched successfully
-        localStorage.setItem('person', JSON.stringify(action.payload.data))
+        localStorage.setItem("person", JSON.stringify(action.payload.data))
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
+      })
+      .addCase(updateStudentByAdmin.pending, (state) => {
+        state.isLoading = true
+        state.isSuccess = false
+        state.isError = false
+        state.message = ""
       })
       .addCase(updateStudentByAdmin.fulfilled, (state, action) => {
         state.isLoading = false
@@ -86,12 +98,17 @@ export const personSlice = createSlice({
           state.person.grade = updatedGrade
 
           // Keep localStorage in sync with updated grade
-          localStorage.setItem('person', JSON.stringify(state.person))
+          localStorage.setItem("person", JSON.stringify(state.person))
         }
+      })
+      .addCase(updateStudentByAdmin.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+        state.isSuccess = false
       })
   },
 })
 
-
-export const { reset } = personSlice.actions
+export const { reset, resetStatus } = personSlice.actions
 export default personSlice.reducer

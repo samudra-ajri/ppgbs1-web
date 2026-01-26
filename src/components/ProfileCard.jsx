@@ -17,7 +17,7 @@ function ProfileCard({ user, isLoading }) {
   const navigate = useNavigate()
 
   const handleEditClick = () => {
-    navigate("/c/edit-grade")
+    navigate("/c/edit-profile-by-admin")
   }
 
   const currentPosition =
@@ -59,7 +59,7 @@ function ProfileCard({ user, isLoading }) {
                   {user?.positions[0]?.type !== "ADMIN"
                     ? (user?.sex === 1 ? "Laki-laki" : "Perempuan") +
                       ", " +
-                      moment().diff(user?.birthdate, 'years') +
+                      moment().diff(user?.birthdate, "years") +
                       " tahun"
                     : ""}
                 </Typography>
