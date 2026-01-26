@@ -18,6 +18,7 @@ import {
 import BackHeader from "../components/BackHeader"
 import gradeEnum from "../enums/gradeEnum"
 import {
+  getUserById,
   resetStatus,
   updateStudentByAdmin,
 } from "../features/persons/personSlice"
@@ -67,20 +68,30 @@ function EditProfileByAdmin() {
   const [ppk, setPPK] = useState(initialPpkData)
 
   useEffect(() => {
-    if (isError) toast.error(message)
-    if (isPersonError) toast.error(personMessage)
-    if (orgError) toast.error(orgMessage)
-    if (positionError) toast.error(positionMessage)
-
-    if (isSuccess) toast.success("Update profile berhasil.")
-    if (isPersonSuccess) toast.success("Berhasil update")
-
     dispatch(getppd())
     dispatch(getppk(user.currentPosition.ancestorOrgId))
     dispatch(reset())
 
     return () => {
       dispatch(resetStatus())
+    }
+  }, [dispatch, user.currentPosition.ancestorOrgId])
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message)
+      dispatch(reset())
+    }
+    if (isPersonError) toast.error(personMessage)
+    if (orgError) toast.error(orgMessage)
+    if (positionError) toast.error(positionMessage)
+
+    if (isSuccess) {
+      toast.success("Update profile berhasil.")
+      dispatch(reset())
+    }
+    if (isPersonSuccess) {
+      dispatch(getUserById(user.id))
     }
   }, [
     dispatch,
@@ -94,7 +105,7 @@ function EditProfileByAdmin() {
     orgMessage,
     positionError,
     positionMessage,
-    user.currentPosition.organizationId,
+    user.id,
   ])
 
   const checkFormChange = (newFormData, newPpk) => {
