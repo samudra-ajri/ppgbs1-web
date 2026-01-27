@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import BackHeader from "../components/BackHeader"
 import {
   Card,
@@ -24,10 +24,14 @@ import { logout } from "../features/auth/authSlice"
 function GroupCompletionByCategory() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const materialIds = queryParams.get("materialIds")
+
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const { sumCompletions, isSuccess, isError, message } = useSelector(
-    (state) => state.completionScores
+    (state) => state.completionScores,
   )
   const { initialData } = useSelector((state) => state.initialData)
 
@@ -46,7 +50,8 @@ function GroupCompletionByCategory() {
         ancestorId: initialData?.groupCompletionFilters?.ancestorId,
         organizationId: initialData?.groupCompletionFilters?.organizationId,
         usersGrade: initialData?.groupCompletionFilters?.usersGrade,
-      })
+        materialIds: materialIds,
+      }),
     )
     dispatch(reset())
   }, [
@@ -58,16 +63,17 @@ function GroupCompletionByCategory() {
     initialData?.groupCompletionFilters?.ancestorId,
     initialData?.groupCompletionFilters?.organizationId,
     initialData?.groupCompletionFilters?.usersGrade,
+    materialIds,
   ])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.completionCount,
-      0
+      0,
     )
     const totalMaterialCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.materialCount,
-      0
+      0,
     )
     const totalPercentage =
       totalCompletionCount && totalMaterialCount
@@ -89,7 +95,8 @@ function GroupCompletionByCategory() {
         ancestorId: initialData?.groupCompletionFilters?.ancestorId,
         organizationId: initialData?.groupCompletionFilters?.organizationId,
         usersGrade: initialData?.groupCompletionFilters?.usersGrade,
-      })
+        materialIds: materialIds,
+      }),
     )
   }
 
@@ -144,7 +151,9 @@ function GroupCompletionByCategory() {
                 key={index}
                 percentage={sumCompletion.percentage}
                 title={sumCompletion.subcategory}
-                link={`/c/group-detail-completion/${category}/${sumCompletion.subcategory}`}
+                link={`/c/group-detail-completion/${category}/${
+                  sumCompletion.subcategory
+                }${materialIds ? `?materialIds=${materialIds}` : ""}`}
               />
             </Grid>
           ))}

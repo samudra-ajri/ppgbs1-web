@@ -10,7 +10,7 @@ import {
 } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import BackHeader from "../components/BackHeader"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import SumCompletionCard from "../components/SumCompletionCard"
@@ -25,12 +25,16 @@ import { logout } from "../features/auth/authSlice"
 function GroupInputCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const materialIds = queryParams.get("materialIds")
+
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const subcategory = pathnames[4]
   const { person } = useSelector((state) => state.person)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
-    (state) => state.completionScores
+    (state) => state.completionScores,
   )
   const {
     isSuccess: isSuccessUpdate,
@@ -56,7 +60,8 @@ function GroupInputCompletion() {
         ancestorId: initialData?.groupCompletionFilters?.ancestorId,
         organizationId: initialData?.groupCompletionFilters?.organizationId,
         usersGrade: initialData?.groupCompletionFilters?.usersGrade,
-      })
+        materialIds: materialIds,
+      }),
     )
     dispatch(reset())
   }, [
@@ -72,16 +77,17 @@ function GroupInputCompletion() {
     initialData?.groupCompletionFilters?.ancestorId,
     initialData?.groupCompletionFilters?.organizationId,
     initialData?.groupCompletionFilters?.usersGrade,
+    materialIds,
   ])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.completionCount,
-      0
+      0,
     )
     const totalMaterialCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.materialCount,
-      0
+      0,
     )
     const totalPercentage =
       totalCompletionCount && totalMaterialCount
@@ -103,7 +109,8 @@ function GroupInputCompletion() {
         ancestorId: initialData?.groupCompletionFilters?.ancestorId,
         organizationId: initialData?.groupCompletionFilters?.organizationId,
         usersGrade: initialData?.groupCompletionFilters?.usersGrade,
-      })
+        materialIds: materialIds,
+      }),
     )
   }
 
@@ -204,7 +211,6 @@ function GroupInputCompletion() {
                     : 12
                 }
                 key={index}
-                onClick={() => onClickInput(sumCompletion)}
               >
                 <SumCompletionCard
                   key={index}
@@ -214,7 +220,7 @@ function GroupInputCompletion() {
                       ? sumCompletion.percentage + "%"
                       : sumCompletion.material
                   }
-                  link='#'
+                  onClick={() => onClickInput(sumCompletion)}
                   structure='material'
                   grade={isQuranHaditsCategory ? null : sumCompletion.grade}
                   backgroundColor={cardColor(sumCompletion).background}

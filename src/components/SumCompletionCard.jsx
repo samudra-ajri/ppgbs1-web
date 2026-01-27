@@ -32,6 +32,8 @@ function SumCompletionCard(props) {
     <Card variant='outlined' sx={{ backgroundColor }}>
       {disabled ? (
         content()
+      ) : props.onClick ? (
+        <CardActionArea onClick={props.onClick}>{content()}</CardActionArea>
       ) : (
         <Link to={props.link} component={CardActionArea}>
           {content()}

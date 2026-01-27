@@ -14,6 +14,8 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  TextField,
+  MenuItem,
 } from "@mui/material"
 import FilterIcon from "@mui/icons-material/FilterListRounded"
 import CloseIcon from "@mui/icons-material/CloseRounded"
@@ -21,6 +23,7 @@ import {
   getGroupSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
+import { getTargetIds } from "../features/materialTargets/materialTargetSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
 import { logout } from "../features/auth/authSlice"
 import { getppd, getppk } from "../features/organizations/organizationSlice"
@@ -32,13 +35,15 @@ function GroupCompletion() {
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
-    (state) => state.completionScores
+    (state) => state.completionScores,
   )
   const { ppd: ppdList, ppk: ppkList } = useSelector(
-    (state) => state.organizations
+    (state) => state.organizations,
   )
   const { initialData } = useSelector((state) => state.initialData)
 
+  const [hasTarget, setHasTarget] = useState(true)
+  const [materialIds, setMaterialIds] = useState([])
 
   const isPPG = user.currentPosition.organizationLevel === 0
   const isPPDOrTeacher =
@@ -54,15 +59,27 @@ function GroupCompletion() {
 
   const [stateDrawer, setStateDrawer] = useState(false)
   const [drawerFilters, setDrawerFilters] = useState({
-    ancestorId: initialData?.groupCompletionFilters?.ancestorId || initialAncestorIdFilter(),
+    ancestorId:
+      initialData?.groupCompletionFilters?.ancestorId ||
+      initialAncestorIdFilter(),
     organizationId: initialData?.groupCompletionFilters?.organizationId,
     usersGrade: initialData?.groupCompletionFilters?.usersGrade || [],
+    targetType: initialData?.groupCompletionFilters?.targetType || "overall",
+    month:
+      initialData?.groupCompletionFilters?.month || new Date().getMonth() + 1,
+    year: initialData?.groupCompletionFilters?.year || new Date().getFullYear(),
   })
   const [filters, setFilters] = useState({
     structure: "category",
-    ancestorId: initialData?.groupCompletionFilters?.ancestorId || initialAncestorIdFilter(),
+    ancestorId:
+      initialData?.groupCompletionFilters?.ancestorId ||
+      initialAncestorIdFilter(),
     organizationId: initialData?.groupCompletionFilters?.organizationId || "",
     usersGrade: initialData?.groupCompletionFilters?.usersGrade || [],
+    targetType: initialData?.groupCompletionFilters?.targetType || "overall",
+    month:
+      initialData?.groupCompletionFilters?.month || new Date().getMonth() + 1,
+    year: initialData?.groupCompletionFilters?.year || new Date().getFullYear(),
   })
 
   useEffect(() => {
@@ -76,7 +93,41 @@ function GroupCompletion() {
   }, [isError, navigate, dispatch, message, ppdList, isPPG])
 
   useEffect(() => {
-    dispatch(getGroupSumCompletions(filters))
+    const fetchData = async () => {
+      if (filters.targetType === "monthly") {
+        const params = {
+          month: filters.month,
+          year: filters.year,
+        }
+        if (filters.usersGrade && filters.usersGrade.length > 0) {
+          params.grade = filters.usersGrade.join(",")
+        }
+
+        try {
+          const result = await dispatch(getTargetIds(params)).unwrap()
+          const ids = result.data
+          if (ids && ids.length > 0) {
+            setHasTarget(true)
+            setMaterialIds(ids)
+            dispatch(getGroupSumCompletions({ ...filters, materialIds: ids }))
+          } else {
+            setHasTarget(false)
+            setMaterialIds([])
+            dispatch(reset())
+          }
+        } catch (err) {
+          console.error(err)
+          setHasTarget(false)
+          setMaterialIds([])
+          dispatch(reset())
+        }
+      } else {
+        setHasTarget(true)
+        setMaterialIds([])
+        dispatch(getGroupSumCompletions(filters))
+      }
+    }
+    fetchData()
   }, [dispatch, filters])
 
   useEffect(() => {
@@ -106,7 +157,9 @@ function GroupCompletion() {
       // multiple grades filter
       if (drawerFilters.usersGrade.includes(value)) {
         // Removes the value if it already exists in the grade array
-        const grades = drawerFilters.usersGrade.filter((grade) => grade !== value)
+        const grades = drawerFilters.usersGrade.filter(
+          (grade) => grade !== value,
+        )
         setDrawerFilters((prevState) => ({
           ...prevState,
           usersGrade: grades,
@@ -142,12 +195,82 @@ function GroupCompletion() {
       </Grid>
 
       <Grid container spacing={1} pb={3} pl={1}>
+        <Grid item>
+          <Chip
+            label='Target Keseluruhan (GGB)'
+            color='info'
+            variant={
+              drawerFilters.targetType === "overall" ? "solid" : "outlined"
+            }
+            onClick={() =>
+              setDrawerFilters((prev) => ({ ...prev, targetType: "overall" }))
+            }
+          />
+        </Grid>
+        <Grid item>
+          <Chip
+            label='Target Bulanan'
+            color='info'
+            variant={
+              drawerFilters.targetType === "monthly" ? "solid" : "outlined"
+            }
+            onClick={() =>
+              setDrawerFilters((prev) => ({ ...prev, targetType: "monthly" }))
+            }
+          />
+        </Grid>
+
+        {drawerFilters.targetType === "monthly" && (
+          <Grid container item spacing={2} mt={-1}>
+            <Grid item xs={5} sm={2}>
+              <TextField
+                select
+                fullWidth
+                size='small'
+                label='Bulan'
+                value={drawerFilters.month}
+                onChange={(e) =>
+                  setDrawerFilters((prev) => ({
+                    ...prev,
+                    month: e.target.value,
+                  }))
+                }
+              >
+                {Array.from(Array(12)).map((_, i) => (
+                  <MenuItem key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={5} sm={2}>
+              <TextField
+                fullWidth
+                size='small'
+                label='Tahun'
+                type='number'
+                value={drawerFilters.year}
+                onChange={(e) =>
+                  setDrawerFilters((prev) => ({
+                    ...prev,
+                    year: e.target.value,
+                  }))
+                }
+              />
+            </Grid>
+          </Grid>
+        )}
+      </Grid>
+
+      <Grid container spacing={1} pb={3} pl={1}>
         {Object.keys(gradeEnum).map((key) => (
           <Grid item key={key}>
             <Chip
               label={gradeEnum[key]}
               color='info'
-              variant={drawerFilters.usersGrade.includes(key) ? "solid" : "outlined"}
+              variant={
+                drawerFilters.usersGrade.includes(key) ? "solid" : "outlined"
+              }
               onClick={handleFilterObject("usersGrade", key)}
             />
           </Grid>
@@ -244,7 +367,11 @@ function GroupCompletion() {
         </Button>
       </Grid>
 
-      {!isSuccess ? (
+      {!hasTarget ? (
+        <Typography align='center' sx={{ mt: 5 }}>
+          Target bulan ini belum dibuat.
+        </Typography>
+      ) : !isSuccess ? (
         <Grid pb={10}>
           <Card align='center'>
             <CardContent>
@@ -260,7 +387,11 @@ function GroupCompletion() {
                 key={index}
                 percentage={sumCompletion.percentage}
                 title={sumCompletion.category}
-                link={`/c/group-completion/${sumCompletion.category}`}
+                link={`/c/group-completion/${sumCompletion.category}${
+                  materialIds.length > 0
+                    ? `?materialIds=${materialIds.join(",")}`
+                    : ""
+                }`}
               />
             </Grid>
           ))}
