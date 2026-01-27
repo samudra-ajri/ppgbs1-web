@@ -1,11 +1,24 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { Card, CardContent, CircularProgress, Grid, Typography } from "@mui/material"
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  Typography,
+  Tabs,
+  Tab,
+  Box,
+  TextField,
+  MenuItem,
+  Button,
+} from "@mui/material"
 import {
   getSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
+import { getTargetIds } from "../features/materialTargets/materialTargetSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
 import { logout } from "../features/auth/authSlice"
 
@@ -14,19 +27,108 @@ function UserCompletion() {
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
-    (state) => state.completionScores
+    (state) => state.completionScores,
   )
+  const { targetIds } = useSelector((state) => state.materialTargets)
+
+  const [value, setValue] = useState(0)
+  const [month, setMonth] = useState(new Date().getMonth() + 1)
+  const [year, setYear] = useState(new Date().getFullYear())
+  const [hasTarget, setHasTarget] = useState(true)
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
+
+  const handleView = () => {
+    if (user?.grade) {
+      setHasTarget(true)
+      dispatch(reset())
+      dispatch(getTargetIds({ month, year, grade: user.grade }))
+        .unwrap()
+        .then((payload) => {
+          const ids = payload.data
+          if (ids && ids.length > 0) {
+            dispatch(
+              getSumCompletions({
+                structure: "category",
+                userId: user.id,
+                materialIds: ids,
+              }),
+            )
+          } else {
+            setHasTarget(false)
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to fetch target IDs", err)
+        })
+    }
+  }
 
   useEffect(() => {
     if (!user) navigate("/login")
     if (isError && message === "Missing authentication.") {
       dispatch(logout())
       navigate("/login")
-      return
     }
-    dispatch(getSumCompletions({ structure: "category", userId: user.id }))
-    dispatch(reset())
-  }, [user, isError, navigate, dispatch, message])
+  }, [user, isError, message, navigate, dispatch])
+
+  useEffect(() => {
+    if (!user) return
+
+    if (value === 1) {
+      dispatch(reset())
+      dispatch(getSumCompletions({ structure: "category", userId: user.id }))
+    } else if (value === 0) {
+      handleView()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, dispatch, user])
+
+  const renderResults = () => {
+    if (value === 0 && !hasTarget) {
+      return (
+        <Typography align='center' sx={{ mt: 5 }}>
+          Target bulan ini belum dibuat.
+        </Typography>
+      )
+    }
+
+    return (
+      <>
+        {!isSuccess ? (
+          <Grid pb={10}>
+            <Card align='center'>
+              <CardContent>
+                <CircularProgress size='3rem' />
+              </CardContent>
+            </Card>
+          </Grid>
+        ) : (
+          <Grid container pb={10} spacing={2}>
+            {sumCompletions &&
+              sumCompletions.map((sumCompletion, index) => {
+                const link =
+                  value === 0 && targetIds?.length > 0
+                    ? `/c/user-completion/${sumCompletion.category}?materialIds=${targetIds.join(",")}`
+                    : `/c/user-completion/${sumCompletion.category}`
+                return (
+                  <Grid item xs={6} key={index}>
+                    <SumCompletionCard
+                      key={index}
+                      percentage={sumCompletion.percentage}
+                      title={sumCompletion.category}
+                      link={link}
+                    />
+                  </Grid>
+                )
+              })}
+          </Grid>
+        )}
+      </>
+    )
+  }
 
   return (
     <>
@@ -34,28 +136,106 @@ function UserCompletion() {
         Capaian Materi
       </Typography>
 
-      {!isSuccess ? (
-        <Grid pb={10}>
-          <Card align='center'>
-            <CardContent>
-              <CircularProgress size='3rem' />
-            </CardContent>
-          </Card>
-        </Grid>
-      ) : (
-        <Grid container pb={10} spacing={2}>
-          {sumCompletions.map((sumCompletion, index) => (
-            <Grid item xs={6} key={index}>
-              <SumCompletionCard
-                key={index}
-                percentage={sumCompletion.percentage}
-                title={sumCompletion.category}
-                link={`/c/user-completion/${sumCompletion.category}`}
+      <Box sx={{ mb: 3 }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          centered
+          TabIndicatorProps={{ sx: { display: "none" } }}
+          sx={{
+            minHeight: "unset",
+            "& .MuiTabs-flexContainer": {
+              gap: 2,
+            },
+          }}
+        >
+          <Tab
+            label='Target Bulanan'
+            sx={{
+              textTransform: "none",
+              borderRadius: "50px",
+              border: "1px solid",
+              borderColor: "primary.main",
+              minHeight: "unset",
+              padding: "6px 12px",
+              "&.Mui-selected": {
+                bgcolor: "primary.main",
+                color: "white",
+              },
+              "&:not(.Mui-selected)": {
+                color: "primary.main",
+              },
+            }}
+          />
+          <Tab
+            label='Target Keseluruhan (GGB)'
+            sx={{
+              textTransform: "none",
+              borderRadius: "50px",
+              border: "1px solid",
+              borderColor: "primary.main",
+              minHeight: "unset",
+              padding: "6px 12px",
+              "&.Mui-selected": {
+                bgcolor: "primary.main",
+                color: "white",
+              },
+              "&:not(.Mui-selected)": {
+                color: "primary.main",
+              },
+            }}
+          />
+        </Tabs>
+      </Box>
+
+      {value === 0 && (
+        <Box>
+          <Grid container spacing={2} alignItems='center' sx={{ mb: 3 }}>
+            <Grid item xs={4}>
+              <TextField
+                select
+                label='Bulan'
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+                fullWidth
+                size='small'
+                variant='outlined'
+              >
+                {Array.from(Array(12)).map((_, i) => (
+                  <MenuItem key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                label='Tahun'
+                type='number'
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                fullWidth
+                size='small'
+                variant='outlined'
               />
             </Grid>
-          ))}
-        </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant='contained'
+                color='primary'
+                fullWidth
+                size='medium'
+                onClick={handleView}
+              >
+                Lihat
+              </Button>
+            </Grid>
+          </Grid>
+          {renderResults()}
+        </Box>
       )}
+
+      {value === 1 && renderResults()}
     </>
   )
 }

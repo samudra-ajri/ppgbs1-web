@@ -1,19 +1,19 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import updateCompletionService from './updateCompletionService'
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import updateCompletionService from "./updateCompletionService"
 
 const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
-  message: '',
+  message: "",
 }
 
 export const createCompletion = createAsyncThunk(
-  'updateCompletion/create',
-  async (data, thunkAPI) => {
+  "updateCompletion/create",
+  async ({ data, params }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await updateCompletionService.createCompletion(data, token)
+      return await updateCompletionService.createCompletion(data, token, params)
     } catch (error) {
       const message =
         (error.response &&
@@ -23,15 +23,19 @@ export const createCompletion = createAsyncThunk(
         error.toString()
       return thunkAPI.rejectWithValue(message)
     }
-  }
+  },
 )
 
 export const createCompletionByAdmin = createAsyncThunk(
-  'updateCompletion/create-by-admin',
+  "updateCompletion/create-by-admin",
   async ({ userId, materialIds }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await updateCompletionService.createCompletionByAdmin(userId, { materialIds }, token)
+      return await updateCompletionService.createCompletionByAdmin(
+        userId,
+        { materialIds },
+        token,
+      )
     } catch (error) {
       const message =
         (error.response &&
@@ -41,11 +45,11 @@ export const createCompletionByAdmin = createAsyncThunk(
         error.toString()
       return thunkAPI.rejectWithValue(message)
     }
-  }
+  },
 )
 
 export const deleteCompletion = createAsyncThunk(
-  'updateCompletion/delete',
+  "updateCompletion/delete",
   async (data, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
@@ -59,15 +63,19 @@ export const deleteCompletion = createAsyncThunk(
         error.toString()
       return thunkAPI.rejectWithValue(message)
     }
-  }
+  },
 )
 
 export const deleteCompletionByAdmin = createAsyncThunk(
-  'updateCompletion/delete-by-admin',
+  "updateCompletion/delete-by-admin",
   async ({ userId, materialIds }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
-      return await updateCompletionService.deleteCompletionByAdmin(userId, { materialIds }, token)
+      return await updateCompletionService.deleteCompletionByAdmin(
+        userId,
+        { materialIds },
+        token,
+      )
     } catch (error) {
       const message =
         (error.response &&
@@ -77,19 +85,19 @@ export const deleteCompletionByAdmin = createAsyncThunk(
         error.toString()
       return thunkAPI.rejectWithValue(message)
     }
-  }
+  },
 )
 
 export const updateCompletionSlice = createSlice({
-  name: 'updateCompletion',
+  name: "updateCompletion",
   initialState,
   reducers: {
     reset: (state) => {
       state.isLoading = false
       state.isSuccess = false
       state.isError = false
-      state.message = ''
-    }
+      state.message = ""
+    },
   },
   extraReducers: (builder) => {
     builder

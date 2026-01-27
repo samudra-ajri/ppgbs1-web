@@ -1,16 +1,20 @@
-import API from '../../api'
+import API from "../../api"
 
-const API_URL = 'completions/'
+const API_URL = "completions/"
 
 // Get all users completions scores
 const getAllCompletionsScores = async (filters, token) => {
-  const { ds = '', klp = '', field = '', category = '' } = filters
+  const { ds = "", klp = "", field = "", category = "" } = filters
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + `scores/all?ds=${ds}&klp=${klp}&field=${field}&category=${category}`, config)
+  const response = await API.get(
+    API_URL +
+      `scores/all?ds=${ds}&klp=${klp}&field=${field}&category=${category}`,
+    config,
+  )
   return response.data
 }
 
@@ -21,32 +25,59 @@ const getCompletionsScoresByUserId = async (token, userId) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + 'user/' + userId + '/scores', config)
+  const response = await API.get(API_URL + "user/" + userId + "/scores", config)
   return response.data
 }
 
 // Get sum user completions
 const getSumCompletions = async (token, filters) => {
-  const { structure, userId, grade, subject, category, subcategory } = filters
+  const {
+    structure,
+    userId,
+    grade,
+    subject,
+    category,
+    subcategory,
+    materialIds,
+  } = filters
 
   const queryFilters = []
   if (grade) queryFilters.push(`grade=${grade}`)
   if (subject) queryFilters.push(`subject=${subject}`)
   if (category) queryFilters.push(`category=${category}`)
   if (subcategory) queryFilters.push(`subcategory=${subcategory}`)
+  if (materialIds) {
+    if (Array.isArray(materialIds)) {
+      queryFilters.push(`materialIds=${materialIds.join(",")}`)
+    } else {
+      queryFilters.push(`materialIds=${materialIds}`)
+    }
+  }
 
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + `sum/${structure}/users/${userId}?${queryFilters.join('&')}`, config)
+  const response = await API.get(
+    API_URL + `sum/${structure}/users/${userId}?${queryFilters.join("&")}`,
+    config,
+  )
   return response.data
 }
 
 // Get group sum completions
 const getGroupSumCompletions = async (token, filters) => {
-  const { structure, grade, subject, category, subcategory, ancestorId, organizationId, usersGrade } = filters
+  const {
+    structure,
+    grade,
+    subject,
+    category,
+    subcategory,
+    ancestorId,
+    organizationId,
+    usersGrade,
+  } = filters
 
   const queryFilters = []
   if (grade) queryFilters.push(`grade=${grade}`)
@@ -62,7 +93,10 @@ const getGroupSumCompletions = async (token, filters) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.get(API_URL + `sum/${structure}/users?${queryFilters.join('&')}`, config)
+  const response = await API.get(
+    API_URL + `sum/${structure}/users?${queryFilters.join("&")}`,
+    config,
+  )
   return response.data
 }
 
@@ -72,7 +106,7 @@ const downloadCompletionData = async (userId, token) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    responseType: 'blob',
+    responseType: "blob",
   }
   const response = await API.get(`${API_URL}/users/${userId}/download`, config)
   return response.data

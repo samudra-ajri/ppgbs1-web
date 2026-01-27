@@ -11,7 +11,7 @@ import {
 } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import BackHeader from "../components/BackHeader"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import SumCompletionCard from "../components/SumCompletionCard"
@@ -34,6 +34,8 @@ import { logout } from "../features/auth/authSlice"
 function InputCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const materialIds = searchParams.get("materialIds")
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const subcategory = pathnames[4]
@@ -44,7 +46,7 @@ function InputCompletion() {
 
   const { initialData } = useSelector((state) => state.initialData)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
-    (state) => state.completionScores
+    (state) => state.completionScores,
   )
   const {
     isSuccess: isSuccessUpdate,
@@ -70,7 +72,8 @@ function InputCompletion() {
         userId: user.id,
         subcategory: subcategory,
         grade: filterGrade === "initial" ? null : filterGrade,
-      })
+        materialIds,
+      }),
     )
     dispatch(reset())
     dispatch(resetCompletionUpdate())
@@ -102,11 +105,11 @@ function InputCompletion() {
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.completionCount,
-      0
+      0,
     )
     const totalMaterialCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.materialCount,
-      0
+      0,
     )
     const totalPercentage =
       totalCompletionCount && totalMaterialCount
@@ -124,7 +127,8 @@ function InputCompletion() {
         userId: user.id,
         subcategory: subcategory,
         grade: grade,
-      })
+        materialIds,
+      }),
     )
   }
 
@@ -171,13 +175,18 @@ function InputCompletion() {
       .map((key) => parseInt(key))
     if (newCompletions.length > 0) {
       if (user.currentPosition?.type === "GENERUS") {
-        dispatch(createCompletion({ materialIds: newCompletions }))
+        dispatch(
+          createCompletion({
+            data: { materialIds: newCompletions },
+            params: { materialIds },
+          }),
+        )
       } else {
         dispatch(
           createCompletionByAdmin({
             userId: user.id,
             materialIds: newCompletions,
-          })
+          }),
         )
       }
     }
@@ -193,7 +202,7 @@ function InputCompletion() {
           deleteCompletionByAdmin({
             userId: user.id,
             materialIds: removeCompletions,
-          })
+          }),
         )
       }
   }
@@ -245,26 +254,28 @@ function InputCompletion() {
           {isQuranHaditsCategory ? (
             <Typography>Halaman {category}:</Typography>
           ) : (
-            <TextField
-              name='grade'
-              label='Filter Materi Kelas'
-              value={filterGrade}
-              onChange={onChangeFilter}
-              variant='outlined'
-              align='left'
-              size='small'
-              select
-              fullWidth
-            >
-              <MenuItem key='initial' value='initial'>
-                Semua Kelas
-              </MenuItem>
-              {Object.keys(gradeEnum).map((option) => (
-                <MenuItem key={option} value={option}>
-                  {gradeEnum[option]}
+            !materialIds && (
+              <TextField
+                name='grade'
+                label='Filter Materi Kelas'
+                value={filterGrade}
+                onChange={onChangeFilter}
+                variant='outlined'
+                align='left'
+                size='small'
+                select
+                fullWidth
+              >
+                <MenuItem key='initial' value='initial'>
+                  Semua Kelas
                 </MenuItem>
-              ))}
-            </TextField>
+                {Object.keys(gradeEnum).map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {gradeEnum[option]}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )
           )}
 
           <Grid
@@ -329,7 +340,7 @@ function InputCompletion() {
                   key={index}
                   percentage={sumCompletion.percentage}
                   title={sumCompletion.material}
-                  link='#'
+                  disabled={true}
                   structure='material'
                   grade={isQuranHaditsCategory ? null : sumCompletion.grade}
                   backgroundColor={cardColor(sumCompletion).background}

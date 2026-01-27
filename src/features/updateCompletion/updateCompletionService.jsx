@@ -1,13 +1,14 @@
-import API from '../../api'
+import API from "../../api"
 
-const API_URL = 'completions/'
+const API_URL = "completions/"
 
 // Create completion
-const createCompletion = async (data, token) => {
+const createCompletion = async (data, token, params) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    params,
   }
   const response = await API.post(API_URL, data, config)
   return response.data
@@ -20,7 +21,11 @@ const createCompletionByAdmin = async (userId, data, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.post(API_URL + `users/${userId}/create-by-admin`, data, config)
+  const response = await API.post(
+    API_URL + `users/${userId}/create-by-admin`,
+    data,
+    config,
+  )
   return response.data
 }
 
@@ -32,7 +37,10 @@ const deleteCompletion = async (data, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.delete(API_URL + '?materialIds=' + materialIds.join(','), config)
+  const response = await API.delete(
+    API_URL + "?materialIds=" + materialIds.join(","),
+    config,
+  )
   return response.data
 }
 
@@ -44,10 +52,14 @@ const deleteCompletionByAdmin = async (userId, data, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  const response = await API.delete(API_URL + `users/${userId}/delete-by-admin?materialIds=` + materialIds.join(','), config)
+  const response = await API.delete(
+    API_URL +
+      `users/${userId}/delete-by-admin?materialIds=` +
+      materialIds.join(","),
+    config,
+  )
   return response.data
 }
-
 
 const authService = {
   createCompletion,

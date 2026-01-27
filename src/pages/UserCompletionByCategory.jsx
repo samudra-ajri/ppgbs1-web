@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import BackHeader from "../components/BackHeader"
 import {
   Card,
@@ -24,11 +24,13 @@ import { logout } from "../features/auth/authSlice"
 function UserCompletionByCategory() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const materialIds = searchParams.get("materialIds")
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const { user } = useSelector((state) => state.auth)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
-    (state) => state.completionScores
+    (state) => state.completionScores,
   )
 
   const [filterGrade, setFilterGrade] = useState("initial")
@@ -45,19 +47,20 @@ function UserCompletionByCategory() {
         structure: "subcategory",
         userId: user.id,
         category: category,
-      })
+        materialIds,
+      }),
     )
     dispatch(reset())
-  }, [user, navigate, dispatch, category, isError, message])
+  }, [user, navigate, dispatch, category, isError, message, materialIds])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.completionCount,
-      0
+      0,
     )
     const totalMaterialCount = sumCompletions?.reduce(
       (acc, curr) => acc + curr.materialCount,
-      0
+      0,
     )
     const totalPercentage =
       totalCompletionCount && totalMaterialCount
@@ -75,7 +78,8 @@ function UserCompletionByCategory() {
         userId: user.id,
         category: category,
         grade: grade,
-      })
+        materialIds,
+      }),
     )
   }
 
@@ -93,7 +97,7 @@ function UserCompletionByCategory() {
         />
       </Box>
 
-      {isQuranHaditsCategory && (
+      {isQuranHaditsCategory && !materialIds && (
         <TextField
           name='grade'
           label='Filter Materi Kelas'
@@ -124,16 +128,21 @@ function UserCompletionByCategory() {
         </Card>
       ) : (
         <Grid container pb={10} spacing={2} mt={1}>
-          {sumCompletions.map((sumCompletion, index) => (
-            <Grid item xs={6} key={index}>
-              <SumCompletionCard
-                key={index}
-                percentage={sumCompletion.percentage}
-                title={sumCompletion.subcategory}
-                link={`/c/detail-completion/${category}/${sumCompletion.subcategory}`}
-              />
-            </Grid>
-          ))}
+          {sumCompletions.map((sumCompletion, index) => {
+            const link = materialIds
+              ? `/c/detail-completion/${category}/${sumCompletion.subcategory}?materialIds=${materialIds}`
+              : `/c/detail-completion/${category}/${sumCompletion.subcategory}`
+            return (
+              <Grid item xs={6} key={index}>
+                <SumCompletionCard
+                  key={index}
+                  percentage={sumCompletion.percentage}
+                  title={sumCompletion.subcategory}
+                  link={link}
+                />
+              </Grid>
+            )
+          })}
           <Grid item xs={12}>
             {sumCompletions?.length === 0 && (
               <Typography align='center' variant='body2'>
