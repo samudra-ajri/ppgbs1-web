@@ -16,6 +16,7 @@ import {
   Typography,
   TextField,
   MenuItem,
+  Box,
 } from "@mui/material"
 import FilterIcon from "@mui/icons-material/FilterListRounded"
 import CloseIcon from "@mui/icons-material/CloseRounded"
@@ -25,6 +26,7 @@ import {
 } from "../features/completionScores/completionScoreSlice"
 import { getTargetIds } from "../features/materialTargets/materialTargetSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
+import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import { logout } from "../features/auth/authSlice"
 import { getppd, getppk } from "../features/organizations/organizationSlice"
 import gradeEnum from "../enums/gradeEnum"
@@ -41,6 +43,21 @@ function GroupCompletion() {
     (state) => state.organizations,
   )
   const { initialData } = useSelector((state) => state.initialData)
+
+  const totalCompletionCount = sumCompletions?.reduce(
+    (acc, curr) => acc + (curr.completionCount || 0),
+    0,
+  )
+  const totalMaterialCount = sumCompletions?.reduce(
+    (acc, curr) =>
+      acc + (curr.materialCount || 0) * (curr.materialsMultiplier || 0),
+    0,
+  )
+
+  const totalPercentage =
+    totalMaterialCount > 0
+      ? (totalCompletionCount / totalMaterialCount) * 100
+      : 0
 
   const [hasTarget, setHasTarget] = useState(true)
   const [materialIds, setMaterialIds] = useState([])
@@ -380,22 +397,41 @@ function GroupCompletion() {
           </Card>
         </Grid>
       ) : (
-        <Grid container pb={10} pt={3} spacing={2}>
-          {sumCompletions.map((sumCompletion, index) => (
-            <Grid item xs={6} key={index}>
-              <SumCompletionCard
-                key={index}
-                percentage={sumCompletion.percentage}
-                title={sumCompletion.category}
-                link={`/c/group-completion/${sumCompletion.category}${
-                  materialIds.length > 0
-                    ? `?materialIds=${materialIds.join(",")}`
-                    : ""
-                }`}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        <Box>
+          {sumCompletions?.length > 0 && (
+            <Box sx={{ mb: 3, mt: 3 }}>
+              <Typography
+                variant='body2'
+                style={{ fontWeight: "bold" }}
+                gutterBottom
+              >
+                Total
+              </Typography>
+              <LinearProgressWithLabel value={totalPercentage} />
+            </Box>
+          )}
+          <Grid
+            container
+            pb={10}
+            pt={sumCompletions?.length > 0 ? 0 : 3}
+            spacing={2}
+          >
+            {sumCompletions.map((sumCompletion, index) => (
+              <Grid item xs={6} key={index}>
+                <SumCompletionCard
+                  key={index}
+                  percentage={sumCompletion.percentage}
+                  title={sumCompletion.category}
+                  link={`/c/group-completion/${sumCompletion.category}${
+                    materialIds.length > 0
+                      ? `?materialIds=${materialIds.join(",")}`
+                      : ""
+                  }`}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       )}
 
       <Drawer anchor='left' open={stateDrawer} onClose={toggleDrawer(false)}>
