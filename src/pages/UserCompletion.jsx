@@ -20,6 +20,7 @@ import {
 } from "../features/completionScores/completionScoreSlice"
 import { getTargetIds } from "../features/materialTargets/materialTargetSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
+import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import { logout } from "../features/auth/authSlice"
 
 function UserCompletion() {
@@ -30,6 +31,20 @@ function UserCompletion() {
     (state) => state.completionScores,
   )
   const { targetIds } = useSelector((state) => state.materialTargets)
+
+  const totalCompletionCount = sumCompletions?.reduce(
+    (acc, curr) => acc + (curr.completionCount || 0),
+    0,
+  )
+  const totalMaterialCount = sumCompletions?.reduce(
+    (acc, curr) => acc + (curr.materialCount || 0),
+    0,
+  )
+
+  const totalPercentage =
+    totalMaterialCount > 0
+      ? (totalCompletionCount / totalMaterialCount) * 100
+      : 0
 
   const [value, setValue] = useState(0)
   const [month, setMonth] = useState(new Date().getMonth() + 1)
@@ -106,25 +121,39 @@ function UserCompletion() {
             </Card>
           </Grid>
         ) : (
-          <Grid container pb={10} spacing={2}>
-            {sumCompletions &&
-              sumCompletions.map((sumCompletion, index) => {
-                const link =
-                  value === 0 && targetIds?.length > 0
-                    ? `/c/user-completion/${sumCompletion.category}?materialIds=${targetIds.join(",")}`
-                    : `/c/user-completion/${sumCompletion.category}`
-                return (
-                  <Grid item xs={6} key={index}>
-                    <SumCompletionCard
-                      key={index}
-                      percentage={sumCompletion.percentage}
-                      title={sumCompletion.category}
-                      link={link}
-                    />
-                  </Grid>
-                )
-              })}
-          </Grid>
+          <Box>
+            {sumCompletions?.length > 0 && (
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  variant='body2'
+                  style={{ fontWeight: "bold" }}
+                  gutterBottom
+                >
+                  Total
+                </Typography>
+                <LinearProgressWithLabel value={totalPercentage} />
+              </Box>
+            )}
+            <Grid container pb={10} spacing={2}>
+              {sumCompletions &&
+                sumCompletions.map((sumCompletion, index) => {
+                  const link =
+                    value === 0 && targetIds?.length > 0
+                      ? `/c/user-completion/${sumCompletion.category}?materialIds=${targetIds.join(",")}`
+                      : `/c/user-completion/${sumCompletion.category}`
+                  return (
+                    <Grid item xs={6} key={index}>
+                      <SumCompletionCard
+                        key={index}
+                        percentage={sumCompletion.percentage}
+                        title={sumCompletion.category}
+                        link={link}
+                      />
+                    </Grid>
+                  )
+                })}
+            </Grid>
+          </Box>
         )}
       </>
     )
