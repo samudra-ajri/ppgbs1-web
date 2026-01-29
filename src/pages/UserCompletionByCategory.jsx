@@ -25,7 +25,9 @@ function UserCompletionByCategory() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const materialIds = searchParams.get("materialIds")
+  const targetMaterialMonth = searchParams.get("targetMaterialMonth")
+  const targetMaterialYear = searchParams.get("targetMaterialYear")
+  const targetGrade = searchParams.get("targetGrade")
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const { user } = useSelector((state) => state.auth)
@@ -47,11 +49,23 @@ function UserCompletionByCategory() {
         structure: "subcategory",
         userId: user.id,
         category: category,
-        materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
     dispatch(reset())
-  }, [user, navigate, dispatch, category, isError, message, materialIds])
+  }, [
+    user,
+    navigate,
+    dispatch,
+    category,
+    isError,
+    message,
+    targetMaterialMonth,
+    targetMaterialYear,
+    targetGrade,
+  ])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
@@ -78,7 +92,9 @@ function UserCompletionByCategory() {
         userId: user.id,
         category: category,
         grade: grade,
-        materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
   }
@@ -97,7 +113,7 @@ function UserCompletionByCategory() {
         />
       </Box>
 
-      {isQuranHaditsCategory && !materialIds && (
+      {isQuranHaditsCategory && !targetMaterialMonth && (
         <TextField
           name='grade'
           label='Filter Materi Kelas'
@@ -129,8 +145,8 @@ function UserCompletionByCategory() {
       ) : (
         <Grid container pb={10} spacing={2} mt={1}>
           {sumCompletions.map((sumCompletion, index) => {
-            const link = materialIds
-              ? `/c/detail-completion/${category}/${sumCompletion.subcategory}?materialIds=${materialIds}`
+            const link = targetMaterialMonth
+              ? `/c/detail-completion/${category}/${sumCompletion.subcategory}?targetMaterialMonth=${targetMaterialMonth}&targetMaterialYear=${targetMaterialYear}&targetGrade=${targetGrade}`
               : `/c/detail-completion/${category}/${sumCompletion.subcategory}`
             return (
               <Grid item xs={6} key={index}>

@@ -39,6 +39,9 @@ const getSumCompletions = async (token, filters) => {
     category,
     subcategory,
     materialIds,
+    targetMaterialMonth,
+    targetMaterialYear,
+    targetGrade,
   } = filters
 
   const queryFilters = []
@@ -46,6 +49,11 @@ const getSumCompletions = async (token, filters) => {
   if (subject) queryFilters.push(`subject=${subject}`)
   if (category) queryFilters.push(`category=${category}`)
   if (subcategory) queryFilters.push(`subcategory=${subcategory}`)
+  if (targetMaterialMonth)
+    queryFilters.push(`targetMaterialMonth=${targetMaterialMonth}`)
+  if (targetMaterialYear)
+    queryFilters.push(`targetMaterialYear=${targetMaterialYear}`)
+  if (targetGrade) queryFilters.push(`targetGrade=${targetGrade}`)
   if (materialIds) {
     if (Array.isArray(materialIds)) {
       queryFilters.push(`materialIds=${materialIds.join(",")}`)

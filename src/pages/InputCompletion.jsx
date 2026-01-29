@@ -35,7 +35,9 @@ function InputCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const materialIds = searchParams.get("materialIds")
+  const targetMaterialMonth = searchParams.get("targetMaterialMonth")
+  const targetMaterialYear = searchParams.get("targetMaterialYear")
+  const targetGrade = searchParams.get("targetGrade")
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const subcategory = pathnames[4]
@@ -72,7 +74,9 @@ function InputCompletion() {
         userId: user.id,
         subcategory: subcategory,
         grade: filterGrade === "initial" ? null : filterGrade,
-        materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
     dispatch(reset())
@@ -88,6 +92,9 @@ function InputCompletion() {
     isError,
     message,
     filterGrade,
+    targetMaterialMonth,
+    targetMaterialYear,
+    targetGrade,
   ])
 
   useEffect(() => {
@@ -127,7 +134,9 @@ function InputCompletion() {
         userId: user.id,
         subcategory: subcategory,
         grade: grade,
-        materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
   }
@@ -178,7 +187,7 @@ function InputCompletion() {
         dispatch(
           createCompletion({
             data: { materialIds: newCompletions },
-            params: { materialIds },
+            params: { targetMaterialMonth, targetMaterialYear, targetGrade },
           }),
         )
       } else {
@@ -254,7 +263,7 @@ function InputCompletion() {
           {isQuranHaditsCategory ? (
             <Typography>Halaman {category}:</Typography>
           ) : (
-            !materialIds && (
+            !targetMaterialMonth && (
               <TextField
                 name='grade'
                 label='Filter Materi Kelas'
