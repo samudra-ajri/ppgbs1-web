@@ -86,6 +86,9 @@ const getGroupSumCompletions = async (token, filters) => {
     organizationId,
     usersGrade,
     materialIds,
+    targetMaterialMonth,
+    targetMaterialYear,
+    targetGrade,
   } = filters
 
   const queryFilters = []
@@ -96,6 +99,11 @@ const getGroupSumCompletions = async (token, filters) => {
   if (ancestorId) queryFilters.push(`ancestorId=${ancestorId}`)
   if (organizationId) queryFilters.push(`organizationId=${organizationId}`)
   if (usersGrade) queryFilters.push(`usersGrade=${usersGrade}`)
+  if (targetMaterialMonth)
+    queryFilters.push(`targetMaterialMonth=${targetMaterialMonth}`)
+  if (targetMaterialYear)
+    queryFilters.push(`targetMaterialYear=${targetMaterialYear}`)
+  if (targetGrade) queryFilters.push(`targetGrade=${targetGrade}`)
   if (materialIds) {
     if (Array.isArray(materialIds)) {
       queryFilters.push(`materialIds=${materialIds.join(",")}`)

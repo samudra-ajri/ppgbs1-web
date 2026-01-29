@@ -27,7 +27,9 @@ function GroupInputCompletion() {
   const navigate = useNavigate()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
-  const materialIds = queryParams.get("materialIds")
+  const targetMaterialMonth = queryParams.get("targetMaterialMonth")
+  const targetMaterialYear = queryParams.get("targetMaterialYear")
+  const targetGrade = queryParams.get("targetGrade")
 
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
@@ -60,7 +62,9 @@ function GroupInputCompletion() {
         ancestorId: initialData?.groupCompletionFilters?.ancestorId,
         organizationId: initialData?.groupCompletionFilters?.organizationId,
         usersGrade: initialData?.groupCompletionFilters?.usersGrade,
-        materialIds: materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
     dispatch(reset())
@@ -77,7 +81,9 @@ function GroupInputCompletion() {
     initialData?.groupCompletionFilters?.ancestorId,
     initialData?.groupCompletionFilters?.organizationId,
     initialData?.groupCompletionFilters?.usersGrade,
-    materialIds,
+    targetMaterialMonth,
+    targetMaterialYear,
+    targetGrade,
   ])
 
   const totalCategoryPercentage = () => {
@@ -109,7 +115,9 @@ function GroupInputCompletion() {
         ancestorId: initialData?.groupCompletionFilters?.ancestorId,
         organizationId: initialData?.groupCompletionFilters?.organizationId,
         usersGrade: initialData?.groupCompletionFilters?.usersGrade,
-        materialIds: materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
   }

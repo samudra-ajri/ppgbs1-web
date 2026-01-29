@@ -27,7 +27,9 @@ function PersonInputCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const materialIds = searchParams.get("materialIds")
+  const targetMaterialMonth = searchParams.get("targetMaterialMonth")
+  const targetMaterialYear = searchParams.get("targetMaterialYear")
+  const targetGrade = searchParams.get("targetGrade")
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const subcategory = pathnames[4]
@@ -56,7 +58,9 @@ function PersonInputCompletion() {
         structure: "material",
         userId: person.id,
         subcategory: subcategory,
-        materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
     dispatch(reset())
@@ -70,7 +74,9 @@ function PersonInputCompletion() {
     messagaUpdate,
     isError,
     message,
-    materialIds,
+    targetMaterialMonth,
+    targetMaterialYear,
+    targetGrade,
   ])
 
   useEffect(() => {
@@ -110,7 +116,9 @@ function PersonInputCompletion() {
         userId: person.id,
         subcategory: subcategory,
         grade: grade,
-        materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
   }
@@ -151,7 +159,7 @@ function PersonInputCompletion() {
           {isQuranHaditsCategory ? (
             <Typography>Halaman {category}:</Typography>
           ) : (
-            !materialIds && (
+            !targetMaterialMonth && (
               <TextField
                 name='grade'
                 label='Filter Materi Kelas'

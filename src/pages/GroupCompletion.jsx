@@ -24,7 +24,6 @@ import {
   getGroupSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
-import { getTargetIds } from "../features/materialTargets/materialTargetSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import { logout } from "../features/auth/authSlice"
@@ -58,9 +57,6 @@ function GroupCompletion() {
     totalMaterialCount > 0
       ? (totalCompletionCount / totalMaterialCount) * 100
       : 0
-
-  const [hasTarget, setHasTarget] = useState(true)
-  const [materialIds, setMaterialIds] = useState([])
 
   const isPPG = user.currentPosition.organizationLevel === 0
   const isPPDOrTeacher =
@@ -112,35 +108,18 @@ function GroupCompletion() {
   useEffect(() => {
     const fetchData = async () => {
       if (filters.targetType === "monthly") {
-        const params = {
-          month: filters.month,
-          year: filters.year,
-        }
-        if (filters.usersGrade && filters.usersGrade.length > 0) {
-          params.grade = filters.usersGrade.join(",")
-        }
-
-        try {
-          const result = await dispatch(getTargetIds(params)).unwrap()
-          const ids = result.data
-          if (ids && ids.length > 0) {
-            setHasTarget(true)
-            setMaterialIds(ids)
-            dispatch(getGroupSumCompletions({ ...filters, materialIds: ids }))
-          } else {
-            setHasTarget(false)
-            setMaterialIds([])
-            dispatch(reset())
-          }
-        } catch (err) {
-          console.error(err)
-          setHasTarget(false)
-          setMaterialIds([])
-          dispatch(reset())
-        }
+        dispatch(
+          getGroupSumCompletions({
+            ...filters,
+            targetMaterialMonth: filters.month,
+            targetMaterialYear: filters.year,
+            targetGrade:
+              filters.usersGrade && filters.usersGrade.length > 0
+                ? filters.usersGrade.join(",")
+                : null,
+          }),
+        )
       } else {
-        setHasTarget(true)
-        setMaterialIds([])
         dispatch(getGroupSumCompletions(filters))
       }
     }
@@ -384,7 +363,9 @@ function GroupCompletion() {
         </Button>
       </Grid>
 
-      {!hasTarget ? (
+      {filters.targetType === "monthly" &&
+      isSuccess &&
+      sumCompletions?.length === 0 ? (
         <Typography align='center' sx={{ mt: 5 }}>
           Target bulan ini belum dibuat.
         </Typography>
@@ -416,20 +397,30 @@ function GroupCompletion() {
             pt={sumCompletions?.length > 0 ? 0 : 3}
             spacing={2}
           >
-            {sumCompletions.map((sumCompletion, index) => (
-              <Grid item xs={6} key={index}>
-                <SumCompletionCard
-                  key={index}
-                  percentage={sumCompletion.percentage}
-                  title={sumCompletion.category}
-                  link={`/c/group-completion/${sumCompletion.category}${
-                    materialIds.length > 0
-                      ? `?materialIds=${materialIds.join(",")}`
-                      : ""
-                  }`}
-                />
-              </Grid>
-            ))}
+            {sumCompletions.map((sumCompletion, index) => {
+              const queryParams = []
+              if (filters.targetType === "monthly") {
+                queryParams.push(`targetMaterialMonth=${filters.month}`)
+                queryParams.push(`targetMaterialYear=${filters.year}`)
+                if (filters.usersGrade && filters.usersGrade.length > 0) {
+                  queryParams.push(
+                    `targetGrade=${filters.usersGrade.join(",")}`,
+                  )
+                }
+              }
+              const queryString =
+                queryParams.length > 0 ? `?${queryParams.join("&")}` : ""
+              return (
+                <Grid item xs={6} key={index}>
+                  <SumCompletionCard
+                    key={index}
+                    percentage={sumCompletion.percentage}
+                    title={sumCompletion.category}
+                    link={`/c/group-completion/${sumCompletion.category}${queryString}`}
+                  />
+                </Grid>
+              )
+            })}
           </Grid>
         </Box>
       )}

@@ -26,7 +26,9 @@ function GroupCompletionByCategory() {
   const navigate = useNavigate()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
-  const materialIds = queryParams.get("materialIds")
+  const targetMaterialMonth = queryParams.get("targetMaterialMonth")
+  const targetMaterialYear = queryParams.get("targetMaterialYear")
+  const targetGrade = queryParams.get("targetGrade")
 
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
@@ -50,7 +52,9 @@ function GroupCompletionByCategory() {
         ancestorId: initialData?.groupCompletionFilters?.ancestorId,
         organizationId: initialData?.groupCompletionFilters?.organizationId,
         usersGrade: initialData?.groupCompletionFilters?.usersGrade,
-        materialIds: materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
     dispatch(reset())
@@ -63,7 +67,9 @@ function GroupCompletionByCategory() {
     initialData?.groupCompletionFilters?.ancestorId,
     initialData?.groupCompletionFilters?.organizationId,
     initialData?.groupCompletionFilters?.usersGrade,
-    materialIds,
+    targetMaterialMonth,
+    targetMaterialYear,
+    targetGrade,
   ])
 
   const totalCategoryPercentage = () => {
@@ -95,7 +101,9 @@ function GroupCompletionByCategory() {
         ancestorId: initialData?.groupCompletionFilters?.ancestorId,
         organizationId: initialData?.groupCompletionFilters?.organizationId,
         usersGrade: initialData?.groupCompletionFilters?.usersGrade,
-        materialIds: materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
   }
@@ -145,18 +153,27 @@ function GroupCompletionByCategory() {
         </Card>
       ) : (
         <Grid container pb={10} spacing={2} mt={1}>
-          {sumCompletions.map((sumCompletion, index) => (
-            <Grid item xs={6} key={index}>
-              <SumCompletionCard
-                key={index}
-                percentage={sumCompletion.percentage}
-                title={sumCompletion.subcategory}
-                link={`/c/group-detail-completion/${category}/${
-                  sumCompletion.subcategory
-                }${materialIds ? `?materialIds=${materialIds}` : ""}`}
-              />
-            </Grid>
-          ))}
+          {sumCompletions.map((sumCompletion, index) => {
+            const queryParams = []
+            if (targetMaterialMonth)
+              queryParams.push(`targetMaterialMonth=${targetMaterialMonth}`)
+            if (targetMaterialYear)
+              queryParams.push(`targetMaterialYear=${targetMaterialYear}`)
+            if (targetGrade) queryParams.push(`targetGrade=${targetGrade}`)
+            const queryString =
+              queryParams.length > 0 ? `?${queryParams.join("&")}` : ""
+
+            return (
+              <Grid item xs={6} key={index}>
+                <SumCompletionCard
+                  key={index}
+                  percentage={sumCompletion.percentage}
+                  title={sumCompletion.subcategory}
+                  link={`/c/group-detail-completion/${category}/${sumCompletion.subcategory}${queryString}`}
+                />
+              </Grid>
+            )
+          })}
           <Grid item xs={12}>
             {sumCompletions?.length === 0 && (
               <Typography align='center' variant='body2'>

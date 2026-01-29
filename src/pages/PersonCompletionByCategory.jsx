@@ -25,7 +25,9 @@ function PersonCompletionByCategory() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const materialIds = searchParams.get("materialIds")
+  const targetMaterialMonth = searchParams.get("targetMaterialMonth")
+  const targetMaterialYear = searchParams.get("targetMaterialYear")
+  const targetGrade = searchParams.get("targetGrade")
   const pathnames = window.location.pathname.split("/")
   const category = pathnames[3]
   const { person } = useSelector((state) => state.person)
@@ -47,11 +49,23 @@ function PersonCompletionByCategory() {
         structure: "subcategory",
         userId: person.id,
         category: category,
-        materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
     dispatch(reset())
-  }, [navigate, dispatch, category, isError, message, person, materialIds])
+  }, [
+    navigate,
+    dispatch,
+    category,
+    isError,
+    message,
+    person,
+    targetMaterialMonth,
+    targetMaterialYear,
+    targetGrade,
+  ])
 
   const totalCategoryPercentage = () => {
     const totalCompletionCount = sumCompletions?.reduce(
@@ -78,7 +92,9 @@ function PersonCompletionByCategory() {
         userId: person.id,
         category: category,
         grade: grade,
-        materialIds,
+        targetMaterialMonth,
+        targetMaterialYear,
+        targetGrade,
       }),
     )
   }
@@ -97,7 +113,7 @@ function PersonCompletionByCategory() {
         />
       </Box>
 
-      {isQuranHaditsCategory && !materialIds && (
+      {isQuranHaditsCategory && !targetMaterialMonth && (
         <TextField
           name='grade'
           label='Filter Materi Kelas'
@@ -134,9 +150,16 @@ function PersonCompletionByCategory() {
                 ? `/c/person-detail-completion/${category}/${sumCompletion.subcategory}`
                 : `/c/detail-completion/${category}/${sumCompletion.subcategory}`
 
-            const link = materialIds
-              ? `${baseUrl}?materialIds=${materialIds}`
-              : baseUrl
+            const queryParams = []
+            if (targetMaterialMonth)
+              queryParams.push(`targetMaterialMonth=${targetMaterialMonth}`)
+            if (targetMaterialYear)
+              queryParams.push(`targetMaterialYear=${targetMaterialYear}`)
+            if (targetGrade) queryParams.push(`targetGrade=${targetGrade}`)
+            const queryString =
+              queryParams.length > 0 ? `?${queryParams.join("&")}` : ""
+
+            const link = `${baseUrl}${queryString}`
 
             return (
               <Grid item xs={6} key={index}>

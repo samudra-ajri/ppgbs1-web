@@ -22,7 +22,6 @@ import {
   getSumCompletions,
   reset,
 } from "../features/completionScores/completionScoreSlice"
-import { getTargetIds } from "../features/materialTargets/materialTargetSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import { logout } from "../features/auth/authSlice"
@@ -35,7 +34,6 @@ function PersonCompletion() {
   const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores,
   )
-  const { targetIds } = useSelector((state) => state.materialTargets)
 
   const totalCompletionCount = sumCompletions?.reduce(
     (acc, curr) => acc + (curr.completionCount || 0),
@@ -54,7 +52,6 @@ function PersonCompletion() {
   const [value, setValue] = useState(0)
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
-  const [hasTarget, setHasTarget] = useState(true)
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -62,27 +59,16 @@ function PersonCompletion() {
 
   const handleView = () => {
     if (person?.grade) {
-      setHasTarget(true)
       dispatch(reset())
-      dispatch(getTargetIds({ month, year, grade: person.grade }))
-        .unwrap()
-        .then((payload) => {
-          const ids = payload.data
-          if (ids && ids.length > 0) {
-            dispatch(
-              getSumCompletions({
-                structure: "category",
-                userId: person.id,
-                materialIds: ids,
-              }),
-            )
-          } else {
-            setHasTarget(false)
-          }
-        })
-        .catch((err) => {
-          console.error("Failed to fetch target IDs", err)
-        })
+      dispatch(
+        getSumCompletions({
+          structure: "category",
+          userId: person.id,
+          targetMaterialMonth: month,
+          targetMaterialYear: year,
+          targetGrade: person.grade,
+        }),
+      )
     }
   }
 
@@ -147,7 +133,7 @@ function PersonCompletion() {
   }
 
   const renderResults = () => {
-    if (value === 0 && !hasTarget) {
+    if (value === 0 && isSuccess && sumCompletions?.length === 0) {
       return (
         <Typography align='center' sx={{ mt: 5 }}>
           Target bulan ini belum dibuat.
@@ -184,8 +170,8 @@ function PersonCompletion() {
         <Grid container pb={10} spacing={2}>
           {sumCompletions.map((sumCompletion, index) => {
             const link =
-              value === 0 && targetIds?.length > 0
-                ? `/c/person-completion/${sumCompletion.category}?materialIds=${targetIds.join(",")}`
+              value === 0
+                ? `/c/person-completion/${sumCompletion.category}?targetMaterialMonth=${month}&targetMaterialYear=${year}&targetGrade=${person.grade}`
                 : `/c/person-completion/${sumCompletion.category}`
 
             return (
