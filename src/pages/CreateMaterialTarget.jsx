@@ -5,6 +5,9 @@ import {
   Button,
   CircularProgress,
   Container,
+  FormControl,
+  InputLabel,
+  Select,
   Grid,
   MenuItem,
   TextField,
@@ -50,23 +53,31 @@ function CreateMaterialTarget() {
 
       <Grid container spacing={2} sx={{ mb: 3 }} alignItems='center'>
         <Grid item xs={4}>
-          <TextField
-            select
-            fullWidth
-            label='Bulan'
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-            size='small'
-          >
-            {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-              <MenuItem key={m} value={m}>
-                {m}
-              </MenuItem>
-            ))}
-          </TextField>
+          <FormControl fullWidth size='small'>
+            <InputLabel id='month-label' htmlFor='month-input'>
+              Bulan
+            </InputLabel>
+            <Select
+              labelId='month-label'
+              id='month-select'
+              name='month'
+              inputProps={{ id: "month-input" }}
+              value={month}
+              label='Bulan'
+              onChange={(e) => setMonth(e.target.value)}
+            >
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                <MenuItem key={m} value={m}>
+                  {m}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={4}>
           <TextField
+            id='year'
+            name='year'
             fullWidth
             label='Tahun'
             type='number'
@@ -134,7 +145,7 @@ function CreateMaterialTarget() {
           {(!groupTargets ||
             (Array.isArray(groupTargets) && groupTargets.length === 0)) && (
             <Typography align='center' sx={{ mt: 2 }}>
-              Target belum dibuat.
+              Belum ada target dibuat.
             </Typography>
           )}
         </Box>
