@@ -21,7 +21,7 @@ import { useEffect } from "react"
 import References from "../pages/References"
 import Kibana from "../components/Kibana"
 import { Container } from "@mui/material"
-import CreateMaterialTarget from "../pages/CreateMaterialTarget"
+import MaterialTarget from "../pages/MaterialTarget"
 
 function MainLayout() {
   const navigate = useNavigate()
@@ -47,10 +47,7 @@ function MainLayout() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/user-completion' element={<UserCompletion />} />
           <Route path='/group-completion' element={<GroupCompletion />} />
-          <Route
-            path='/create-material-target'
-            element={<CreateMaterialTarget />}
-          />
+          <Route path='/material-target' element={<MaterialTarget />} />
           <Route path='/login' element={<Login />} />
           <Route path='/forgot-password' element={<FortgotPassword />} />
           <Route path='/register' element={<Register />} />

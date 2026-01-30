@@ -23,7 +23,7 @@ import {
 } from "../features/materialTargets/materialTargetSlice"
 import gradeEnum from "../enums/gradeEnum"
 
-function CreateMaterialTarget() {
+function MaterialTarget() {
   const dispatch = useDispatch()
 
   const { groupTargets, isLoading, isError, message } = useSelector(
@@ -154,4 +154,4 @@ function CreateMaterialTarget() {
   )
 }
 
-export default CreateMaterialTarget
+export default MaterialTarget

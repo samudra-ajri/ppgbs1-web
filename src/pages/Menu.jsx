@@ -49,7 +49,7 @@ function Menu() {
       text: "Reset Password",
     },
     {
-      to: "/create-material-target",
+      to: "/material-target",
       icon: <AddBarIcon fontSize='large' color='info' />,
       text: "Buat Target Materi",
     },
