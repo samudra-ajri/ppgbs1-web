@@ -30,6 +30,7 @@ import EditProfileByAdmin from "../pages/EditProfileByAdmin"
 import MaterialTargetDetail from "../pages/MaterialTargetDetail"
 import MaterialTargetGroupDetail from "../pages/MaterialTargetGroupDetail"
 import MaterialTargetGroupInput from "../pages/MaterialTargetGroupInput"
+import CreateMaterialTarget from "../pages/CreateMaterialTarget"
 
 function ChildLayout() {
   return (
@@ -104,6 +105,10 @@ function ChildLayout() {
           <Route path='/edit-kemuballighan' element={<EditKemuballighan />} />
           <Route path='/update-password' element={<UpdatePassword />} />
           <Route path='/create-reference' element={<CreateReference />} />
+          <Route
+            path='/material-target/create'
+            element={<CreateMaterialTarget />}
+          />
           <Route
             path='/material-target/detail'
             element={<MaterialTargetDetail />}

@@ -15,7 +15,9 @@ import {
   Typography,
   Card,
   CardContent,
+  Fab,
 } from "@mui/material"
+import AddRoundedIcon from "@mui/icons-material/AddRounded"
 import {
   getGroupTargets,
   reset,
@@ -29,6 +31,7 @@ function MaterialTarget() {
   const { groupTargets, isLoading, isError, message } = useSelector(
     (state) => state.materialTargets,
   )
+  const { user } = useSelector((state) => state.auth)
 
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
@@ -159,6 +162,18 @@ function MaterialTarget() {
             </Typography>
           )}
         </Box>
+      )}
+
+      {user?.currentPosition?.type === "ADMIN" && (
+        <Fab
+          size='large'
+          color='info'
+          aria-label='create material target'
+          onClick={() => navigate("/c/material-target/create")}
+          sx={{ position: "fixed", bottom: 76, right: 16 }}
+        >
+          <AddRoundedIcon fontSize='large' />
+        </Fab>
       )}
     </Container>
   )
