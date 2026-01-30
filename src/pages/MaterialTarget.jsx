@@ -48,7 +48,7 @@ function MaterialTarget() {
   return (
     <Container sx={{ mt: 3, mb: 10 }}>
       <Typography variant='h6' align='center' sx={{ mb: 3 }}>
-        Buat Target Materi
+        Target Materi Bulanan
       </Typography>
 
       <Grid container spacing={2} sx={{ mb: 3 }} alignItems='center'>

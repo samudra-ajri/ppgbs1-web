@@ -48,11 +48,16 @@ function Menu() {
       icon: <RestPasswordIcon fontSize='large' color='info' />,
       text: "Reset Password",
     },
-    {
-      to: "/material-target",
-      icon: <AddBarIcon fontSize='large' color='info' />,
-      text: "Buat Target Materi",
-    },
+    ...(user?.currentPosition?.organizationId === 1 &&
+    user?.currentPosition?.type === "ADMIN"
+      ? [
+          {
+            to: "/material-target",
+            icon: <AddBarIcon fontSize='large' color='info' />,
+            text: "Buat Target Materi",
+          },
+        ]
+      : []),
     {
       to: "/activities-logs",
       icon: <QueryStatsIcon fontSize='large' color='info' />,
