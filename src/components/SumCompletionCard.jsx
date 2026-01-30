@@ -20,9 +20,19 @@ function SumCompletionCard(props) {
           Kelas: {gradeEnum[props.grade]}
         </Typography>
       )}
-      <Typography variant='body2' component='div' sx={{ color }}>
+      <Typography variant='body1' component='div' sx={{ color }}>
         {props.title}
       </Typography>
+      {props.totalTarget !== undefined && (
+        <Typography
+          variant='body1'
+          display='block'
+          sx={{ color }}
+          fontWeight='bold'
+        >
+          Total {props.totalTarget} target
+        </Typography>
+      )}
       {props.structure !== "material" && (
         <LinearProgressWithLabel value={props.percentage} />
       )}

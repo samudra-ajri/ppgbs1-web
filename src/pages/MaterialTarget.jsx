@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import {
   Box,
@@ -23,6 +24,7 @@ import gradeEnum from "../enums/gradeEnum"
 
 function MaterialTarget() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const { groupTargets, isLoading, isError, message } = useSelector(
     (state) => state.materialTargets,
@@ -118,6 +120,16 @@ function MaterialTarget() {
                   variant='outlined'
                   sx={{ mb: 0.5 }}
                   key={item.id || item._id || index}
+                  onClick={() =>
+                    navigate("/c/material-target/detail", {
+                      state: {
+                        month,
+                        year,
+                        grades: gradesValue,
+                        total: item.total,
+                      },
+                    })
+                  }
                 >
                   <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
                     <Grid

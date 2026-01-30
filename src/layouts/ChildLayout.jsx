@@ -27,6 +27,9 @@ import RegisterByAdmin from "../pages/RegisterByAdmin"
 import { Container } from "@mui/material"
 import EditKemuballighan from "../pages/EditKemuballighan"
 import EditProfileByAdmin from "../pages/EditProfileByAdmin"
+import MaterialTargetDetail from "../pages/MaterialTargetDetail"
+import MaterialTargetGroupDetail from "../pages/MaterialTargetGroupDetail"
+import MaterialTargetGroupInput from "../pages/MaterialTargetGroupInput"
 
 function ChildLayout() {
   return (
@@ -101,6 +104,18 @@ function ChildLayout() {
           <Route path='/edit-kemuballighan' element={<EditKemuballighan />} />
           <Route path='/update-password' element={<UpdatePassword />} />
           <Route path='/create-reference' element={<CreateReference />} />
+          <Route
+            path='/material-target/detail'
+            element={<MaterialTargetDetail />}
+          />
+          <Route
+            path='/material-target/detail/:category'
+            element={<MaterialTargetGroupDetail />}
+          />
+          <Route
+            path='/material-target/detail/:category/:subcategory'
+            element={<MaterialTargetGroupInput />}
+          />
         </Routes>
       </Container>
     </>
