@@ -15,8 +15,6 @@ import {
   Card,
   CardContent,
 } from "@mui/material"
-import moment from "moment"
-import capitalize from "capitalize"
 import {
   getGroupTargets,
   reset,
