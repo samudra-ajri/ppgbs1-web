@@ -118,7 +118,7 @@ function MaterialTarget() {
               return (
                 <Card
                   variant='outlined'
-                  sx={{ mb: 0.5 }}
+                  sx={{ mb: 0.5, cursor: "pointer" }}
                   key={item.id || item._id || index}
                   onClick={() =>
                     navigate("/c/material-target/detail", {
