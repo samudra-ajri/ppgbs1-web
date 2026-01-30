@@ -3,6 +3,7 @@ import materialTargetService from "./materialTargetService"
 
 const initialState = {
   targetIds: [],
+  groupTargets: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -16,6 +17,25 @@ export const getTargetIds = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token
       return await materialTargetService.getTargetIds(params, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+// Get group targets
+export const getGroupTargets = createAsyncThunk(
+  "materialTargets/group",
+  async (params, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await materialTargetService.getGroupTargets(params, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -45,6 +65,19 @@ export const materialTargetSlice = createSlice({
         state.targetIds = action.payload.data
       })
       .addCase(getTargetIds.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getGroupTargets.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getGroupTargets.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.groupTargets = action.payload.data
+      })
+      .addCase(getGroupTargets.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

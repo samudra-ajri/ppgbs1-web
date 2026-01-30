@@ -14,8 +14,21 @@ const getTargetIds = async (params, token) => {
   return response.data
 }
 
+// Get group targets
+const getGroupTargets = async (params, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params,
+  }
+  const response = await API.get(API_URL + "group", config)
+  return response.data
+}
+
 const materialTargetService = {
   getTargetIds,
+  getGroupTargets,
 }
 
 export default materialTargetService

@@ -2,12 +2,13 @@ import { useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { Box, Grid, Typography } from "@mui/material"
-import BarIcon from "@mui/icons-material/EqualizerRounded"
+import BarIcon from "@mui/icons-material/InsertChartOutlinedRounded"
 import PeopleListIcon from "@mui/icons-material/PersonSearchOutlined"
 import EventIcon from "@mui/icons-material/EventRounded"
 import RestPasswordIcon from "@mui/icons-material/LockResetRounded"
 import QueryStatsIcon from "@mui/icons-material/QueryStatsRounded"
 import BookIcon from "@mui/icons-material/BookOutlined"
+import AddBarIcon from "@mui/icons-material/AddchartRounded"
 
 function Menu() {
   const dispatch = useDispatch()
@@ -46,6 +47,11 @@ function Menu() {
       to: "/reset-passwords",
       icon: <RestPasswordIcon fontSize='large' color='info' />,
       text: "Reset Password",
+    },
+    {
+      to: "/create-material-target",
+      icon: <AddBarIcon fontSize='large' color='info' />,
+      text: "Buat Target Materi",
     },
     {
       to: "/activities-logs",

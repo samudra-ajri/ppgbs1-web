@@ -1,33 +1,34 @@
-import { Routes, Route, useNavigate } from 'react-router-dom'
-import 'react-toastify/dist/ReactToastify.css'
-import BottomNav from '../components/BottomNav'
-import Header from '../components/Header'
-import CompletionDashboard from '../pages/CompletionDashboard'
-import Dashboard from '../pages/Dashboard'
-import Generus from '../pages/Generus'
-import Login from '../pages/Login'
-import Register from '../pages/Register'
-import Event from '../pages/Event'
-import FortgotPassword from '../pages/FortgotPassword'
-import Menu from '../pages/Menu'
-import ResetPasswordList from '../pages/ResetPasswordList'
-import DecidePosition from '../pages/DecidePosition'
-import UserCompletion from '../pages/UserCompletion'
-import GroupCompletion from '../pages/GroupCompletion'
-import Profile from '../pages/Profile'
-import Footer from '../components/Footer'
-import { useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import References from '../pages/References'
-import Kibana from '../components/Kibana'
-import { Container } from '@mui/material'
+import { Routes, Route, useNavigate } from "react-router-dom"
+import "react-toastify/dist/ReactToastify.css"
+import BottomNav from "../components/BottomNav"
+import Header from "../components/Header"
+import CompletionDashboard from "../pages/CompletionDashboard"
+import Dashboard from "../pages/Dashboard"
+import Generus from "../pages/Generus"
+import Login from "../pages/Login"
+import Register from "../pages/Register"
+import Event from "../pages/Event"
+import FortgotPassword from "../pages/FortgotPassword"
+import Menu from "../pages/Menu"
+import ResetPasswordList from "../pages/ResetPasswordList"
+import DecidePosition from "../pages/DecidePosition"
+import UserCompletion from "../pages/UserCompletion"
+import GroupCompletion from "../pages/GroupCompletion"
+import Profile from "../pages/Profile"
+import Footer from "../components/Footer"
+import { useSelector } from "react-redux"
+import { useEffect } from "react"
+import References from "../pages/References"
+import Kibana from "../components/Kibana"
+import { Container } from "@mui/material"
+import CreateMaterialTarget from "../pages/CreateMaterialTarget"
 
 function MainLayout() {
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
 
   useEffect(() => {
-    const now = Math.floor(Date.now() / 1000);
+    const now = Math.floor(Date.now() / 1000)
     const isChangeTempPassword =
       user?.needUpdatePassword && user?.resetPasswordToken
 
@@ -38,7 +39,7 @@ function MainLayout() {
   return (
     <>
       <Header />
-      <Container maxWidth="sm" sx={{ pt: 11 }}>
+      <Container maxWidth='sm' sx={{ pt: 11 }}>
         <Routes>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/users' element={<Generus />} />
@@ -46,6 +47,10 @@ function MainLayout() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/user-completion' element={<UserCompletion />} />
           <Route path='/group-completion' element={<GroupCompletion />} />
+          <Route
+            path='/create-material-target'
+            element={<CreateMaterialTarget />}
+          />
           <Route path='/login' element={<Login />} />
           <Route path='/forgot-password' element={<FortgotPassword />} />
           <Route path='/register' element={<Register />} />
