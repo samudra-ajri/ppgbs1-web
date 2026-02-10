@@ -1,11 +1,7 @@
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useSelector } from "react-redux"
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Paper,
-} from "@mui/material"
+import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material"
 
 import LoginIcon from "@mui/icons-material/LoginRounded"
 import PersonIcon from "@mui/icons-material/PersonRounded"
@@ -28,10 +24,26 @@ function BottomNav() {
     if (user && alreadyDecidedPosition) {
       if (isGenerus) {
         return [
-          { to: "/events", label: "Kegiatan", icon: <EventIcon fontSize="small" /> },
-          { to: "/user-completion", label: "Capaian Materi", icon: <CompletionIcon fontSize="small" /> },
-          { to: "/references", label: "Pustaka", icon: <BookIcon fontSize="small" /> },
-          { to: "/profile", label: "Profile", icon: <ProfileIcon fontSize="small" /> },
+          {
+            to: "/events",
+            label: "Kegiatan",
+            icon: <EventIcon fontSize='small' />,
+          },
+          {
+            to: "/user-completion",
+            label: "Materi",
+            icon: <CompletionIcon fontSize='small' />,
+          },
+          {
+            to: "/references",
+            label: "Pustaka",
+            icon: <BookIcon fontSize='small' />,
+          },
+          {
+            to: "/profile",
+            label: "Profile",
+            icon: <ProfileIcon fontSize='small' />,
+          },
         ]
       }
 
@@ -39,22 +51,39 @@ function BottomNav() {
         {
           to: "/",
           label: "Menu",
-          icon: pathname === "/" ? (
-            <HomeIcon fontSize="small" />
-          ) : (
-            <ArrowBackIcon fontSize="small" />
-          ),
+          icon:
+            pathname === "/" ? (
+              <HomeIcon fontSize='small' />
+            ) : (
+              <ArrowBackIcon fontSize='small' />
+            ),
         },
-        { to: "/users", label: "Users", icon: <PeopleListIcon fontSize="small" /> },
-        { to: "/events", label: "Kegiatan", icon: <EventIcon fontSize="small" /> },
-        { to: "/profile", label: "Profile", icon: <ProfileIcon fontSize="small" /> },
+        {
+          to: "/users",
+          label: "Users",
+          icon: <PeopleListIcon fontSize='small' />,
+        },
+        {
+          to: "/events",
+          label: "Kegiatan",
+          icon: <EventIcon fontSize='small' />,
+        },
+        {
+          to: "/profile",
+          label: "Profile",
+          icon: <ProfileIcon fontSize='small' />,
+        },
       ]
     }
 
     if (!user) {
       return [
-        { to: "/login", label: "Masuk", icon: <LoginIcon fontSize="small" /> },
-        { to: "/register", label: "Registrasi", icon: <PersonIcon fontSize="small" /> },
+        { to: "/login", label: "Masuk", icon: <LoginIcon fontSize='small' /> },
+        {
+          to: "/register",
+          label: "Registrasi",
+          icon: <PersonIcon fontSize='small' />,
+        },
       ]
     }
 
@@ -62,7 +91,10 @@ function BottomNav() {
   })()
 
   return (
-    <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={3}>
+    <Paper
+      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      elevation={3}
+    >
       <BottomNavigation
         showLabels
         value={value}
