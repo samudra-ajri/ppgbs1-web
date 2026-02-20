@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Typography,
   Container,
@@ -9,14 +9,56 @@ import {
   MenuItem,
   TextField,
   Autocomplete,
+  Button,
 } from "@mui/material"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import BackHeader from "../components/BackHeader"
 import gradeEnum from "../enums/gradeEnum"
+import {
+  createMaterialTargets,
+  reset,
+} from "../features/materialTargets/materialTargetSlice"
 
 function CreateMaterialTarget() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
   const [grades, setGrades] = useState([])
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const { isError, isSuccess, isLoading, message } = useSelector(
+    (state) => state.materialTargets,
+  )
+
+  useEffect(() => {
+    dispatch(reset())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (isSubmitted && isError) {
+      toast.error(message)
+      setIsSubmitted(false)
+    }
+    if (isSubmitted && isSuccess) {
+      toast.success("berhasil menambahkan")
+      navigate("/material-target")
+      dispatch(reset())
+    }
+  }, [isSubmitted, isError, isSuccess, message, navigate, dispatch])
+
+  const onSubmit = () => {
+    setIsSubmitted(true)
+    const data = {
+      materialIds: null,
+      grades: grades.map((grade) => parseInt(grade)),
+      month: parseInt(month),
+      year: parseInt(year),
+    }
+    dispatch(createMaterialTargets(data))
+  }
 
   return (
     <>
@@ -78,6 +120,19 @@ function CreateMaterialTarget() {
                 />
               )}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              onClick={onSubmit}
+              size='large'
+              style={{ margin: "20px auto" }}
+              type='submit'
+              variant='contained'
+              color='primary'
+              fullWidth
+            >
+              Tambah
+            </Button>
           </Grid>
         </Grid>
       </Container>
