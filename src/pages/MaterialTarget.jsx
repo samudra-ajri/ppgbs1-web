@@ -16,11 +16,20 @@ import {
   Card,
   CardContent,
   Fab,
+  IconButton,
+  Menu,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material"
 import AddRoundedIcon from "@mui/icons-material/AddRounded"
+import MoreVertIcon from "@mui/icons-material/MoreVert"
 import {
   getGroupTargets,
   reset,
+  deleteMaterialTargets,
 } from "../features/materialTargets/materialTargetSlice"
 import gradeEnum from "../enums/gradeEnum"
 
@@ -36,6 +45,10 @@ function MaterialTarget() {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
 
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [selectedTarget, setSelectedTarget] = useState(null)
+  const [openDialog, setOpenDialog] = useState(false)
+
   useEffect(() => {
     dispatch(getGroupTargets({ month, year }))
 
@@ -46,6 +59,38 @@ function MaterialTarget() {
 
   const handleView = () => {
     dispatch(getGroupTargets({ month, year }))
+  }
+
+  const handleMenuOpen = (event, target) => {
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
+    setSelectedTarget(target)
+  }
+
+  const handleMenuClose = (event) => {
+    if (event) event.stopPropagation()
+    setAnchorEl(null)
+  }
+
+  const handleDeleteClick = (event) => {
+    event.stopPropagation()
+    handleMenuClose()
+    setOpenDialog(true)
+  }
+
+  const handleDialogClose = () => {
+    setOpenDialog(false)
+    setSelectedTarget(null)
+  }
+
+  const handleConfirmDelete = () => {
+    if (selectedTarget) {
+      const grades = selectedTarget.grades.join(",")
+      dispatch(deleteMaterialTargets({ grades, month, year })).then(() => {
+        dispatch(getGroupTargets({ month, year }))
+      })
+      handleDialogClose()
+    }
   }
 
   return (
@@ -121,7 +166,7 @@ function MaterialTarget() {
               return (
                 <Card
                   variant='outlined'
-                  sx={{ mb: 0.5, cursor: "pointer" }}
+                  sx={{ mb: 0.5, cursor: "pointer", position: "relative" }}
                   key={item.id || item._id || index}
                   onClick={() =>
                     navigate("/c/material-target/detail", {
@@ -134,6 +179,20 @@ function MaterialTarget() {
                     })
                   }
                 >
+                  {user?.currentPosition?.type === "ADMIN" && (
+                    <IconButton
+                      aria-label='settings'
+                      sx={{ position: "absolute", top: 8, right: 8 }}
+                      onClick={(e) =>
+                        handleMenuOpen(e, {
+                          ...item,
+                          grades: gradesValue,
+                        })
+                      }
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  )}
                   <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
                     <Grid
                       container
@@ -145,9 +204,21 @@ function MaterialTarget() {
                           Rombongan Belajar
                         </Typography>
                         <Typography variant='body1'>{grades}</Typography>
-                        <Typography variant='body1' fontWeight='bold'>
-                          Total {item.total} target
-                        </Typography>
+                        <Box
+                          sx={{
+                            display: "inline-block",
+                            bgcolor: item.total > 0 ? "#2E7D32" : "#BDBDBD",
+                            color: "#fff",
+                            px: 1,
+                            py: 0.5,
+                            borderRadius: 1,
+                            mt: 1,
+                          }}
+                        >
+                          <Typography variant='caption' fontWeight='bold'>
+                            Total {item.total} target
+                          </Typography>
+                        </Box>
                       </Grid>
                     </Grid>
                   </CardContent>
@@ -163,6 +234,39 @@ function MaterialTarget() {
           )}
         </Box>
       )}
+
+      <Menu
+        id='basic-menu'
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={handleDeleteClick}>Hapus</MenuItem>
+      </Menu>
+
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>{"Hapus Target?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Apakah Anda yakin ingin menghapus target materi ini? Tindakan ini
+            tidak dapat dibatalkan.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>Batal</Button>
+          <Button onClick={handleConfirmDelete} autoFocus color='error'>
+            Hapus
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {user?.currentPosition?.type === "ADMIN" && (
         <Fab

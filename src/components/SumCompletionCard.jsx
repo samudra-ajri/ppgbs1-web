@@ -1,4 +1,10 @@
-import { Card, CardActionArea, CardContent, Typography } from "@mui/material"
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+} from "@mui/material"
 import { Link } from "react-router-dom"
 import LinearProgressWithLabel from "./LinearProgressWithLabel"
 import gradeEnum from "../enums/gradeEnum"
@@ -24,14 +30,21 @@ function SumCompletionCard(props) {
         {props.title}
       </Typography>
       {props.totalTarget !== undefined && (
-        <Typography
-          variant='body1'
-          display='block'
-          sx={{ color }}
-          fontWeight='bold'
+        <Box
+          sx={{
+            display: "inline-block",
+            bgcolor: props.totalTarget > 0 ? "#2E7D32" : "#BDBDBD",
+            color: "#fff",
+            px: 1,
+            py: 0.5,
+            borderRadius: 1,
+            mt: 1,
+          }}
         >
-          Total {props.totalTarget} target
-        </Typography>
+          <Typography variant='caption' fontWeight='bold'>
+            Total {props.totalTarget} target
+          </Typography>
+        </Box>
       )}
       {props.structure !== "material" && (
         <LinearProgressWithLabel value={props.percentage} />

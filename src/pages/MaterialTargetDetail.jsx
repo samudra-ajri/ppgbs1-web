@@ -11,9 +11,9 @@ import {
   Typography,
 } from "@mui/material"
 import {
-  getGroupSumCompletions,
+  getGroupTargetsSummary,
   reset,
-} from "../features/completionScores/completionScoreSlice"
+} from "../features/materialTargets/materialTargetSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
 import { logout } from "../features/auth/authSlice"
 import { getppd } from "../features/organizations/organizationSlice"
@@ -29,8 +29,8 @@ function MaterialTargetDetail() {
   const { month, year, grades } = location.state || {}
 
   const { user } = useSelector((state) => state.auth)
-  const { sumCompletions, isSuccess, isError, message } = useSelector(
-    (state) => state.completionScores,
+  const { groupTargetsSummary, isSuccess, isError, message } = useSelector(
+    (state) => state.materialTargets,
   )
   const { ppd: ppdList } = useSelector((state) => state.organizations)
 
@@ -72,17 +72,16 @@ function MaterialTargetDetail() {
     // Fetch data
     dispatch(reset())
 
-    // Construct params for getGroupSumCompletions
+    // Construct params for getGroupTargetsSummary
     const params = {
-      ...filters,
-      targetMaterialMonth: filters.month,
-      targetMaterialYear: filters.year,
-      targetGrade:
+      month: filters.month,
+      year: filters.year,
+      grades:
         filters.usersGrade && filters.usersGrade.length > 0
           ? filters.usersGrade.join(",")
           : null,
     }
-    dispatch(getGroupSumCompletions(params))
+    dispatch(getGroupTargetsSummary(params))
   }, [
     isError,
     navigate,
@@ -115,7 +114,7 @@ function MaterialTargetDetail() {
         </Grid>
       ) : (
         <Container sx={{ mt: 3, mb: 10 }}>
-          {sumCompletions?.length === 0 && (
+          {groupTargetsSummary?.length === 0 && (
             <Typography align='center' sx={{ mt: 5 }}>
               Target bulan ini belum dibuat.
             </Typography>
@@ -124,11 +123,11 @@ function MaterialTargetDetail() {
           <Grid
             container
             pb={10}
-            pt={sumCompletions?.length > 0 ? 0 : 3}
+            pt={groupTargetsSummary?.length > 0 ? 0 : 3}
             spacing={2}
           >
-            {sumCompletions &&
-              sumCompletions.map((sumCompletion, index) => {
+            {groupTargetsSummary &&
+              groupTargetsSummary.map((sumCompletion, index) => {
                 const queryParams = []
                 // Always monthly target mode here
                 queryParams.push(`targetMaterialMonth=${filters.month}`)
@@ -148,7 +147,7 @@ function MaterialTargetDetail() {
                     <SumCompletionCard
                       key={index}
                       structure='material'
-                      totalTarget={sumCompletion.materialCount}
+                      totalTarget={sumCompletion.targetedCount}
                       percentage={sumCompletion.percentage}
                       title={sumCompletion.category}
                       link={`/c/material-target/detail/${sumCompletion.category}${queryString}`}
