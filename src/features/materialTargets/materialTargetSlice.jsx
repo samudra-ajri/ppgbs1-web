@@ -152,6 +152,25 @@ export const deleteMaterialTargets = createAsyncThunk(
   },
 )
 
+// Duplicate material targets
+export const duplicateMaterialTargets = createAsyncThunk(
+  "materialTargets/duplicate",
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await materialTargetService.duplicateMaterialTargets(data, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const materialTargetSlice = createSlice({
   name: "materialTargets",
   initialState,
@@ -245,6 +264,18 @@ export const materialTargetSlice = createSlice({
         state.isSuccess = true
       })
       .addCase(deleteMaterialTargets.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(duplicateMaterialTargets.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(duplicateMaterialTargets.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+      })
+      .addCase(duplicateMaterialTargets.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

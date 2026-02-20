@@ -85,6 +85,17 @@ const deleteMaterialTargets = async (params, token) => {
   return response.data
 }
 
+// Duplicate material targets
+const duplicateMaterialTargets = async (data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.post(API_URL + "duplicate", data, config)
+  return response.data
+}
+
 const materialTargetService = {
   getTargetIds,
   getGroupTargets,
@@ -93,6 +104,7 @@ const materialTargetService = {
   getGroupTargetsSummaryMaterial,
   createMaterialTargets,
   deleteMaterialTargets,
+  duplicateMaterialTargets,
 }
 
 export default materialTargetService

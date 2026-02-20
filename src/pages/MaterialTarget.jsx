@@ -30,6 +30,7 @@ import {
   getGroupTargets,
   reset,
   deleteMaterialTargets,
+  duplicateMaterialTargets,
 } from "../features/materialTargets/materialTargetSlice"
 import gradeEnum from "../enums/gradeEnum"
 
@@ -48,6 +49,18 @@ function MaterialTarget() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [selectedTarget, setSelectedTarget] = useState(null)
   const [openDialog, setOpenDialog] = useState(false)
+
+  const [openDuplicateDialog, setOpenDuplicateDialog] = useState(false)
+  const [duplicateMonth, setDuplicateMonth] = useState(() => {
+    const today = new Date()
+    return today.getMonth() + 2 > 12 ? 1 : today.getMonth() + 2
+  })
+  const [duplicateYear, setDuplicateYear] = useState(() => {
+    const today = new Date()
+    return today.getMonth() + 2 > 12
+      ? today.getFullYear() + 1
+      : today.getFullYear()
+  })
 
   useEffect(() => {
     dispatch(getGroupTargets({ month, year }))
@@ -90,6 +103,35 @@ function MaterialTarget() {
         dispatch(getGroupTargets({ month, year }))
       })
       handleDialogClose()
+    }
+  }
+
+  const handleDuplicateClick = (event) => {
+    event.stopPropagation()
+    handleMenuClose()
+    setOpenDuplicateDialog(true)
+  }
+
+  const handleDuplicateDialogClose = () => {
+    setOpenDuplicateDialog(false)
+    setSelectedTarget(null)
+  }
+
+  const handleConfirmDuplicate = () => {
+    if (selectedTarget) {
+      const payload = {
+        grades: selectedTarget.grades,
+        fromMonth: month,
+        fromYear: year,
+        toMonth: duplicateMonth,
+        toYear: duplicateYear,
+      }
+      dispatch(duplicateMaterialTargets(payload)).then(() => {
+        if (duplicateMonth === month && duplicateYear === year) {
+          dispatch(getGroupTargets({ month, year }))
+        }
+      })
+      handleDuplicateDialogClose()
     }
   }
 
@@ -244,6 +286,7 @@ function MaterialTarget() {
           "aria-labelledby": "basic-button",
         }}
       >
+        <MenuItem onClick={handleDuplicateClick}>Duplikasi</MenuItem>
         <MenuItem onClick={handleDeleteClick}>Hapus</MenuItem>
       </Menu>
 
@@ -264,6 +307,57 @@ function MaterialTarget() {
           <Button onClick={handleDialogClose}>Batal</Button>
           <Button onClick={handleConfirmDelete} autoFocus color='error'>
             Hapus
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openDuplicateDialog}
+        onClose={handleDuplicateDialogClose}
+        aria-labelledby='duplicate-dialog-title'
+        aria-describedby='duplicate-dialog-description'
+      >
+        <DialogTitle id='duplicate-dialog-title'>
+          {"Duplikasi Target"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id='duplicate-dialog-description'>
+            Duplikasi target ini ke bulan lain.
+          </DialogContentText>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={6}>
+              <FormControl fullWidth size='small'>
+                <InputLabel id='dup-month-label'>Bulan</InputLabel>
+                <Select
+                  labelId='dup-month-label'
+                  value={duplicateMonth}
+                  label='Bulan'
+                  onChange={(e) => setDuplicateMonth(e.target.value)}
+                >
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                    <MenuItem key={m} value={m}>
+                      {m}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label='Tahun'
+                type='number'
+                size='small'
+                value={duplicateYear}
+                onChange={(e) => setDuplicateYear(e.target.value)}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDuplicateDialogClose}>Batal</Button>
+          <Button onClick={handleConfirmDuplicate} autoFocus>
+            Duplikasi
           </Button>
         </DialogActions>
       </Dialog>
