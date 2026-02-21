@@ -9,7 +9,7 @@ import ProfileIcon from "@mui/icons-material/FaceOutlined"
 import PeopleListIcon from "@mui/icons-material/PersonSearchOutlined"
 import EventIcon from "@mui/icons-material/EventRounded"
 import HomeIcon from "@mui/icons-material/HomeMaxRounded"
-import CompletionIcon from "@mui/icons-material/GradingOutlined"
+import BarIcon from "@mui/icons-material/InsertChartOutlinedRounded"
 import ArrowBackIcon from "@mui/icons-material/ArrowBackRounded"
 import BookIcon from "@mui/icons-material/BookOutlined"
 
@@ -32,7 +32,7 @@ function BottomNav() {
           {
             to: "/user-completion",
             label: "Materi",
-            icon: <CompletionIcon fontSize='small' />,
+            icon: <BarIcon fontSize='small' />,
           },
           {
             to: "/references",
