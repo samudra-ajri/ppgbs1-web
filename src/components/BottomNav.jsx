@@ -9,7 +9,7 @@ import ProfileIcon from "@mui/icons-material/FaceOutlined"
 import PeopleListIcon from "@mui/icons-material/PersonSearchOutlined"
 import EventIcon from "@mui/icons-material/EventRounded"
 import HomeIcon from "@mui/icons-material/HomeMaxRounded"
-import BarIcon from "@mui/icons-material/InsertChartOutlinedRounded"
+import BarIcon from "@mui/icons-material/BarChartRounded"
 import ArrowBackIcon from "@mui/icons-material/ArrowBackRounded"
 import BookIcon from "@mui/icons-material/BookOutlined"
 
