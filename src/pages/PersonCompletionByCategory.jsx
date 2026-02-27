@@ -103,7 +103,7 @@ function PersonCompletionByCategory() {
 
   return (
     <>
-      <BackHeader title={category} />
+      <BackHeader title={decodeURIComponent(category)} />
       <Box mb={2}>
         <Typography variant='h7' component='b'>
           Total

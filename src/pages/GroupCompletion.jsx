@@ -391,37 +391,65 @@ function GroupCompletion() {
               <LinearProgressWithLabel value={totalPercentage} />
             </Box>
           )}
-          <Grid
-            container
-            pb={10}
-            pt={sumCompletions?.length > 0 ? 0 : 3}
-            spacing={2}
-          >
-            {sumCompletions.map((sumCompletion, index) => {
-              const queryParams = []
-              if (filters.targetType === "monthly") {
-                queryParams.push(`targetMaterialMonth=${filters.month}`)
-                queryParams.push(`targetMaterialYear=${filters.year}`)
-                if (filters.usersGrade && filters.usersGrade.length > 0) {
-                  queryParams.push(
-                    `targetGrade=${filters.usersGrade.join(",")}`,
-                  )
+          <Box pb={10} pt={sumCompletions?.length > 0 ? 0 : 3}>
+            {(() => {
+              const groups = []
+              const groupMap = new Map()
+
+              sumCompletions?.forEach((item) => {
+                const subject = item.subject || "Lainnya"
+                if (!groupMap.has(subject)) {
+                  const group = { subject, items: [] }
+                  groups.push(group)
+                  groupMap.set(subject, group)
                 }
-              }
-              const queryString =
-                queryParams.length > 0 ? `?${queryParams.join("&")}` : ""
-              return (
-                <Grid item xs={6} key={index}>
-                  <SumCompletionCard
-                    key={index}
-                    percentage={sumCompletion.percentage}
-                    title={sumCompletion.category}
-                    link={`/c/group-completion/${sumCompletion.category}${queryString}`}
-                  />
-                </Grid>
-              )
-            })}
-          </Grid>
+                groupMap.get(subject).items.push(item)
+              })
+
+              return groups.map((group) => (
+                <Box key={group.subject} sx={{ mb: 3 }}>
+                  <Typography
+                    variant='body1'
+                    style={{ fontWeight: "bold" }}
+                    sx={{ mb: 1, ml: 1, textTransform: "capitalize" }}
+                  >
+                    {group.subject.toLowerCase()}
+                  </Typography>
+                  <Grid container spacing={2}>
+                    {group.items.map((sumCompletion, index) => {
+                      const queryParams = []
+                      if (filters.targetType === "monthly") {
+                        queryParams.push(`targetMaterialMonth=${filters.month}`)
+                        queryParams.push(`targetMaterialYear=${filters.year}`)
+                        if (
+                          filters.usersGrade &&
+                          filters.usersGrade.length > 0
+                        ) {
+                          queryParams.push(
+                            `targetGrade=${filters.usersGrade.join(",")}`,
+                          )
+                        }
+                      }
+                      const queryString =
+                        queryParams.length > 0
+                          ? `?${queryParams.join("&")}`
+                          : ""
+                      return (
+                        <Grid item xs={6} key={index}>
+                          <SumCompletionCard
+                            key={index}
+                            percentage={sumCompletion.percentage}
+                            title={sumCompletion.category}
+                            link={`/c/group-completion/${sumCompletion.category}${queryString}`}
+                          />
+                        </Grid>
+                      )
+                    })}
+                  </Grid>
+                </Box>
+              ))
+            })()}
+          </Box>
         </Box>
       )}
 
