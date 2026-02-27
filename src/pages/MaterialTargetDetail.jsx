@@ -120,42 +120,66 @@ function MaterialTargetDetail() {
             </Typography>
           )}
 
-          <Grid
-            container
-            pb={10}
-            pt={groupTargetsSummary?.length > 0 ? 0 : 3}
-            spacing={2}
-          >
-            {groupTargetsSummary &&
-              groupTargetsSummary.map((sumCompletion, index) => {
-                const queryParams = []
-                // Always monthly target mode here
-                queryParams.push(`targetMaterialMonth=${filters.month}`)
-                queryParams.push(`targetMaterialYear=${filters.year}`)
-                if (filters.usersGrade && filters.usersGrade.length > 0) {
-                  queryParams.push(
-                    `targetGrade=${filters.usersGrade.join(",")}`,
-                  )
+          <Box pb={10} pt={groupTargetsSummary?.length > 0 ? 0 : 3}>
+            {(() => {
+              const groups = []
+              const groupMap = new Map()
+
+              groupTargetsSummary?.forEach((item) => {
+                const subject = item.subject || "Lainnya"
+                if (!groupMap.has(subject)) {
+                  const group = { subject, items: [] }
+                  groups.push(group)
+                  groupMap.set(subject, group)
                 }
+                groupMap.get(subject).items.push(item)
+              })
 
-                const queryString =
-                  queryParams.length > 0 ? `?${queryParams.join("&")}` : ""
+              return groups.map((group) => (
+                <Box key={group.subject} sx={{ mb: 3 }}>
+                  <Typography
+                    variant='body1'
+                    style={{ fontWeight: "bold" }}
+                    sx={{ mb: 1, ml: 1, textTransform: "capitalize" }}
+                  >
+                    {group.subject.toLowerCase()}
+                  </Typography>
+                  <Grid container spacing={2}>
+                    {group.items.map((sumCompletion, index) => {
+                      const queryParams = []
+                      // Always monthly target mode here
+                      queryParams.push(`targetMaterialMonth=${filters.month}`)
+                      queryParams.push(`targetMaterialYear=${filters.year}`)
+                      if (filters.usersGrade && filters.usersGrade.length > 0) {
+                        queryParams.push(
+                          `targetGrade=${filters.usersGrade.join(",")}`,
+                        )
+                      }
 
-                // Link to existing GroupCompletionByCategory
-                return (
-                  <Grid item xs={6} key={index}>
-                    <SumCompletionCard
-                      key={index}
-                      structure='material'
-                      totalTarget={sumCompletion.targetedCount}
-                      percentage={sumCompletion.percentage}
-                      title={sumCompletion.category}
-                      link={`/c/material-target/detail/${sumCompletion.category}${queryString}`}
-                    />
+                      const queryString =
+                        queryParams.length > 0
+                          ? `?${queryParams.join("&")}`
+                          : ""
+
+                      // Link to existing GroupCompletionByCategory
+                      return (
+                        <Grid item xs={6} key={index}>
+                          <SumCompletionCard
+                            key={index}
+                            structure='material'
+                            totalTarget={sumCompletion.targetedCount}
+                            percentage={sumCompletion.percentage}
+                            title={sumCompletion.category}
+                            link={`/c/material-target/detail/${sumCompletion.category}${queryString}`}
+                          />
+                        </Grid>
+                      )
+                    })}
                   </Grid>
-                )
-              })}
-          </Grid>
+                </Box>
+              ))
+            })()}
+          </Box>
         </Container>
       )}
     </>
