@@ -205,7 +205,7 @@ function GroupCompletion() {
         </Grid>
         <Grid item>
           <Chip
-            label='Target Bulanan'
+            label='Target Saat Ini'
             color='info'
             variant={
               drawerFilters.targetType === "monthly" ? "solid" : "outlined"

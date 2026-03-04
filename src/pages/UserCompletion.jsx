@@ -53,7 +53,7 @@ function UserCompletion() {
   }
 
   const handleView = () => {
-    if (user?.grade) {
+    if (user?.grade !== undefined && user?.grade !== null) {
       dispatch(reset())
       dispatch(
         getSumCompletions({
@@ -192,7 +192,7 @@ function UserCompletion() {
           }}
         >
           <Tab
-            label='Target Bulanan'
+            label='Target Saat Ini'
             sx={{
               textTransform: "none",
               borderRadius: "50px",

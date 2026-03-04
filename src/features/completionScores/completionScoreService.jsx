@@ -45,7 +45,7 @@ const getSumCompletions = async (token, filters) => {
   } = filters
 
   const queryFilters = []
-  if (grade) queryFilters.push(`grade=${grade}`)
+  if (grade !== undefined && grade !== null) queryFilters.push(`grade=${grade}`)
   if (subject) queryFilters.push(`subject=${subject}`)
   if (category) queryFilters.push(`category=${category}`)
   if (subcategory) queryFilters.push(`subcategory=${subcategory}`)
@@ -53,7 +53,8 @@ const getSumCompletions = async (token, filters) => {
     queryFilters.push(`targetMaterialMonth=${targetMaterialMonth}`)
   if (targetMaterialYear)
     queryFilters.push(`targetMaterialYear=${targetMaterialYear}`)
-  if (targetGrade) queryFilters.push(`targetGrade=${targetGrade}`)
+  if (targetGrade !== undefined && targetGrade !== null)
+    queryFilters.push(`targetGrade=${targetGrade}`)
   if (materialIds) {
     if (Array.isArray(materialIds)) {
       queryFilters.push(`materialIds=${materialIds.join(",")}`)
@@ -92,7 +93,7 @@ const getGroupSumCompletions = async (token, filters) => {
   } = filters
 
   const queryFilters = []
-  if (grade) queryFilters.push(`grade=${grade}`)
+  if (grade !== undefined && grade !== null) queryFilters.push(`grade=${grade}`)
   if (subject) queryFilters.push(`subject=${subject}`)
   if (category) queryFilters.push(`category=${category}`)
   if (subcategory) queryFilters.push(`subcategory=${subcategory}`)
@@ -103,7 +104,8 @@ const getGroupSumCompletions = async (token, filters) => {
     queryFilters.push(`targetMaterialMonth=${targetMaterialMonth}`)
   if (targetMaterialYear)
     queryFilters.push(`targetMaterialYear=${targetMaterialYear}`)
-  if (targetGrade) queryFilters.push(`targetGrade=${targetGrade}`)
+  if (targetGrade !== undefined && targetGrade !== null)
+    queryFilters.push(`targetGrade=${targetGrade}`)
   if (materialIds) {
     if (Array.isArray(materialIds)) {
       queryFilters.push(`materialIds=${materialIds.join(",")}`)
