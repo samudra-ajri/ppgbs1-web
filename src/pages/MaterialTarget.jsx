@@ -68,11 +68,7 @@ function MaterialTarget() {
     return () => {
       dispatch(reset())
     }
-  }, [dispatch])
-
-  const handleView = () => {
-    dispatch(getGroupTargets({ month, year }))
-  }
+  }, [dispatch, month, year])
 
   const handleMenuOpen = (event, target) => {
     event.stopPropagation()
@@ -142,7 +138,7 @@ function MaterialTarget() {
       </Typography>
 
       <Grid container spacing={2} sx={{ mb: 3 }} alignItems='center'>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <FormControl fullWidth size='small'>
             <InputLabel id='month-label' htmlFor='month-input'>
               Bulan
@@ -164,7 +160,7 @@ function MaterialTarget() {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <TextField
             id='year'
             name='year'
@@ -175,16 +171,6 @@ function MaterialTarget() {
             onChange={(e) => setYear(e.target.value)}
             size='small'
           />
-        </Grid>
-        <Grid item xs={4}>
-          <Button
-            variant='contained'
-            fullWidth
-            onClick={handleView}
-            disabled={isLoading}
-          >
-            Lihat
-          </Button>
         </Grid>
       </Grid>
 

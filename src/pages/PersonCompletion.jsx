@@ -57,21 +57,6 @@ function PersonCompletion() {
     setValue(newValue)
   }
 
-  const handleView = () => {
-    if (person?.grade !== undefined && person?.grade !== null) {
-      dispatch(reset())
-      dispatch(
-        getSumCompletions({
-          structure: "category",
-          userId: person.id,
-          targetMaterialMonth: month,
-          targetMaterialYear: year,
-          targetGrade: person.grade,
-        }),
-      )
-    }
-  }
-
   useEffect(() => {
     if (isError && message === "Missing authentication.") {
       dispatch(logout())
@@ -87,10 +72,21 @@ function PersonCompletion() {
       dispatch(reset())
       dispatch(getSumCompletions({ structure: "category", userId: person.id }))
     } else if (value === 0) {
-      handleView()
+      if (person?.grade !== undefined && person?.grade !== null) {
+        dispatch(reset())
+        dispatch(
+          getSumCompletions({
+            structure: "category",
+            userId: person.id,
+            targetMaterialMonth: month,
+            targetMaterialYear: year,
+            targetGrade: person.grade,
+          }),
+        )
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, dispatch, person])
+  }, [value, dispatch, person, month, year])
 
   const lastUpdateTime = () => {
     const lastCompletionUpdate = person?.lastCompletionUpdate
@@ -300,7 +296,7 @@ function PersonCompletion() {
       {value === 0 && (
         <Box>
           <Grid container spacing={2} alignItems='center' sx={{ mb: 3 }}>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextField
                 select
                 label='Bulan'
@@ -317,7 +313,7 @@ function PersonCompletion() {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextField
                 label='Tahun'
                 type='number'
@@ -327,17 +323,6 @@ function PersonCompletion() {
                 size='small'
                 variant='outlined'
               />
-            </Grid>
-            <Grid item xs={4}>
-              <Button
-                variant='contained'
-                color='primary'
-                fullWidth
-                size='medium'
-                onClick={handleView}
-              >
-                Lihat
-              </Button>
             </Grid>
           </Grid>
         </Box>

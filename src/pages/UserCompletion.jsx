@@ -52,21 +52,6 @@ function UserCompletion() {
     setValue(newValue)
   }
 
-  const handleView = () => {
-    if (user?.grade !== undefined && user?.grade !== null) {
-      dispatch(reset())
-      dispatch(
-        getSumCompletions({
-          structure: "category",
-          userId: user.id,
-          targetMaterialMonth: month,
-          targetMaterialYear: year,
-          targetGrade: user.grade,
-        }),
-      )
-    }
-  }
-
   useEffect(() => {
     if (!user) navigate("/login")
     if (isError && message === "Missing authentication.") {
@@ -82,10 +67,21 @@ function UserCompletion() {
       dispatch(reset())
       dispatch(getSumCompletions({ structure: "category", userId: user.id }))
     } else if (value === 0) {
-      handleView()
+      if (user?.grade !== undefined && user?.grade !== null) {
+        dispatch(reset())
+        dispatch(
+          getSumCompletions({
+            structure: "category",
+            userId: user.id,
+            targetMaterialMonth: month,
+            targetMaterialYear: year,
+            targetGrade: user.grade,
+          }),
+        )
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, dispatch, user])
+  }, [value, dispatch, user, month, year])
 
   const renderResults = () => {
     if (value === 0 && isSuccess && sumCompletions?.length === 0) {
@@ -233,7 +229,7 @@ function UserCompletion() {
       {value === 0 && (
         <Box>
           <Grid container spacing={2} alignItems='center' sx={{ mb: 3 }}>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextField
                 select
                 label='Bulan'
@@ -250,7 +246,7 @@ function UserCompletion() {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextField
                 label='Tahun'
                 type='number'
@@ -260,17 +256,6 @@ function UserCompletion() {
                 size='small'
                 variant='outlined'
               />
-            </Grid>
-            <Grid item xs={4}>
-              <Button
-                variant='contained'
-                color='primary'
-                fullWidth
-                size='medium'
-                onClick={handleView}
-              >
-                Lihat
-              </Button>
             </Grid>
           </Grid>
           {renderResults()}
