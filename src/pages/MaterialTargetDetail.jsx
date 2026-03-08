@@ -226,8 +226,9 @@ function MaterialTargetDetail() {
             placeholder='Ketik min. 3 karakter...'
             variant='outlined'
             value={searchTerm}
+            size='small'
             onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ mb: 2 }}
+            sx={{ mb: 5 }}
           />
 
           <Box pb={10} pt={groupTargetsSummary?.length > 0 ? 0 : 3}>
