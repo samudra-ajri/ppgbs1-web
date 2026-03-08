@@ -21,6 +21,7 @@ import initialDataReducer from "../features/initialData/initialDataSlice"
 import updateCompletionReducer from "../features/updateCompletion/updateCompletionSlice"
 import referencesReducer from "../features/references/referenceSlice"
 import materialTargetReducer from "../features/materialTargets/materialTargetSlice"
+import materialReducer from "../features/materials/materialSlice"
 
 export const store = configureStore({
   reducer: {
@@ -46,6 +47,7 @@ export const store = configureStore({
     updateCompletion: updateCompletionReducer,
     references: referencesReducer,
     materialTargets: materialTargetReducer,
+    materials: materialReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
