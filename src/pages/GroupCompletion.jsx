@@ -334,20 +334,41 @@ function GroupCompletion() {
         Capaian Materi
       </Typography>
 
-      <Card sx={{ mb: 0.5 }} align='center'>
+      <Card
+        variant='outlined'
+        sx={{
+          mb: 1.5,
+          borderRadius: 2,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+        }}
+        align='center'
+      >
         <CardContent
           sx={{
-            padding: 2,
+            padding: 3,
             "&:last-child": {
-              paddingBottom: 2,
+              paddingBottom: 3,
             },
           }}
         >
-          <Typography variant='body1'>Jumlah</Typography>
-          <Typography variant='h5'>
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            textTransform='uppercase'
+            letterSpacing={1}
+          >
+            Jumlah
+          </Typography>
+          <Typography
+            variant='h4'
+            fontWeight='bold'
+            sx={{ my: 1, color: "primary.main" }}
+          >
             {sumCompletions ? sumCompletions[0]?.materialsMultiplier : 0}
           </Typography>
-          <Typography variant='body2'>Generus</Typography>
+          <Typography variant='body2' color='text.secondary' fontWeight={500}>
+            Generus
+          </Typography>
         </CardContent>
       </Card>
 

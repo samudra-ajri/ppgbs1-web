@@ -15,20 +15,33 @@ function SumCompletionCard(props) {
   const color = props.fontColor ? props.fontColor : ""
 
   const content = () => (
-    <CardContent>
+    <CardContent
+      sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+    >
       {(props.grade || props.grade === 0) && (
         <Typography
           variant='caption'
           display='block'
           gutterBottom
-          sx={{ color }}
+          sx={{
+            color,
+            textTransform: "uppercase",
+            letterSpacing: 0.5,
+            fontWeight: 500,
+          }}
         >
           Kelas: {gradeEnum[props.grade]}
         </Typography>
       )}
-      <Typography variant='body1' component='div' sx={{ color }}>
+
+      <Typography
+        variant='subtitle2'
+        component='div'
+        sx={{ color, fontWeight: "bold", lineHeight: 1.3, mb: 1, flexGrow: 1 }}
+      >
         {props.title}
       </Typography>
+
       {props.totalTarget !== undefined && (
         <Box
           sx={{
@@ -46,21 +59,61 @@ function SumCompletionCard(props) {
           </Typography>
         </Box>
       )}
+
       {props.structure !== "material" && (
-        <LinearProgressWithLabel value={props.percentage} />
+        <Box sx={{ mt: "auto", pt: 1 }}>
+          <LinearProgressWithLabel value={props.percentage} />
+        </Box>
       )}
     </CardContent>
   )
+
   return (
-    <Card variant='outlined' sx={{ backgroundColor }}>
+    <Card
+      variant='outlined'
+      sx={{
+        backgroundColor,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: 2,
+        boxShadow: disabled ? "none" : "0 2px 8px rgba(0,0,0,0.05)",
+        transition: "transform 0.2s, box-shadow 0.2s",
+        "&:hover": disabled
+          ? {}
+          : {
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              transform: "translateY(-2px)",
+            },
+      }}
+    >
       {disabled ? (
-        content()
+        <Box sx={{ height: "100%" }}>{content()}</Box>
       ) : props.onClick ? (
-        <CardActionArea onClick={props.onClick}>{content()}</CardActionArea>
-      ) : (
-        <Link to={props.link} component={CardActionArea}>
+        <CardActionArea
+          onClick={props.onClick}
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+          }}
+        >
           {content()}
-        </Link>
+        </CardActionArea>
+      ) : (
+        <CardActionArea
+          component={Link}
+          to={props.link}
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+          }}
+        >
+          {content()}
+        </CardActionArea>
       )}
     </Card>
   )

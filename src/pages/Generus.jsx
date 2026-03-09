@@ -37,10 +37,10 @@ function Generus() {
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
   const { users, totalCount, hasNextPage, isLoading } = useSelector(
-    (state) => state.users
+    (state) => state.users,
   )
   const { ppd: ppdList, ppk: ppkList } = useSelector(
-    (state) => state.organizations
+    (state) => state.organizations,
   )
 
   const isPPG = user.currentPosition.organizationLevel === 0
@@ -205,7 +205,10 @@ function Generus() {
             variant={
               drawerFilters.hasExistPosition === true ? "solid" : "outlined"
             }
-            onClick={handleFilterObject("hasExistPosition", drawerFilters.hasExistPosition ? false : true)}
+            onClick={handleFilterObject(
+              "hasExistPosition",
+              drawerFilters.hasExistPosition ? false : true,
+            )}
           />
         </Grid>
       </Grid>
@@ -340,18 +343,41 @@ function Generus() {
         Users
       </Typography>
 
-      <Card sx={{ mb: 0.5 }} align='center'>
+      <Card
+        variant='outlined'
+        sx={{
+          mb: 1.5,
+          borderRadius: 2,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+        }}
+        align='center'
+      >
         <CardContent
           sx={{
-            padding: 2,
+            padding: 3,
             "&:last-child": {
-              paddingBottom: 2,
+              paddingBottom: 3,
             },
           }}
         >
-          <Typography variant='body1'>Jumlah</Typography>
-          <Typography variant='h5'>{totalCount}</Typography>
-          <Typography variant='body2'>Orang</Typography>
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            textTransform='uppercase'
+            letterSpacing={1}
+          >
+            Jumlah
+          </Typography>
+          <Typography
+            variant='h4'
+            fontWeight='bold'
+            sx={{ my: 1, color: "primary.main" }}
+          >
+            {totalCount}
+          </Typography>
+          <Typography variant='body2' color='text.secondary' fontWeight={500}>
+            Orang
+          </Typography>
         </CardContent>
       </Card>
 

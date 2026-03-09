@@ -15,6 +15,7 @@ import {
   Typography,
   Card,
   CardContent,
+  CardActionArea,
   Fab,
   IconButton,
   Menu,
@@ -194,44 +195,60 @@ function MaterialTarget() {
               return (
                 <Card
                   variant='outlined'
-                  sx={{ mb: 0.5, cursor: "pointer", position: "relative" }}
+                  sx={{
+                    mb: 1.5,
+                    borderRadius: 2,
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    "&:hover": {
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      transform: "translateY(-2px)",
+                    },
+                    position: "relative",
+                  }}
                   key={item.id || item._id || index}
-                  onClick={() =>
-                    navigate("/c/material-target/detail", {
-                      state: {
-                        month,
-                        year,
-                        grades: gradesValue,
-                        total: item.total,
-                      },
-                    })
-                  }
                 >
-                  {user?.currentPosition?.type === "ADMIN" && (
-                    <IconButton
-                      aria-label='settings'
-                      sx={{ position: "absolute", top: 8, right: 8 }}
-                      onClick={(e) =>
-                        handleMenuOpen(e, {
-                          ...item,
+                  <CardActionArea
+                    onClick={() =>
+                      navigate("/c/material-target/detail", {
+                        state: {
+                          month,
+                          year,
                           grades: gradesValue,
-                        })
-                      }
+                          total: item.total,
+                        },
+                      })
+                    }
+                    sx={{ display: "block", height: "100%" }}
+                  >
+                    <CardContent
+                      sx={{
+                        padding: 2.5,
+                        "&:last-child": { paddingBottom: 2.5 },
+                      }}
                     >
-                      <MoreVertIcon />
-                    </IconButton>
-                  )}
-                  <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-                    <Grid
-                      container
-                      alignItems='center'
-                      justifyContent='space-between'
-                    >
-                      <Grid item xs={12}>
-                        <Typography variant='body2' color='textSecondary'>
+                      <Box sx={{ pr: 4 }}>
+                        <Typography
+                          variant='caption'
+                          color='text.secondary'
+                          sx={{
+                            textTransform: "uppercase",
+                            letterSpacing: 0.5,
+                            fontWeight: 500,
+                          }}
+                        >
                           Rombongan Belajar
                         </Typography>
-                        <Typography variant='body1'>{grades}</Typography>
+
+                        <Typography
+                          variant='subtitle1'
+                          fontWeight='bold'
+                          lineHeight={1.3}
+                          sx={{ mb: 1.5, mt: 0.5 }}
+                        >
+                          {grades}
+                        </Typography>
+
                         <Box
                           sx={{
                             display: "inline-block",
@@ -247,9 +264,34 @@ function MaterialTarget() {
                             Total {item.total} target
                           </Typography>
                         </Box>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
+                      </Box>
+                    </CardContent>
+                  </CardActionArea>
+
+                  {user?.currentPosition?.type === "ADMIN" && (
+                    <IconButton
+                      aria-label='settings'
+                      size='small'
+                      sx={{
+                        position: "absolute",
+                        top: 12,
+                        right: 12,
+                        zIndex: 1,
+                        color: "text.secondary",
+                        backgroundColor: "rgba(255,255,255,0.8)",
+                        "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleMenuOpen(e, {
+                          ...item,
+                          grades: gradesValue,
+                        })
+                      }}
+                    >
+                      <MoreVertIcon fontSize='small' />
+                    </IconButton>
+                  )}
                 </Card>
               )
             })}
