@@ -19,7 +19,7 @@ function Event() {
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
   const { events, hasNextPage, isSuccess } = useSelector(
-    (state) => state.listEvents
+    (state) => state.listEvents,
   )
   const [page, setPage] = useState(1)
   const [searchBar, setSearchBar] = useState("")
@@ -56,7 +56,7 @@ function Event() {
       setPage((prevPage) => prevPage + 1)
       user.currentPosition.type === "ADMIN"
         ? dispatch(
-            listEvents({ ...filters, page: page + 1, isGroupHead: "false" })
+            listEvents({ ...filters, page: page + 1, isGroupHead: "false" }),
           )
         : dispatch(listEvents({ ...filters, page: page + 1, groupId: "null" }))
     }

@@ -31,38 +31,106 @@ function ReferenceCard({ data, canDelete, link }) {
 
   return (
     <>
-      <Card variant='outlined' sx={{ mb: 0.5, cursor: "pointer" }}>
-        <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-          <Grid container>
-            <Grid item xs={canDelete ? 10 : 12} md={11}>
-              <a
-                href={link}
-                target='_blank'
-                rel='noopener noreferrer'
-                style={{ textDecoration: "none" }}
-              >
-                <Box component={CardActionArea} sx={{ p: 1 }}>
-                  <Typography variant='body2'>{data.name}</Typography>
-                  <Typography fontSize={10} color='text.secondary'>
+      <Card
+        variant='outlined'
+        sx={{
+          mb: 1.5,
+          borderRadius: 2,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+          transition: "transform 0.2s, box-shadow 0.2s",
+          "&:hover": {
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            transform: "translateY(-2px)",
+          },
+        }}
+      >
+        <CardActionArea
+          component='a'
+          href={link}
+          target='_blank'
+          rel='noopener noreferrer'
+          sx={{ display: "block", color: "inherit", textDecoration: "none" }}
+        >
+          <CardContent
+            sx={{ padding: 2.5, "&:last-child": { paddingBottom: 2.5 } }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+              }}
+            >
+              <Box sx={{ flex: 1, pr: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 0.5,
+                    gap: 1,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Typography
+                    variant='subtitle1'
+                    fontWeight='bold'
+                    lineHeight={1.3}
+                  >
+                    {data.name}
+                  </Typography>
+                  {data.type === "PRIVATE" && (
+                    <Typography
+                      variant='caption'
+                      sx={{
+                        px: 1,
+                        py: 0.25,
+                        borderRadius: 1,
+                        bgcolor: "error.lighter",
+                        color: "error.main",
+                        fontWeight: 600,
+                        fontSize: "0.65rem",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Admin Only
+                    </Typography>
+                  )}
+                </Box>
+
+                {data.description && (
+                  <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{ mt: 1, lineHeight: 1.5 }}
+                  >
                     {data.description}
                   </Typography>
-                  <Typography fontSize={10} color='text.secondary'>
-                    {data.type === "PRIVATE" ? "(admin)" : ""}
-                  </Typography>
-                </Box>
-              </a>
-            </Grid>
-            {canDelete && (
-              <Grid item xs={2} md={1} display='flex' justifyContent='flex-end'>
+                )}
+              </Box>
+
+              {canDelete && (
                 <Tooltip title='Hapus data'>
-                  <IconButton onClick={handleDeleteClick}>
-                    <DeleteIcon fontSize='medium' color='error' />
+                  <IconButton
+                    size='small'
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleDeleteClick()
+                    }}
+                    sx={{
+                      mt: -0.5,
+                      mr: -0.5,
+                      color: "error.main",
+                      "&:hover": { backgroundColor: "error.lighter" },
+                    }}
+                  >
+                    <DeleteIcon fontSize='small' />
                   </IconButton>
                 </Tooltip>
-              </Grid>
-            )}
-          </Grid>
-        </CardContent>
+              )}
+            </Box>
+          </CardContent>
+        </CardActionArea>
       </Card>
 
       <PopDialog
