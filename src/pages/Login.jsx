@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { login, reset } from "../features/auth/authSlice"
 import { reset as resetCompletionScore } from "../features/completionScores/completionScoreSlice"
-import Spinner from "../components/Spinner"
 import {
   Button,
   Card,
@@ -12,6 +11,7 @@ import {
   Grid,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material"
 
 function Login() {
@@ -23,7 +23,7 @@ function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
+    (state) => state.auth,
   )
 
   useEffect(() => {
@@ -50,10 +50,6 @@ function Login() {
     dispatch(login(userData))
   }
 
-  if (isLoading) {
-    return <Spinner />
-  }
-
   return (
     <>
       <Typography align='center' variant='h4'>
@@ -78,6 +74,7 @@ function Login() {
                     variant='outlined'
                     fullWidth
                     required
+                    disabled={isLoading}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -91,6 +88,7 @@ function Login() {
                     variant='outlined'
                     fullWidth
                     required
+                    disabled={isLoading}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -103,8 +101,14 @@ function Login() {
                     variant='contained'
                     color='primary'
                     fullWidth
+                    disabled={isLoading}
+                    startIcon={
+                      isLoading ? (
+                        <CircularProgress size={20} color='inherit' />
+                      ) : null
+                    }
                   >
-                    Masuk
+                    {isLoading ? "Memproses..." : "Masuk"}
                   </Button>
                   <Link to='/forgot-password'>
                     <Typography

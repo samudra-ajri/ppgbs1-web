@@ -24,10 +24,15 @@ function DecidePosition() {
     dispatch(reset())
   }, [user, alreadyDecidedPosition, navigate, dispatch, navigationPath])
 
+  // If user has only 1 position or has already decided, show a loading state instead of flickering the positions
+  if (user?.positions?.length === 1 || alreadyDecidedPosition) {
+    return null
+  }
+
   return (
     <>
       <Typography variant='h5' align='center' sx={{ pb: 4 }}>
-        Login dengan Akun
+        Pilih Akun
       </Typography>
       {user?.positions?.map((position) => (
         <DecidePositionCard position={position} key={position.positionId} />
