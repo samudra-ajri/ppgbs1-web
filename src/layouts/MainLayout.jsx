@@ -16,8 +16,9 @@ import UserCompletion from "../pages/UserCompletion"
 import GroupCompletion from "../pages/GroupCompletion"
 import Profile from "../pages/Profile"
 import Footer from "../components/Footer"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { useEffect } from "react"
+import { logout } from "../features/auth/authSlice"
 import References from "../pages/References"
 import Kibana from "../components/Kibana"
 import { Container } from "@mui/material"
@@ -25,6 +26,7 @@ import MaterialTarget from "../pages/MaterialTarget"
 
 function MainLayout() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
 
   useEffect(() => {
@@ -32,9 +34,12 @@ function MainLayout() {
     const isChangeTempPassword =
       user?.needUpdatePassword && user?.resetPasswordToken
 
-    if (now >= user?.exp) navigate("/login")
+    if (user?.exp && now >= user.exp) {
+      dispatch(logout())
+      navigate("/login")
+    }
     if (isChangeTempPassword) navigate("/c/update-password")
-  }, [user, navigate])
+  }, [user, navigate, dispatch])
 
   return (
     <>

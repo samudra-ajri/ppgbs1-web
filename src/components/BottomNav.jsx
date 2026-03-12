@@ -90,6 +90,15 @@ function BottomNav() {
     return [] // user exists but position not decided
   })()
 
+  if (
+    !user &&
+    (pathname === "/login" ||
+      pathname === "/register" ||
+      pathname === "/forgot-password")
+  ) {
+    return null
+  }
+
   return (
     <Paper
       sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
