@@ -108,7 +108,7 @@ function Login() {
                       ) : null
                     }
                   >
-                    {isLoading ? "Memproses..." : "Masuk"}
+                    {isLoading ? "" : "Masuk"}
                   </Button>
                   <Link to='/forgot-password'>
                     <Typography
