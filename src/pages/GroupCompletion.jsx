@@ -177,155 +177,169 @@ function GroupCompletion() {
   }
 
   const filterList = () => (
-    <>
-      <Grid pt={3} sx={{ width: "100vw" }}>
-        <IconButton aria-label='delete' onClick={toggleDrawer(false)}>
+    <Box
+      sx={{
+        width: { xs: "100vw", sm: 400 },
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          p: 2,
+          borderBottom: "1px solid #eee",
+        }}
+      >
+        <Typography variant='h6' fontWeight='bold'>
+          Filters
+        </Typography>
+        <IconButton aria-label='close' onClick={toggleDrawer(false)}>
           <CloseIcon />
         </IconButton>
-      </Grid>
+      </Box>
 
-      <Grid item xs={12} pb={4}>
-        <Typography textAlign='center'>
-          <b>Filters</b>
-        </Typography>
-      </Grid>
-
-      <Grid container spacing={1} pb={3} pl={1}>
-        <Grid item>
-          <Chip
-            label='Target Keseluruhan (GGB)'
-            color='info'
-            variant={
-              drawerFilters.targetType === "overall" ? "solid" : "outlined"
-            }
-            onClick={() =>
-              setDrawerFilters((prev) => ({ ...prev, targetType: "overall" }))
-            }
-          />
-        </Grid>
-        <Grid item>
-          <Chip
-            label='Target Saat Ini'
-            color='info'
-            variant={
-              drawerFilters.targetType === "monthly" ? "solid" : "outlined"
-            }
-            onClick={() =>
-              setDrawerFilters((prev) => ({ ...prev, targetType: "monthly" }))
-            }
-          />
-        </Grid>
-
-        {drawerFilters.targetType === "monthly" && (
-          <Grid container item spacing={2} mt={-1}>
-            <Grid item xs={5} sm={2}>
-              <TextField
-                select
-                fullWidth
-                size='small'
-                label='Bulan'
-                value={drawerFilters.month}
-                onChange={(e) =>
-                  setDrawerFilters((prev) => ({
-                    ...prev,
-                    month: e.target.value,
-                  }))
-                }
-              >
-                {Array.from(Array(12)).map((_, i) => (
-                  <MenuItem key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={5} sm={2}>
-              <TextField
-                fullWidth
-                size='small'
-                label='Tahun'
-                type='number'
-                value={drawerFilters.year}
-                onChange={(e) =>
-                  setDrawerFilters((prev) => ({
-                    ...prev,
-                    year: e.target.value,
-                  }))
-                }
-              />
-            </Grid>
-          </Grid>
-        )}
-      </Grid>
-
-      <Grid container spacing={1} pb={3} pl={1}>
-        {Object.keys(gradeEnum).map((key) => (
-          <Grid item key={key}>
+      <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
+        <Grid container spacing={1} pb={3}>
+          <Grid item>
             <Chip
-              label={gradeEnum[key]}
+              label='Target Keseluruhan (GGB)'
               color='info'
               variant={
-                drawerFilters.usersGrade.includes(key) ? "solid" : "outlined"
+                drawerFilters.targetType === "overall" ? "solid" : "outlined"
               }
-              onClick={handleFilterObject("usersGrade", key)}
+              onClick={() =>
+                setDrawerFilters((prev) => ({ ...prev, targetType: "overall" }))
+              }
             />
           </Grid>
-        ))}
-      </Grid>
-
-      {isPPG && (
-        <Grid container spacing={1} pb={3} pl={1}>
-          {ppdList?.data.map((ppd) => (
-            <Grid item key={ppd.id}>
-              <Chip
-                label={ppd.name}
-                color='info'
-                variant={
-                  drawerFilters.ancestorId === ppd.id ? "solid" : "outlined"
-                }
-                onClick={handleFilterObject("ancestorId", ppd.id)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
-
-      {drawerFilters.ancestorId && (isPPG || isPPDOrTeacher) && (
-        <Grid container spacing={1} pb={3} pl={1}>
-          {ppkList?.data.map((ppk) => (
-            <Grid item key={ppk.id}>
-              <Chip
-                label={ppk.name}
-                color='info'
-                variant={
-                  drawerFilters.organizationId === ppk.id ? "solid" : "outlined"
-                }
-                onClick={handleFilterObject("organizationId", ppk.id)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
-
-      <Grid pb={10} />
-
-      <AppBar position='fixed' color='inherit' sx={{ top: "auto", bottom: 0 }}>
-        <Toolbar>
-          <Grid container justifyContent='center' style={{ width: "100%" }}>
-            <Grid item xs={12}>
-              <Button
-                variant='contained'
-                color='info'
-                fullWidth
-                onClick={toggleDrawer(false)}
-              >
-                Lihat
-              </Button>
-            </Grid>
+          <Grid item>
+            <Chip
+              label='Target Saat Ini'
+              color='info'
+              variant={
+                drawerFilters.targetType === "monthly" ? "solid" : "outlined"
+              }
+              onClick={() =>
+                setDrawerFilters((prev) => ({ ...prev, targetType: "monthly" }))
+              }
+            />
           </Grid>
-        </Toolbar>
-      </AppBar>
-    </>
+
+          {drawerFilters.targetType === "monthly" && (
+            <Grid container item spacing={2} mt={-1}>
+              <Grid item xs={5} sm={2}>
+                <TextField
+                  select
+                  fullWidth
+                  size='small'
+                  label='Bulan'
+                  value={drawerFilters.month}
+                  onChange={(e) =>
+                    setDrawerFilters((prev) => ({
+                      ...prev,
+                      month: e.target.value,
+                    }))
+                  }
+                >
+                  {Array.from(Array(12)).map((_, i) => (
+                    <MenuItem key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={5} sm={2}>
+                <TextField
+                  fullWidth
+                  size='small'
+                  label='Tahun'
+                  type='number'
+                  value={drawerFilters.year}
+                  onChange={(e) =>
+                    setDrawerFilters((prev) => ({
+                      ...prev,
+                      year: e.target.value,
+                    }))
+                  }
+                />
+              </Grid>
+            </Grid>
+          )}
+        </Grid>
+
+        <Grid container spacing={1} pb={3}>
+          {Object.keys(gradeEnum).map((key) => (
+            <Grid item key={key}>
+              <Chip
+                label={gradeEnum[key]}
+                color='info'
+                variant={
+                  drawerFilters.usersGrade.includes(key) ? "solid" : "outlined"
+                }
+                onClick={handleFilterObject("usersGrade", key)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+        {isPPG && (
+          <Grid container spacing={1} pb={3}>
+            {ppdList?.data.map((ppd) => (
+              <Grid item key={ppd.id}>
+                <Chip
+                  label={ppd.name}
+                  color='info'
+                  variant={
+                    drawerFilters.ancestorId === ppd.id ? "solid" : "outlined"
+                  }
+                  onClick={handleFilterObject("ancestorId", ppd.id)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+
+        {drawerFilters.ancestorId && (isPPG || isPPDOrTeacher) && (
+          <Grid container spacing={1} pb={3}>
+            {ppkList?.data.map((ppk) => (
+              <Grid item key={ppk.id}>
+                <Chip
+                  label={ppk.name}
+                  color='info'
+                  variant={
+                    drawerFilters.organizationId === ppk.id
+                      ? "solid"
+                      : "outlined"
+                  }
+                  onClick={handleFilterObject("organizationId", ppk.id)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          p: 2,
+          borderTop: "1px solid #eee",
+          bgcolor: "background.paper",
+        }}
+      >
+        <Button
+          variant='contained'
+          color='info'
+          fullWidth
+          onClick={toggleDrawer(false)}
+        >
+          Lihat
+        </Button>
+      </Box>
+    </Box>
   )
 
   return (
@@ -475,7 +489,7 @@ function GroupCompletion() {
       )}
 
       <Drawer anchor='left' open={stateDrawer} onClose={toggleDrawer(false)}>
-        <Container>{filterList()}</Container>
+        {filterList()}
       </Drawer>
     </>
   )

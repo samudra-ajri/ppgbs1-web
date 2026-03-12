@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Box,
   Button,
   Card,
   CardContent,
@@ -161,147 +162,161 @@ function Generus() {
   }
 
   const filterList = () => (
-    <>
-      <Grid pt={3} sx={{ width: "100vw" }}>
-        <IconButton aria-label='delete' onClick={toggleDrawer(false)}>
+    <Box
+      sx={{
+        width: { xs: "100vw", sm: 400 },
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          p: 2,
+          borderBottom: "1px solid #eee",
+        }}
+      >
+        <Typography variant='h6' fontWeight='bold'>
+          Filters
+        </Typography>
+        <IconButton aria-label='close' onClick={toggleDrawer(false)}>
           <CloseIcon />
         </IconButton>
-      </Grid>
+      </Box>
 
-      <Grid item xs={12} pb={4}>
-        <Typography textAlign='center'>
-          <b>Filters</b>
-        </Typography>
-      </Grid>
-
-      <Grid container spacing={1} pb={3} pl={1}>
-        <Grid item>
-          <Chip
-            label='Generus'
-            color='info'
-            variant={
-              drawerFilters.positionType === "GENERUS" ? "solid" : "outlined"
-            }
-            onClick={handleFilterObject("positionType", "GENERUS")}
-          />
-        </Grid>
-        <Grid item>
-          <Chip
-            label='Pengajar'
-            color='info'
-            variant={
-              drawerFilters.positionType === "PENGAJAR" ? "solid" : "outlined"
-            }
-            onClick={handleFilterObject("positionType", "PENGAJAR")}
-          />
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={1} pb={3} pl={1}>
-        <Grid item>
-          <Chip
-            label='Status Aktif'
-            color='info'
-            variant={
-              drawerFilters.hasExistPosition === true ? "solid" : "outlined"
-            }
-            onClick={handleFilterObject(
-              "hasExistPosition",
-              drawerFilters.hasExistPosition ? false : true,
-            )}
-          />
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={1} pb={3} pl={1}>
-        <Grid item>
-          <Chip
-            label='Laki-laki'
-            color='info'
-            variant={drawerFilters.sex === 1 ? "solid" : "outlined"}
-            onClick={handleFilterObject("sex", 1)}
-          />
-        </Grid>
-        <Grid item>
-          <Chip
-            label='Perempuan'
-            color='info'
-            variant={drawerFilters.sex === 0 ? "solid" : "outlined"}
-            onClick={handleFilterObject("sex", 0)}
-          />
-        </Grid>
-      </Grid>
-
-      {drawerFilters.positionType !== "PENGAJAR" && (
-        <Grid container spacing={1} pb={3} pl={1}>
-          {Object.keys(gradeEnum).map((key) => (
-            <Grid item key={key}>
-              <Chip
-                label={gradeEnum[key]}
-                color='info'
-                variant={
-                  drawerFilters.grade.includes(key) ? "solid" : "outlined"
-                }
-                onClick={handleFilterObject("grade", key)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
-
-      {isPPG && (
-        <Grid container spacing={1} pb={3} pl={1}>
-          {ppdList?.data.map((ppd) => (
-            <Grid item key={ppd.id}>
-              <Chip
-                label={ppd.name}
-                color='info'
-                variant={
-                  drawerFilters.ancestorId === ppd.id ? "solid" : "outlined"
-                }
-                onClick={handleFilterObject("ancestorId", ppd.id)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
-
-      {drawerFilters.ancestorId && (isPPG || isPPDOrTeacher) && (
-        <Grid container spacing={1} pb={3} pl={1}>
-          {ppkList?.data.map((ppk) => (
-            <Grid item key={ppk.id}>
-              <Chip
-                label={ppk.name}
-                color='info'
-                variant={
-                  drawerFilters.organizationId === ppk.id ? "solid" : "outlined"
-                }
-                onClick={handleFilterObject("organizationId", ppk.id)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
-
-      <Grid pb={10} />
-
-      <AppBar position='fixed' color='inherit' sx={{ top: "auto", bottom: 0 }}>
-        <Toolbar>
-          <Grid container justifyContent='center' style={{ width: "100%" }}>
-            <Grid item xs={12}>
-              <Button
-                variant='contained'
-                color='info'
-                fullWidth
-                onClick={toggleDrawer(false)}
-              >
-                Lihat
-              </Button>
-            </Grid>
+      <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
+        <Grid container spacing={1} pb={3}>
+          <Grid item>
+            <Chip
+              label='Generus'
+              color='info'
+              variant={
+                drawerFilters.positionType === "GENERUS" ? "solid" : "outlined"
+              }
+              onClick={handleFilterObject("positionType", "GENERUS")}
+            />
           </Grid>
-        </Toolbar>
-      </AppBar>
-    </>
+          <Grid item>
+            <Chip
+              label='Pengajar'
+              color='info'
+              variant={
+                drawerFilters.positionType === "PENGAJAR" ? "solid" : "outlined"
+              }
+              onClick={handleFilterObject("positionType", "PENGAJAR")}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={1} pb={3}>
+          <Grid item>
+            <Chip
+              label='Status Aktif'
+              color='info'
+              variant={
+                drawerFilters.hasExistPosition === true ? "solid" : "outlined"
+              }
+              onClick={handleFilterObject(
+                "hasExistPosition",
+                drawerFilters.hasExistPosition ? false : true,
+              )}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={1} pb={3}>
+          <Grid item>
+            <Chip
+              label='Laki-laki'
+              color='info'
+              variant={drawerFilters.sex === 1 ? "solid" : "outlined"}
+              onClick={handleFilterObject("sex", 1)}
+            />
+          </Grid>
+          <Grid item>
+            <Chip
+              label='Perempuan'
+              color='info'
+              variant={drawerFilters.sex === 0 ? "solid" : "outlined"}
+              onClick={handleFilterObject("sex", 0)}
+            />
+          </Grid>
+        </Grid>
+
+        {drawerFilters.positionType !== "PENGAJAR" && (
+          <Grid container spacing={1} pb={3}>
+            {Object.keys(gradeEnum).map((key) => (
+              <Grid item key={key}>
+                <Chip
+                  label={gradeEnum[key]}
+                  color='info'
+                  variant={
+                    drawerFilters.grade.includes(key) ? "solid" : "outlined"
+                  }
+                  onClick={handleFilterObject("grade", key)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+
+        {isPPG && (
+          <Grid container spacing={1} pb={3}>
+            {ppdList?.data.map((ppd) => (
+              <Grid item key={ppd.id}>
+                <Chip
+                  label={ppd.name}
+                  color='info'
+                  variant={
+                    drawerFilters.ancestorId === ppd.id ? "solid" : "outlined"
+                  }
+                  onClick={handleFilterObject("ancestorId", ppd.id)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+
+        {drawerFilters.ancestorId && (isPPG || isPPDOrTeacher) && (
+          <Grid container spacing={1} pb={3}>
+            {ppkList?.data.map((ppk) => (
+              <Grid item key={ppk.id}>
+                <Chip
+                  label={ppk.name}
+                  color='info'
+                  variant={
+                    drawerFilters.organizationId === ppk.id
+                      ? "solid"
+                      : "outlined"
+                  }
+                  onClick={handleFilterObject("organizationId", ppk.id)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          p: 2,
+          borderTop: "1px solid #eee",
+          bgcolor: "background.paper",
+        }}
+      >
+        <Button
+          variant='contained'
+          color='info'
+          fullWidth
+          onClick={toggleDrawer(false)}
+        >
+          Lihat
+        </Button>
+      </Box>
+    </Box>
   )
 
   const onClickCreateUser = () => {
@@ -465,7 +480,7 @@ function Generus() {
       </InfiniteScroll>
 
       <Drawer anchor='left' open={stateDrawer} onClose={toggleDrawer(false)}>
-        <Container>{filterList()}</Container>
+        {filterList()}
       </Drawer>
 
       <Fab

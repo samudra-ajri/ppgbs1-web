@@ -55,7 +55,7 @@ function PresenceList(props) {
   const [removeId, setRemoveId] = useState("")
   const [stateDrawer, setStateDrawer] = useState(false)
   const { ppd: ppdList, ppk: ppkList } = useSelector(
-    (state) => state.organizations
+    (state) => state.organizations,
   )
 
   const isPPG = user.currentPosition.organizationLevel === 0
@@ -142,7 +142,7 @@ function PresenceList(props) {
             search,
             positionType: "GENERUS",
             ancestorId: event.organizationId,
-          })
+          }),
         )
         dispatch(resetSearch())
       } else {
@@ -232,7 +232,7 @@ function PresenceList(props) {
   const updateStatus = (attender, status) => () => {
     if (!isLoadingUpdate)
       dispatch(
-        updatePresence({ eventId: event.id, userId: attender.userId, status })
+        updatePresence({ eventId: event.id, userId: attender.userId, status }),
       )
   }
 
@@ -253,7 +253,7 @@ function PresenceList(props) {
         link.href = fileURL
         link.setAttribute(
           "download",
-          `presensi-${event.name}-${Date.now()}.xlsx`
+          `presensi-${event.name}-${Date.now()}.xlsx`,
         ) // Name the file
         document.body.appendChild(link)
         link.click()
@@ -269,110 +269,124 @@ function PresenceList(props) {
   }
 
   const filterList = () => (
-    <>
-      <Grid pt={3} sx={{ width: "100vw" }}>
-        <IconButton aria-label='delete' onClick={toggleDrawer(false)}>
+    <Box
+      sx={{
+        width: { xs: "100vw", sm: 400 },
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          p: 2,
+          borderBottom: "1px solid #eee",
+        }}
+      >
+        <Typography variant='h6' fontWeight='bold'>
+          Filters
+        </Typography>
+        <IconButton aria-label='close' onClick={toggleDrawer(false)}>
           <CloseIcon />
         </IconButton>
-      </Grid>
+      </Box>
 
-      <Grid item xs={12} pb={4}>
-        <Typography textAlign='center'>
-          <b>Filters</b>
-        </Typography>
-      </Grid>
-
-      <Grid container spacing={1} pb={3} pl={1}>
-        <Grid item>
-          <Chip
-            label='Laki-laki'
-            color='info'
-            variant={drawerFilters.sex === 1 ? "solid" : "outlined"}
-            onClick={handleFilterObject("sex", 1)}
-          />
-        </Grid>
-        <Grid item>
-          <Chip
-            label='Perempuan'
-            color='info'
-            variant={drawerFilters.sex === 0 ? "solid" : "outlined"}
-            onClick={handleFilterObject("sex", 0)}
-          />
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={1} pb={3} pl={1}>
-        {Object.keys(gradeEnum).map((key) => (
-          <Grid item key={key}>
+      <Box sx={{ flexGrow: 1, overflowY: "auto", p: 2 }}>
+        <Grid container spacing={1} pb={3}>
+          <Grid item>
             <Chip
-              label={gradeEnum[key]}
+              label='Laki-laki'
               color='info'
-              variant={drawerFilters.grade.includes(key) ? "solid" : "outlined"}
-              onClick={handleFilterObject("grade", key)}
+              variant={drawerFilters.sex === 1 ? "solid" : "outlined"}
+              onClick={handleFilterObject("sex", 1)}
             />
           </Grid>
-        ))}
-      </Grid>
+          <Grid item>
+            <Chip
+              label='Perempuan'
+              color='info'
+              variant={drawerFilters.sex === 0 ? "solid" : "outlined"}
+              onClick={handleFilterObject("sex", 0)}
+            />
+          </Grid>
+        </Grid>
 
-      {isPPGevent && isPPG && (
-        <Grid container spacing={1} pb={3} pl={1}>
-          {ppdList?.data.map((ppd) => (
-            <Grid item key={ppd.id}>
+        <Grid container spacing={1} pb={3}>
+          {Object.keys(gradeEnum).map((key) => (
+            <Grid item key={key}>
               <Chip
-                label={ppd.name}
+                label={gradeEnum[key]}
                 color='info'
                 variant={
-                  drawerFilters.ancestorOrganizationId === ppd.id
-                    ? "solid"
-                    : "outlined"
+                  drawerFilters.grade.includes(key) ? "solid" : "outlined"
                 }
-                onClick={handleFilterObject("ancestorOrganizationId", ppd.id)}
+                onClick={handleFilterObject("grade", key)}
               />
             </Grid>
           ))}
         </Grid>
-      )}
 
-      {drawerFilters.ancestorOrganizationId &&
-        (isPPGevent || isPPDevent) &&
-        !isPPK && (
-          <Grid container spacing={1} pb={3} pl={1}>
-            {ppkList?.data.map((ppk) => (
-              <Grid item key={ppk.id}>
+        {isPPGevent && isPPG && (
+          <Grid container spacing={1} pb={3}>
+            {ppdList?.data.map((ppd) => (
+              <Grid item key={ppd.id}>
                 <Chip
-                  label={ppk.name}
+                  label={ppd.name}
                   color='info'
                   variant={
-                    drawerFilters.organizationId === ppk.id
+                    drawerFilters.ancestorOrganizationId === ppd.id
                       ? "solid"
                       : "outlined"
                   }
-                  onClick={handleFilterObject("organizationId", ppk.id)}
+                  onClick={handleFilterObject("ancestorOrganizationId", ppd.id)}
                 />
               </Grid>
             ))}
           </Grid>
         )}
 
-      <Grid pb={10} />
-
-      <AppBar position='fixed' color='inherit' sx={{ top: "auto", bottom: 0 }}>
-        <Toolbar>
-          <Grid container justifyContent='center' style={{ width: "100%" }}>
-            <Grid item xs={12}>
-              <Button
-                variant='contained'
-                color='info'
-                fullWidth
-                onClick={toggleDrawer(false)}
-              >
-                Lihat
-              </Button>
+        {drawerFilters.ancestorOrganizationId &&
+          (isPPGevent || isPPDevent) &&
+          !isPPK && (
+            <Grid container spacing={1} pb={3}>
+              {ppkList?.data.map((ppk) => (
+                <Grid item key={ppk.id}>
+                  <Chip
+                    label={ppk.name}
+                    color='info'
+                    variant={
+                      drawerFilters.organizationId === ppk.id
+                        ? "solid"
+                        : "outlined"
+                    }
+                    onClick={handleFilterObject("organizationId", ppk.id)}
+                  />
+                </Grid>
+              ))}
             </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-    </>
+          )}
+      </Box>
+
+      <Box
+        sx={{
+          p: 2,
+          borderTop: "1px solid #eee",
+          bgcolor: "background.paper",
+        }}
+      >
+        <Button
+          variant='contained'
+          color='info'
+          fullWidth
+          onClick={toggleDrawer(false)}
+        >
+          Lihat
+        </Button>
+      </Box>
+    </Box>
   )
 
   return (
@@ -528,10 +542,12 @@ function PresenceList(props) {
                     >
                       PPK{" "}
                       {capitalize.words(
-                        attender.organizationName.replace("PPK ", "")
+                        attender.organizationName.replace("PPK ", ""),
                       )}{" "}
                       · {attender.userSex ? "Lk" : "Pr"} ·{" "}
-                      {attender.grade || attender.grade === 0 ? gradeShortEnum[attender.grade] : ""}
+                      {attender.grade || attender.grade === 0
+                        ? gradeShortEnum[attender.grade]
+                        : ""}
                       {attender.status === "ALPA" || attender.status === "IZIN"
                         ? ""
                         : " · " + presenceTime(attender.createdAt)}
@@ -608,7 +624,7 @@ function PresenceList(props) {
       </PopDialog>
 
       <Drawer anchor='left' open={stateDrawer} onClose={toggleDrawer(false)}>
-        <Container>{filterList()}</Container>
+        {filterList()}
       </Drawer>
 
       <Fab
