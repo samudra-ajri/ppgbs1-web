@@ -230,8 +230,8 @@ function GroupCompletion() {
           </Grid>
 
           {drawerFilters.targetType === "monthly" && (
-            <Grid container item spacing={2} mt={-1}>
-              <Grid item xs={5} sm={2}>
+            <Grid container item spacing={2} mt={1}>
+              <Grid item xs={6} sm={6}>
                 <TextField
                   select
                   fullWidth
@@ -252,7 +252,7 @@ function GroupCompletion() {
                   ))}
                 </TextField>
               </Grid>
-              <Grid item xs={5} sm={2}>
+              <Grid item xs={6} sm={6}>
                 <TextField
                   fullWidth
                   size='small'
