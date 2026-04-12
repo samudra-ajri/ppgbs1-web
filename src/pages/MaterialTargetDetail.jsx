@@ -261,6 +261,7 @@ function MaterialTargetDetail() {
                     realCategory: m.category,
                     subcategory: m.subcategory,
                     id: m.id,
+                    grade: m.grade,
                     targetedCount: isTargeted ? 1 : 0, // Using 1 to signal targeted
                     percentage: 0,
                   }
@@ -337,6 +338,24 @@ function MaterialTargetDetail() {
                                     {sumCompletion.subcategory}
                                   </Typography>
                                   <div>{sumCompletion.category}</div>
+                                  <Typography
+                                    variant='caption'
+                                    display='block'
+                                    sx={{
+                                      mt: 0.5,
+                                      opacity: isTargeted ? 0.85 : 0.6,
+                                      fontStyle: "italic",
+                                    }}
+                                  >
+                                    Kelas:{" "}
+                                    {sumCompletion.grade || sumCompletion.grade === 0
+                                      ? gradeShortEnum[sumCompletion.grade]
+                                      : filters.usersGrade && filters.usersGrade.length > 0
+                                      ? filters.usersGrade
+                                          .map((g) => gradeShortEnum[g])
+                                          .join(", ")
+                                      : "Semua"}
+                                  </Typography>
                                 </Box>
                               }
                               backgroundColor={backgroundColor}
