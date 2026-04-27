@@ -75,13 +75,15 @@ function PeopleCard(props) {
             boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
             transform: "translateY(-2px)",
           },
+          display: "flex",
+          alignItems: "stretch",
         }}
       >
         <CardActionArea
           component={Link}
           to={link}
           onClick={handleClickCard}
-          sx={{ display: "block" }}
+          sx={{ display: "block", flex: 1 }}
         >
           <CardContent
             sx={{
@@ -89,80 +91,75 @@ function PeopleCard(props) {
               "&:last-child": { paddingBottom: 2 },
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Box sx={{ flex: 1, pr: 2 }}>
-                <Typography
-                  variant='subtitle1'
-                  fontWeight='bold'
-                  lineHeight={1.3}
-                >
-                  {user.name}
-                </Typography>
-
-                <Typography
-                  variant='caption'
-                  color='text.secondary'
-                  sx={{ mt: 0.5, display: "block", lineHeight: 1.5 }}
-                >
-                  {capitalize
-                    .words(user.positions[0].positionName)
-                    .replace("Ppk ", "PPK ")}
-                  {user.sex ? " · Lk" : " · Pr"}
-                  {user.grade || user.grade === 0
-                    ? ` · ${gradeShortEnum[user.grade]}`
-                    : ""}
-                  {user.birthdate ? ` · ${age} thn` : ""}
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                }}
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                }}
+            <Box sx={{ pr: 1 }}>
+              <Typography
+                variant='subtitle1'
+                fontWeight='bold'
+                lineHeight={1.3}
               >
-                <Tooltip title='aktifasi user'>
-                  <Switch
-                    checked={isActive}
-                    onChange={handleSwitchChange}
-                    size='small'
-                    color='success'
-                  />
-                </Tooltip>
+                {user.name}
+              </Typography>
 
-                {canDelete && (
-                  <Tooltip title='hapus user'>
-                    <IconButton
-                      size='small'
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        onClick()
-                      }}
-                      sx={{
-                        color: "error.main",
-                        "&:hover": { backgroundColor: "error.lighter" },
-                      }}
-                    >
-                      <DeleteIcon fontSize='small' />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </Box>
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{ mt: 0.5, display: "block", lineHeight: 1.5 }}
+              >
+                {capitalize
+                  .words(user.positions[0].positionName)
+                  .replace("Ppk ", "PPK ")}
+                {user.sex ? " · Lk" : " · Pr"}
+                {user.grade || user.grade === 0
+                  ? ` · ${gradeShortEnum[user.grade]}`
+                  : ""}
+                {user.birthdate ? ` · ${age} thn` : ""}
+              </Typography>
             </Box>
           </CardContent>
         </CardActionArea>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            pr: 1,
+            position: "relative",
+            zIndex: 2,
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+            e.preventDefault()
+          }}
+        >
+          <Tooltip title='aktifasi user'>
+            <Switch
+              checked={isActive}
+              onChange={handleSwitchChange}
+              size='small'
+              color='success'
+              onClick={(e) => e.stopPropagation()}
+            />
+          </Tooltip>
+
+          {canDelete && (
+            <Tooltip title='hapus user'>
+              <IconButton
+                size='small'
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onClick()
+                }}
+                sx={{
+                  color: "error.main",
+                  "&:hover": { backgroundColor: "error.lighter" },
+                }}
+              >
+                <DeleteIcon fontSize='small' />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
       </Card>
 
       <PopDialog
