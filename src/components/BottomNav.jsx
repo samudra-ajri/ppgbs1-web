@@ -90,14 +90,7 @@ function BottomNav() {
     return [] // user exists but position not decided
   })()
 
-  if (
-    !user &&
-    (pathname === "/login" ||
-      pathname === "/register" ||
-      pathname === "/forgot-password")
-  ) {
-    return null
-  }
+
 
   return (
     <Paper
