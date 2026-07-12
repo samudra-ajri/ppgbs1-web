@@ -148,7 +148,7 @@ function EventCard(props) {
                 </Typography>
               </Box>
 
-              {user.currentPosition.type === "ADMIN" && (
+              {(user.currentPosition.type === "ADMIN" || user.currentPosition.type === "PENGAJAR") && (
                 <IconButton
                   size='small'
                   disabled={!canDelete()}

@@ -43,7 +43,7 @@ function Event() {
 
   useEffect(() => {
     if (!user) navigate("/login")
-    user.currentPosition.type === "ADMIN"
+    user.currentPosition.type === "ADMIN" || user.currentPosition.type === "PENGAJAR"
       ? dispatch(listEvents({ ...filters, page: 1, isGroupHead: "false" }))
       : dispatch(listEvents({ ...filters, page: 1, groupId: "null" }))
     return () => {
@@ -54,7 +54,7 @@ function Event() {
   const fetchMoreEvents = () => {
     if (hasNextPage) {
       setPage((prevPage) => prevPage + 1)
-      user.currentPosition.type === "ADMIN"
+      user.currentPosition.type === "ADMIN" || user.currentPosition.type === "PENGAJAR"
         ? dispatch(
             listEvents({ ...filters, page: page + 1, isGroupHead: "false" }),
           )
@@ -132,7 +132,7 @@ function Event() {
         </Typography>
       )}
 
-      {user.currentPosition.type === "ADMIN" && (
+      {(user.currentPosition.type === "ADMIN" || user.currentPosition.type === "PENGAJAR") && (
         <Fab
           size='large'
           color='info'
