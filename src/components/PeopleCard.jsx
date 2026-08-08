@@ -22,6 +22,7 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import HowToRegIcon from "@mui/icons-material/HowToRegOutlined"
 import SchoolIcon from "@mui/icons-material/SchoolOutlined"
+import NoSchoolIcon from "@mui/icons-material/PersonRemoveOutlined"
 import moment from "moment"
 import { Link } from "react-router-dom"
 import capitalize from "capitalize"
@@ -33,6 +34,7 @@ import {
   addUserPosition,
   deleteUser,
   deleteUserPermanently,
+  removeUserPosition,
 } from "../features/users/userSlice"
 import { getUserById } from "../features/persons/personSlice"
 import gradeShortEnum from "../enums/gradeShortEnum"
@@ -43,12 +45,21 @@ function PeopleCard(props) {
   const age = moment().diff(user.birthdate, "years")
   const [openPopup, setOpenPopup] = useState(false)
   const [openTeacherPopup, setOpenTeacherPopup] = useState(false)
+  const [openRemoveTeacherPopup, setOpenRemoveTeacherPopup] = useState(false)
   const { isLoading } = useSelector((state) => state.users)
 
-  const isTeacher = user.positions.some(
-    (position) => position.type === "PENGAJAR" && !position.positionDeletedAt,
+  // `positions` only holds the positions matching the list filter, so role checks
+  // use `allPositions` which the list endpoint returns unfiltered.
+  const activePositions = (user.allPositions ?? user.positions).filter(
+    (position) => !position.positionDeletedAt,
   )
-  const canAddTeacher = Boolean(user.positions[0]?.organizationId) && !isTeacher
+  const teacherPosition = activePositions.find(
+    (position) => position.type === "PENGAJAR",
+  )
+  const canAddTeacher =
+    Boolean(user.positions[0]?.organizationId) && !teacherPosition
+  const canRemoveTeacher =
+    Boolean(teacherPosition?.organizationId) && activePositions.length > 1
 
   const [anchorEl, setAnchorEl] = useState(null)
   const openMenu = Boolean(anchorEl)
@@ -119,6 +130,27 @@ function PeopleCard(props) {
       toast.error(result.payload)
     } else {
       toast.success(`${user.name} ditambahkan sebagai pengajar.`)
+    }
+  }
+
+  const handleClickRemoveTeacher = () => {
+    handleCloseMenu()
+    setOpenRemoveTeacherPopup(true)
+  }
+
+  const onClickRemoveTeacher = async () => {
+    const result = await dispatch(
+      removeUserPosition({
+        userId: user.id,
+        organizationId: teacherPosition.organizationId,
+        type: "PENGAJAR",
+      }),
+    )
+    setOpenRemoveTeacherPopup(false)
+    if (removeUserPosition.rejected.match(result)) {
+      toast.error(result.payload)
+    } else {
+      toast.success(`${user.name} dihapus sebagai pengajar.`)
     }
   }
 
@@ -251,6 +283,15 @@ function PeopleCard(props) {
             </MenuItem>
           )}
 
+          {canRemoveTeacher && (
+            <MenuItem onClick={handleClickRemoveTeacher}>
+              <ListItemIcon>
+                <NoSchoolIcon fontSize='small' />
+              </ListItemIcon>
+              <ListItemText primary='Hapus sebagai pengajar' />
+            </MenuItem>
+          )}
+
           {canDelete && <Divider />}
 
           {canDelete && (
@@ -305,6 +346,37 @@ function PeopleCard(props) {
               <Button
                 variant='outlined'
                 onClick={() => setOpenTeacherPopup(false)}
+              >
+                Batal
+              </Button>
+            </Stack>
+          )}
+        </Box>
+      </PopDialog>
+
+      <PopDialog
+        title={`Hapus ${user.name} sebagai pengajar ${capitalize
+          .words(teacherPosition?.organizationName ?? "")
+          .replace("Ppk ", "PPK ")}?`}
+        openPopup={openRemoveTeacherPopup}
+      >
+        <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
+          {isLoading ? (
+            <Grid align='center' sx={{ pt: 1.5 }}>
+              <CircularProgress size={20} />
+            </Grid>
+          ) : (
+            <Stack spacing={1} direction='row'>
+              <Button
+                variant='outlined'
+                color='error'
+                onClick={onClickRemoveTeacher}
+              >
+                Hapus
+              </Button>
+              <Button
+                variant='contained'
+                onClick={() => setOpenRemoveTeacherPopup(false)}
               >
                 Batal
               </Button>

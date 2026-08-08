@@ -112,6 +112,25 @@ export const addUserPosition = createAsyncThunk(
   }
 )
 
+// Remove a position from a user
+export const removeUserPosition = createAsyncThunk(
+  'users/removePosition',
+  async (params, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await userService.removeUserPosition(token, params)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const moveUser = createAsyncThunk(
   'users/move',
   async ({ userId, data }, thunkAPI) => {
@@ -218,20 +237,64 @@ export const userSlice = createSlice({
       .addCase(addUserPosition.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        const { userId, positionId, type } = action.payload
+        const {
+          userId,
+          positionId,
+          positionName,
+          type,
+          organizationId,
+          organizationName,
+        } = action.payload
+        const added = {
+          positionId,
+          positionName,
+          type,
+          organizationId,
+          organizationName,
+          isMain: false,
+          positionDeletedAt: null,
+        }
         state.users = state.users.map((user) =>
           String(user.id) === String(userId)
             ? {
                 ...user,
-                positions: [
-                  ...user.positions,
-                  { positionId, type, isMain: false, positionDeletedAt: null },
-                ],
+                allPositions: [...(user.allPositions ?? user.positions), added],
               }
             : user
         )
       })
       .addCase(addUserPosition.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(removeUserPosition.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(removeUserPosition.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        const { userId, positionId } = action.payload
+        const without = (positions) =>
+          positions.filter(
+            (position) => String(position.positionId) !== String(positionId)
+          )
+        const updated = state.users.map((user) =>
+          String(user.id) === String(userId)
+            ? {
+                ...user,
+                positions: without(user.positions),
+                allPositions: without(user.allPositions ?? user.positions),
+              }
+            : user
+        )
+        // the list only holds users matching the position filter, so a user left
+        // without a matching position no longer belongs in it
+        state.users = updated.filter((user) => user.positions.length > 0)
+        state.totalCount =
+          state.totalCount - (updated.length - state.users.length)
+      })
+      .addCase(removeUserPosition.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
