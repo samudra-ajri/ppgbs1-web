@@ -5,21 +5,35 @@ import {
   CardActionArea,
   CardContent,
   CircularProgress,
+  Divider,
   Grid,
   IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Stack,
   Tooltip,
   Typography,
   Switch,
+  Chip,
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
+import MoreVertIcon from "@mui/icons-material/MoreVert"
+import HowToRegIcon from "@mui/icons-material/HowToRegOutlined"
+import SchoolIcon from "@mui/icons-material/SchoolOutlined"
 import moment from "moment"
 import { Link } from "react-router-dom"
 import capitalize from "capitalize"
+import { toast } from "react-toastify"
 import PopDialog from "./PopDialog"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { deleteUser, deleteUserPermanently } from "../features/users/userSlice"
+import {
+  addUserPosition,
+  deleteUser,
+  deleteUserPermanently,
+} from "../features/users/userSlice"
 import { getUserById } from "../features/persons/personSlice"
 import gradeShortEnum from "../enums/gradeShortEnum"
 
@@ -28,7 +42,16 @@ function PeopleCard(props) {
   const { user, canDelete, link } = props
   const age = moment().diff(user.birthdate, "years")
   const [openPopup, setOpenPopup] = useState(false)
+  const [openTeacherPopup, setOpenTeacherPopup] = useState(false)
   const { isLoading } = useSelector((state) => state.users)
+
+  const isTeacher = user.positions.some(
+    (position) => position.type === "PENGAJAR" && !position.positionDeletedAt,
+  )
+  const canAddTeacher = Boolean(user.positions[0]?.organizationId) && !isTeacher
+
+  const [anchorEl, setAnchorEl] = useState(null)
+  const openMenu = Boolean(anchorEl)
 
   const [isActive, setIsActive] = useState(
     !user.positions[0]?.positionDeletedAt,
@@ -36,6 +59,16 @@ function PeopleCard(props) {
   useEffect(() => {
     setIsActive(!user.positions[0]?.positionDeletedAt)
   }, [user])
+
+  const handleOpenMenu = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setAnchorEl(e.currentTarget)
+  }
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
+  }
 
   const onClick = () => {
     setOpenPopup(true)
@@ -55,11 +88,38 @@ function PeopleCard(props) {
     dispatch(getUserById(user.id))
   }
 
-  const handleSwitchChange = (e) => {
-    setIsActive(e.target.checked)
+  const handleToggleActive = () => {
+    setIsActive(!isActive)
     dispatch(
       deleteUser({ userId: user.id, positionId: user.positions[0].positionId }),
     )
+    handleCloseMenu()
+  }
+
+  const handleClickDelete = () => {
+    handleCloseMenu()
+    onClick()
+  }
+
+  const handleClickAddTeacher = () => {
+    handleCloseMenu()
+    setOpenTeacherPopup(true)
+  }
+
+  const onClickAddTeacher = async () => {
+    const result = await dispatch(
+      addUserPosition({
+        userId: user.id,
+        organizationId: user.positions[0].organizationId,
+        type: "PENGAJAR",
+      }),
+    )
+    setOpenTeacherPopup(false)
+    if (addUserPosition.rejected.match(result)) {
+      toast.error(result.payload)
+    } else {
+      toast.success(`${user.name} ditambahkan sebagai pengajar.`)
+    }
   }
 
   return (
@@ -92,13 +152,27 @@ function PeopleCard(props) {
             }}
           >
             <Box sx={{ pr: 1 }}>
-              <Typography
-                variant='subtitle1'
-                fontWeight='bold'
-                lineHeight={1.3}
+              <Stack
+                direction='row'
+                alignItems='center'
+                spacing={0.75}
+                flexWrap='wrap'
               >
-                {user.name}
-              </Typography>
+                <Typography
+                  variant='subtitle1'
+                  fontWeight='bold'
+                  lineHeight={1.3}
+                >
+                  {user.name}
+                </Typography>
+                <Chip
+                  label={isActive ? "Aktif" : "Pindah Sementara"}
+                  size='small'
+                  color={isActive ? "success" : "default"}
+                  variant='outlined'
+                  sx={{ height: 18, fontSize: 10 }}
+                />
+              </Stack>
 
               <Typography
                 variant='caption'
@@ -132,34 +206,62 @@ function PeopleCard(props) {
             e.preventDefault()
           }}
         >
-          <Tooltip title='aktifasi user'>
+          <Tooltip title='aksi'>
+            <IconButton
+              size='small'
+              aria-label='aksi user'
+              aria-haspopup='true'
+              aria-expanded={openMenu ? "true" : undefined}
+              onClick={handleOpenMenu}
+              sx={{ color: "text.secondary" }}
+            >
+              <MoreVertIcon fontSize='small' />
+            </IconButton>
+          </Tooltip>
+        </Box>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={openMenu}
+          onClose={handleCloseMenu}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MenuItem onClick={handleToggleActive}>
+            <ListItemIcon>
+              <HowToRegIcon fontSize='small' />
+            </ListItemIcon>
+            <ListItemText primary='Aktifasi user' />
             <Switch
               checked={isActive}
-              onChange={handleSwitchChange}
               size='small'
               color='success'
-              onClick={(e) => e.stopPropagation()}
+              sx={{ ml: 1, pointerEvents: "none" }}
+              inputProps={{ tabIndex: -1 }}
             />
-          </Tooltip>
+          </MenuItem>
+
+          {canAddTeacher && (
+            <MenuItem onClick={handleClickAddTeacher}>
+              <ListItemIcon>
+                <SchoolIcon fontSize='small' />
+              </ListItemIcon>
+              <ListItemText primary='Tambah sebagai pengajar' />
+            </MenuItem>
+          )}
+
+          {canDelete && <Divider />}
 
           {canDelete && (
-            <Tooltip title='hapus user'>
-              <IconButton
-                size='small'
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onClick()
-                }}
-                sx={{
-                  color: "error.main",
-                  "&:hover": { backgroundColor: "error.lighter" },
-                }}
-              >
-                <DeleteIcon fontSize='small' />
-              </IconButton>
-            </Tooltip>
+            <MenuItem onClick={handleClickDelete} sx={{ color: "error.main" }}>
+              <ListItemIcon>
+                <DeleteIcon fontSize='small' color='error' />
+              </ListItemIcon>
+              <ListItemText primary='Hapus user' />
+            </MenuItem>
           )}
-        </Box>
+        </Menu>
       </Card>
 
       <PopDialog
@@ -177,6 +279,33 @@ function PeopleCard(props) {
                 Hapus
               </Button>
               <Button variant='contained' onClick={() => setOpenPopup(false)}>
+                Batal
+              </Button>
+            </Stack>
+          )}
+        </Box>
+      </PopDialog>
+
+      <PopDialog
+        title={`Tambahkan ${user.name} sebagai pengajar ${capitalize
+          .words(user.positions[0]?.organizationName ?? "")
+          .replace("Ppk ", "PPK ")}?`}
+        openPopup={openTeacherPopup}
+      >
+        <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
+          {isLoading ? (
+            <Grid align='center' sx={{ pt: 1.5 }}>
+              <CircularProgress size={20} />
+            </Grid>
+          ) : (
+            <Stack spacing={1} direction='row'>
+              <Button variant='contained' onClick={onClickAddTeacher}>
+                Tambah
+              </Button>
+              <Button
+                variant='outlined'
+                onClick={() => setOpenTeacherPopup(false)}
+              >
                 Batal
               </Button>
             </Stack>

@@ -65,6 +65,18 @@ const deleteUserPermanently = async (token, params) => {
   return response.data
 }
 
+// Add a position to a user
+const addUserPosition = async (token, params) => {
+  const { userId, organizationId, type } = params
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.post(API_URL + `/${userId}/positions`, { organizationId, type }, config)
+  return response.data
+}
+
 // Update a user
 const updateUser = async (token, userId, data) => {
   const config = {
@@ -115,6 +127,7 @@ const userService = {
   updateUser,
   downloadUsersData,
   deleteUserPermanently,
+  addUserPosition,
 }
 
 export default userService

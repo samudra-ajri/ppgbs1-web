@@ -93,6 +93,25 @@ export const deleteUserPermanently = createAsyncThunk(
   }
 )
 
+// Add a position to a user
+export const addUserPosition = createAsyncThunk(
+  'users/addPosition',
+  async (params, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await userService.addUserPosition(token, params)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const moveUser = createAsyncThunk(
   'users/move',
   async ({ userId, data }, thunkAPI) => {
@@ -189,6 +208,30 @@ export const userSlice = createSlice({
         state.totalCount = state.totalCount - 1
       })
       .addCase(deleteUserPermanently.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(addUserPosition.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(addUserPosition.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        const { userId, positionId, type } = action.payload
+        state.users = state.users.map((user) =>
+          String(user.id) === String(userId)
+            ? {
+                ...user,
+                positions: [
+                  ...user.positions,
+                  { positionId, type, isMain: false, positionDeletedAt: null },
+                ],
+              }
+            : user
+        )
+      })
+      .addCase(addUserPosition.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
