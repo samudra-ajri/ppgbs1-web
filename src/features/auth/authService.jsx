@@ -91,6 +91,17 @@ const updateTeacherProfile = async (userData, token) => {
     }
 }
 
+// Declare myself a generus on top of being a teacher
+const addMyGenerusPosition = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await API.post('users/me/generus-position', {}, config)
+    return response.data
+}
+
 // Update my password
 const updateMyPassword = async (userData, token) => {
     const {
@@ -175,6 +186,7 @@ const authService = {
     updateMyPassword,
     registerByAdmin,
     updateTeacherProfile,
+    addMyGenerusPosition,
 }
 
 export default authService

@@ -118,6 +118,21 @@ export const updateMyPassword = createAsyncThunk('auth/update-password', async (
     }
 })
 
+// Declare myself a generus on top of being a teacher
+export const addMyGenerusPosition = createAsyncThunk('auth/add-my-generus-position', async (_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.addMyGenerusPosition(token)
+    } catch (error) {
+        const message = (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+        ) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const logout = createAsyncThunk('auth/logout', async () => {
     await authService.logout()
 })
@@ -314,6 +329,19 @@ export const authSlice = createSlice({
                 state.user = action.payload
             })
             .addCase(decidePosition.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            // state.user is left untouched on purpose: the session still carries the
+            // old positions, which is why the user is asked to log in again
+            .addCase(addMyGenerusPosition.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(addMyGenerusPosition.fulfilled, (state) => {
+                state.isLoading = false
+            })
+            .addCase(addMyGenerusPosition.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

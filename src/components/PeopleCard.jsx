@@ -39,6 +39,9 @@ import {
 import { getUserById } from "../features/persons/personSlice"
 import gradeShortEnum from "../enums/gradeShortEnum"
 
+const formatOrgName = (name) =>
+  capitalize.words(name ?? "").replace("Ppk ", "PPK ")
+
 function PeopleCard(props) {
   const dispatch = useDispatch()
   const { user, canDelete, link } = props
@@ -328,9 +331,14 @@ function PeopleCard(props) {
       </PopDialog>
 
       <PopDialog
-        title={`Tambahkan ${user.name} sebagai pengajar ${capitalize
-          .words(user.positions[0]?.organizationName ?? "")
-          .replace("Ppk ", "PPK ")}?`}
+        title={
+          <>
+            Tambahkan {user.name}
+            <br />
+            sebagai pengajar {formatOrgName(user.positions[0]?.organizationName)}
+            ?
+          </>
+        }
         openPopup={openTeacherPopup}
       >
         <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
@@ -355,9 +363,13 @@ function PeopleCard(props) {
       </PopDialog>
 
       <PopDialog
-        title={`Hapus ${user.name} sebagai pengajar ${capitalize
-          .words(teacherPosition?.organizationName ?? "")
-          .replace("Ppk ", "PPK ")}?`}
+        title={
+          <>
+            Hapus {user.name}
+            <br />
+            sebagai pengajar {formatOrgName(teacherPosition?.organizationName)}?
+          </>
+        }
         openPopup={openRemoveTeacherPopup}
       >
         <Box sx={{ display: "flex", justifyContent: "center", height: 45 }}>
