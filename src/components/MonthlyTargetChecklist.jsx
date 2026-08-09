@@ -35,7 +35,18 @@ import {
 const isPageNumber = (material) => /^\d+$/.test(material)
 
 function MonthlyTargetChecklist(props) {
-  const { userId, targetGrade, month, year, canInput = true, byAdmin } = props
+  const {
+    userId,
+    targetGrade,
+    month,
+    year,
+    canInput = true,
+    byAdmin,
+    showSummary = true,
+    showActions = true,
+    lockCompleted = false,
+    onSelectionChange,
+  } = props
   const dispatch = useDispatch()
   const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores,
@@ -124,8 +135,30 @@ function MonthlyTargetChecklist(props) {
 
   const hasChanges = changes.added.length > 0 || changes.removed.length > 0
 
+  // halaman induk perlu tahu capaian baru yang dicentang, mis. untuk validasi
+  useEffect(() => {
+    if (onSelectionChange) onSelectionChange(changes.added)
+  }, [changes.added, onSelectionChange])
+
+  // capaian yang sudah tersimpan bisa dikunci supaya tidak bisa dibatalkan lagi
+  const isLocked = (materialId) => lockCompleted && Boolean(baseline[materialId])
+
+  const createCompletions = (materialIds) =>
+    byAdmin
+      ? dispatch(createCompletionByAdmin({ userId, materialIds })).unwrap()
+      : dispatch(
+          createCompletion({
+            data: { materialIds },
+            params: {
+              targetMaterialMonth: month,
+              targetMaterialYear: year,
+              targetGrade,
+            },
+          }),
+        ).unwrap()
+
   const onToggle = (materialId) => {
-    if (!canInput) return
+    if (!canInput || isLocked(materialId)) return
     setInputs((prevState) => ({
       ...prevState,
       [materialId]: prevState[materialId] ? 0 : 1,
@@ -148,20 +181,7 @@ function MonthlyTargetChecklist(props) {
     setIsSaving(true)
     try {
       if (added.length > 0) {
-        await (byAdmin
-          ? dispatch(
-              createCompletionByAdmin({ userId, materialIds: added }),
-            ).unwrap()
-          : dispatch(
-              createCompletion({
-                data: { materialIds: added },
-                params: {
-                  targetMaterialMonth: month,
-                  targetMaterialYear: year,
-                  targetGrade,
-                },
-              }),
-            ).unwrap())
+        await createCompletions(added)
       }
       if (removed.length > 0) {
         await (byAdmin
@@ -230,6 +250,7 @@ function MonthlyTargetChecklist(props) {
       <Grid container spacing={1}>
         {section.items.map((item) => {
           const checked = Boolean(inputs[item.materialId])
+          const locked = isLocked(item.materialId)
           return (
             <Grid item xs={3} md={2} key={item.materialId}>
               <Box
@@ -242,7 +263,8 @@ function MonthlyTargetChecklist(props) {
                   borderColor: checked ? "#2E7D32" : "divider",
                   bgcolor: checked ? "#2E7D32" : "transparent",
                   color: checked ? "#F0F6F0" : "text.primary",
-                  cursor: canInput ? "pointer" : "default",
+                  cursor: canInput && !locked ? "pointer" : "default",
+                  opacity: locked ? 0.6 : 1,
                   userSelect: "none",
                 }}
               >
@@ -263,7 +285,7 @@ function MonthlyTargetChecklist(props) {
         <ListItemButton
           key={item.materialId}
           onClick={() => onToggle(item.materialId)}
-          disabled={!canInput}
+          disabled={!canInput || isLocked(item.materialId)}
           sx={{ py: 0.5 }}
         >
           <ListItemIcon sx={{ minWidth: 40 }}>
@@ -271,6 +293,7 @@ function MonthlyTargetChecklist(props) {
               edge='start'
               color='success'
               checked={Boolean(inputs[item.materialId])}
+              disabled={isLocked(item.materialId)}
               tabIndex={-1}
               disableRipple
             />
@@ -290,66 +313,82 @@ function MonthlyTargetChecklist(props) {
     </List>
   )
 
+  // tanpa summary, tombol simpan hanya muncul begitu ada perubahan
+  const actionsVisible = canInput && showActions && (showSummary || hasChanges)
+
   return (
     <>
-      {/* tetap terlihat saat daftar materi di-scroll, menempel di bawah AppBar */}
-      <Box
-        sx={{
-          position: "sticky",
-          top: { xs: 56, sm: 64 },
-          zIndex: (theme) => theme.zIndex.appBar - 1,
-          bgcolor: "background.default",
-          borderBottom: "1px solid",
-          borderColor: "divider",
-          pt: 1,
-          pb: 1.5,
-          mb: 2,
-        }}
-      >
-        <Typography variant='body2' style={{ fontWeight: "bold" }} gutterBottom>
-          Total
-        </Typography>
-        <LinearProgressWithLabel value={totalPercentage} />
+      {(showSummary || actionsVisible) && (
+        // tetap terlihat saat daftar materi di-scroll, menempel di bawah AppBar
+        <Box
+          sx={{
+            position: "sticky",
+            top: { xs: 56, sm: 64 },
+            zIndex: (theme) => theme.zIndex.appBar - 1,
+            bgcolor: "background.default",
+            borderBottom: "1px solid",
+            borderColor: "divider",
+            pt: 1,
+            pb: 1.5,
+            mb: 2,
+          }}
+        >
+          {showSummary && (
+            <>
+              <Typography
+                variant='body2'
+                style={{ fontWeight: "bold" }}
+                gutterBottom
+              >
+                Total
+              </Typography>
+              <LinearProgressWithLabel value={totalPercentage} />
+            </>
+          )}
 
-        {canInput && (
-          <Grid container spacing={1} alignItems='center' sx={{ mt: 0 }}>
-            <Grid item>
-              <Button
-                sx={{ fontSize: 11 }}
-                variant='contained'
-                onClick={selectAllInputs}
-              >
-                Hatam Semua
-              </Button>
+          {actionsVisible && (
+            <Grid container spacing={1} alignItems='center' sx={{ mt: 0 }}>
+              {showSummary && (
+                <Grid item>
+                  <Button
+                    sx={{ fontSize: 11 }}
+                    variant='contained'
+                    onClick={selectAllInputs}
+                  >
+                    Hatam Semua
+                  </Button>
+                </Grid>
+              )}
+              <Grid item xs style={{ flexGrow: 1 }}></Grid>
+              <Grid item>
+                <Button
+                  disabled={!hasChanges || isSaving}
+                  sx={{ fontSize: 11 }}
+                  variant='contained'
+                  onClick={resetInputs}
+                  color='error'
+                >
+                  Batal
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  disabled={!hasChanges || isSaving}
+                  sx={{ fontSize: 11 }}
+                  variant='contained'
+                  onClick={saveInputs}
+                  color='success'
+                >
+                  Simpan
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs style={{ flexGrow: 1 }}></Grid>
-            <Grid item>
-              <Button
-                disabled={!hasChanges || isSaving}
-                sx={{ fontSize: 11 }}
-                variant='contained'
-                onClick={resetInputs}
-                color='error'
-              >
-                Batal
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                disabled={!hasChanges || isSaving}
-                sx={{ fontSize: 11 }}
-                variant='contained'
-                onClick={saveInputs}
-                color='success'
-              >
-                Simpan
-              </Button>
-            </Grid>
-          </Grid>
-        )}
-      </Box>
+          )}
+        </Box>
+      )}
 
-      <Box pb={10}>
+      {/* ruang bawah hanya perlu saat komponen ini mengisi halaman sendiri */}
+      <Box pb={showSummary ? 10 : 0}>
         {groups.map((group) => (
           <Box key={group.subject} sx={{ mb: 3 }}>
             <Typography
