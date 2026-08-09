@@ -19,6 +19,7 @@ import {
   reset,
 } from "../features/completionScores/completionScoreSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
+import MonthlyTargetChecklist from "../components/MonthlyTargetChecklist"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import { logout } from "../features/auth/authSlice"
 
@@ -48,6 +49,8 @@ function UserCompletion() {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
 
+  const hasGrade = user?.grade !== undefined && user?.grade !== null
+
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
@@ -62,36 +65,15 @@ function UserCompletion() {
 
   useEffect(() => {
     if (!user) return
+    // the monthly target tab loads its own material list
+    if (value !== 1) return
 
-    if (value === 1) {
-      dispatch(reset())
-      dispatch(getSumCompletions({ structure: "category", userId: user.id }))
-    } else if (value === 0) {
-      if (user?.grade !== undefined && user?.grade !== null) {
-        dispatch(reset())
-        dispatch(
-          getSumCompletions({
-            structure: "category",
-            userId: user.id,
-            targetMaterialMonth: month,
-            targetMaterialYear: year,
-            targetGrade: user.grade,
-          }),
-        )
-      }
-    }
+    dispatch(reset())
+    dispatch(getSumCompletions({ structure: "category", userId: user.id }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, dispatch, user, month, year])
+  }, [value, dispatch, user])
 
   const renderResults = () => {
-    if (value === 0 && isSuccess && sumCompletions?.length === 0) {
-      return (
-        <Typography align='center' sx={{ mt: 5 }}>
-          Target bulan ini belum dibuat.
-        </Typography>
-      )
-    }
-
     return (
       <>
         {!isSuccess ? (
@@ -141,22 +123,16 @@ function UserCompletion() {
                       {group.subject.toLowerCase()}
                     </Typography>
                     <Grid container spacing={2}>
-                      {group.items.map((sumCompletion, index) => {
-                        const link =
-                          value === 0
-                            ? `/c/user-completion/${sumCompletion.category}?targetMaterialMonth=${month}&targetMaterialYear=${year}&targetGrade=${user.grade}`
-                            : `/c/user-completion/${sumCompletion.category}`
-                        return (
-                          <Grid item xs={6} key={index}>
-                            <SumCompletionCard
-                              key={index}
-                              percentage={sumCompletion.percentage}
-                              title={sumCompletion.category}
-                              link={link}
-                            />
-                          </Grid>
-                        )
-                      })}
+                      {group.items.map((sumCompletion, index) => (
+                        <Grid item xs={6} key={index}>
+                          <SumCompletionCard
+                            key={index}
+                            percentage={sumCompletion.percentage}
+                            title={sumCompletion.category}
+                            link={`/c/user-completion/${sumCompletion.category}`}
+                          />
+                        </Grid>
+                      ))}
                     </Grid>
                   </Box>
                 ))
@@ -258,7 +234,19 @@ function UserCompletion() {
               />
             </Grid>
           </Grid>
-          {renderResults()}
+          {hasGrade ? (
+            <MonthlyTargetChecklist
+              userId={user.id}
+              targetGrade={user.grade}
+              month={month}
+              year={year}
+              byAdmin={user.currentPosition.type !== "GENERUS"}
+            />
+          ) : (
+            <Typography align='center' sx={{ mt: 5 }}>
+              Kelas belum diatur.
+            </Typography>
+          )}
         </Box>
       )}
 

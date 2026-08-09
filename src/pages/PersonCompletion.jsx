@@ -23,6 +23,7 @@ import {
   reset,
 } from "../features/completionScores/completionScoreSlice"
 import SumCompletionCard from "../components/SumCompletionCard"
+import MonthlyTargetChecklist from "../components/MonthlyTargetChecklist"
 import LinearProgressWithLabel from "../components/LinearProgressWithLabel"
 import { logout } from "../features/auth/authSlice"
 import moment from "moment"
@@ -31,6 +32,7 @@ function PersonCompletion() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { person, isLoading } = useSelector((state) => state.person)
+  const { user } = useSelector((state) => state.auth)
   const { sumCompletions, isSuccess, isError, message } = useSelector(
     (state) => state.completionScores,
   )
@@ -53,6 +55,14 @@ function PersonCompletion() {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
 
+  const hasGrade = person?.grade !== undefined && person?.grade !== null
+
+  // User dengan tipe GENERUS, PENGAJAR, atau ADMIN dapat input capaian
+  const canInput =
+    user?.currentPosition?.type === "GENERUS" ||
+    user?.currentPosition?.type === "PENGAJAR" ||
+    user?.currentPosition?.type === "ADMIN"
+
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
@@ -67,26 +77,13 @@ function PersonCompletion() {
 
   useEffect(() => {
     if (!person) return
+    // the monthly target tab loads its own material list
+    if (value !== 1) return
 
-    if (value === 1) {
-      dispatch(reset())
-      dispatch(getSumCompletions({ structure: "category", userId: person.id }))
-    } else if (value === 0) {
-      if (person?.grade !== undefined && person?.grade !== null) {
-        dispatch(reset())
-        dispatch(
-          getSumCompletions({
-            structure: "category",
-            userId: person.id,
-            targetMaterialMonth: month,
-            targetMaterialYear: year,
-            targetGrade: person.grade,
-          }),
-        )
-      }
-    }
+    dispatch(reset())
+    dispatch(getSumCompletions({ structure: "category", userId: person.id }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, dispatch, person, month, year])
+  }, [value, dispatch, person])
 
   const lastUpdateTime = () => {
     const lastCompletionUpdate = person?.lastCompletionUpdate
@@ -129,14 +126,6 @@ function PersonCompletion() {
   }
 
   const renderResults = () => {
-    if (value === 0 && isSuccess && sumCompletions?.length === 0) {
-      return (
-        <Typography align='center' sx={{ mt: 5 }}>
-          Target bulan ini belum dibuat.
-        </Typography>
-      )
-    }
-
     if (!isSuccess) {
       return (
         <Grid pb={10}>
@@ -188,38 +177,21 @@ function PersonCompletion() {
                   {group.subject.toLowerCase()}
                 </Typography>
                 <Grid container spacing={2}>
-                  {group.items.map((sumCompletion, index) => {
-                    const link =
-                      value === 0
-                        ? `/c/person-completion/${sumCompletion.category}?targetMaterialMonth=${month}&targetMaterialYear=${year}&targetGrade=${person.grade}`
-                        : `/c/person-completion/${sumCompletion.category}`
-
-                    return (
-                      <Grid item xs={6} key={index}>
-                        <SumCompletionCard
-                          key={index}
-                          percentage={sumCompletion.percentage}
-                          title={sumCompletion.category}
-                          link={link}
-                        />
-                      </Grid>
-                    )
-                  })}
+                  {group.items.map((sumCompletion, index) => (
+                    <Grid item xs={6} key={index}>
+                      <SumCompletionCard
+                        key={index}
+                        percentage={sumCompletion.percentage}
+                        title={sumCompletion.category}
+                        link={`/c/person-completion/${sumCompletion.category}`}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
               </Box>
             ))
           })()}
         </Box>
-
-        <Fab
-          size='medium'
-          color='success'
-          aria-label='download excel'
-          onClick={onClickDownload}
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
-        >
-          <FileDownloadOutlinedIcon />
-        </Fab>
       </>
     )
   }
@@ -325,10 +297,35 @@ function PersonCompletion() {
               />
             </Grid>
           </Grid>
+
+          {!person ? null : hasGrade ? (
+            <MonthlyTargetChecklist
+              userId={person.id}
+              targetGrade={person.grade}
+              month={month}
+              year={year}
+              canInput={canInput}
+              byAdmin
+            />
+          ) : (
+            <Typography align='center' sx={{ mt: 5 }}>
+              Kelas belum diatur.
+            </Typography>
+          )}
         </Box>
       )}
 
-      {renderResults()}
+      {value === 1 && renderResults()}
+
+      <Fab
+        size='medium'
+        color='success'
+        aria-label='download excel'
+        onClick={onClickDownload}
+        sx={{ position: "fixed", bottom: 16, right: 16 }}
+      >
+        <FileDownloadOutlinedIcon />
+      </Fab>
     </>
   )
 }
