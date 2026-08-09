@@ -11,7 +11,12 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   Grid,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
   Autocomplete,
@@ -38,6 +43,7 @@ function CreateEvent() {
   })
 
   const { name, passcode, location, description } = formData
+  const [mustUpdateMaterialFirst, setMustUpdateMaterialFirst] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
@@ -74,6 +80,7 @@ function CreateEvent() {
       location,
       description,
       selectedGrades,
+      mustUpdateMaterialFirst,
     }
     dispatch(createEvent(data))
   }
@@ -297,6 +304,38 @@ function CreateEvent() {
                         inputFormat='DD/MM/YYYY HH:mm'
                       />
                     </LocalizationProvider>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <FormControl>
+                      <FormLabel
+                        id='must-update-material-first-label'
+                        sx={{ fontSize: 14 }}
+                      >
+                        Generus Wajib Update Capaian Target Sebelum Konfirmasi
+                        Kehadiran?
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby='must-update-material-first-label'
+                        name='mustUpdateMaterialFirst'
+                        value={String(mustUpdateMaterialFirst)}
+                        onChange={(e) =>
+                          setMustUpdateMaterialFirst(e.target.value === 'true')
+                        }
+                      >
+                        <FormControlLabel
+                          value='true'
+                          control={<Radio size='small' />}
+                          label='Ya'
+                        />
+                        <FormControlLabel
+                          value='false'
+                          control={<Radio size='small' />}
+                          label='Tidak'
+                        />
+                      </RadioGroup>
+                    </FormControl>
                   </Grid>
 
                   <Grid item xs={12}>

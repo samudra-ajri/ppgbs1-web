@@ -10,9 +10,11 @@ import { useDispatch, useSelector } from "react-redux"
 import { createPresence } from "../features/presences/presenceSlice"
 
 function PresenceCodeForm(props) {
-  const { event, validate, errorMessage } = props
+  const { event, validate, errorMessage, extraPayload, onPresenceCreated } =
+    props
   const dispatch = useDispatch()
   const [passcode, setPasscode] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const { isLoading, isPresentStatus, isLoadingPresentStatus } = useSelector(
     (state) => state.presences,
   )
@@ -20,11 +22,25 @@ function PresenceCodeForm(props) {
   const isAlreadyPresent = isPresentStatus?.data.status === "HADIR"
   if (isLoadingPresentStatus || isAlreadyPresent) return null
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     if (validate && !validate()) return
-    dispatch(createPresence({ eventId: event.id, passcode }))
+
+    setIsSubmitting(true)
+    try {
+      // kehadiran dulu: kode akses yang salah ditolak di sini, sebelum apa pun disimpan
+      await dispatch(
+        createPresence({ eventId: event.id, passcode, ...extraPayload }),
+      ).unwrap()
+      if (onPresenceCreated) await onPresenceCreated()
+    } catch (error) {
+      // kegagalan kehadiran sudah dikabarkan lewat state presences
+    } finally {
+      setIsSubmitting(false)
+    }
   }
+
+  const isBusy = isLoading || isSubmitting
 
   return (
     <form onSubmit={onSubmit}>
@@ -52,10 +68,10 @@ function PresenceCodeForm(props) {
             type='submit'
             variant='contained'
             color='primary'
-            disabled={isLoading}
+            disabled={isBusy}
             sx={{ minWidth: 120, height: 40 }}
           >
-            {isLoading ? <CircularProgress size={20} /> : "Hadir"}
+            {isBusy ? <CircularProgress size={20} /> : "Hadir"}
           </Button>
         </Grid>
       </Grid>

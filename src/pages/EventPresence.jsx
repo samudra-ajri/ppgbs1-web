@@ -11,11 +11,16 @@ import {
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import BackHeader from '../components/BackHeader'
 import PresenceForm from '../components/PresenceForm'
 import PresenceCodeForm from '../components/PresenceCodeForm'
 import MonthlyTargetChecklist from '../components/MonthlyTargetChecklist'
 import { getEvent, reset } from '../features/event/eventSlice'
+import {
+  createCompletion,
+  createCompletionByAdmin,
+} from '../features/updateCompletion/updateCompletionSlice'
 
 const tabStyle = {
   textTransform: 'none',
@@ -41,10 +46,12 @@ function EventPresence() {
   const navigate = useNavigate()
   const { user } = useSelector((state) => state.auth)
   const { event, isSuccess } = useSelector((state) => state.events)
+  const { isPresentStatus } = useSelector((state) => state.presences)
   const [tab, setTab] = useState(0)
-  const [noAdditionReason, setNoAdditionReason] = useState('')
+  const [noMaterialAdditionReason, setNoMaterialAdditionReason] = useState('')
   const [selectedMaterialIds, setSelectedMaterialIds] = useState([])
   const [presenceError, setPresenceError] = useState('')
+  const [checklistKey, setChecklistKey] = useState(0)
 
   // target materi mengikuti bulan kegiatan, bukan bulan saat halaman dibuka
   const eventDate = event?.data?.startDate
@@ -53,6 +60,11 @@ function EventPresence() {
   const month = eventDate.getMonth() + 1
   const year = eventDate.getFullYear()
   const hasGrade = user?.grade !== undefined && user?.grade !== null
+  const isAlreadyPresent = isPresentStatus?.data.status === 'HADIR'
+  // hanya kegiatan yang mewajibkan update capaian yang menampilkan bagian target
+  const mustUpdateMaterialFirst = Boolean(event?.data?.mustUpdateMaterialFirst)
+  const showTargetSection =
+    mustUpdateMaterialFirst && hasGrade && !isAlreadyPresent
 
   useEffect(() => {
     if (!user) navigate('/login')
@@ -63,7 +75,7 @@ function EventPresence() {
   // pindah tab membatalkan pilihan alasan, jadi tidak terbawa dari kunjungan sebelumnya
   const onChangeTab = (event, newValue) => {
     setTab(newValue)
-    setNoAdditionReason('')
+    setNoMaterialAdditionReason('')
     setSelectedMaterialIds([])
     setPresenceError('')
   }
@@ -73,19 +85,19 @@ function EventPresence() {
     if (materialIds.length > 0) setPresenceError('')
   }, [])
 
-  const onChangeNoAdditionReason = (e) => {
-    setNoAdditionReason(e.target.value)
+  const onChangeNoMaterialAdditionReason = (e) => {
+    setNoMaterialAdditionReason(e.target.value)
     setPresenceError('')
   }
 
   // kehadiran hanya bisa dikirim setelah capaian target diisi atau alasannya dipilih
   const validationError = () => {
-    if (!hasGrade) return ''
+    if (!showTargetSection) return ''
     if (tab === 0) {
       if (selectedMaterialIds.length > 0) return ''
       return '(!) Silakan isi capaian target terlebih dahulu. Bila tidak ada penambahan capaian target materi silakan klik tab "Tidak Ada Penambahan Capaian Target" di atas.'
     }
-    if (noAdditionReason) return ''
+    if (noMaterialAdditionReason) return ''
     return '(!) Silakan pilih penyebab tidak ada penambahan capaian target terlebih dahulu.'
   }
 
@@ -95,6 +107,37 @@ function EventPresence() {
     return !error
   }
 
+  // dijalankan setelah kehadiran diterima, jadi kode akses sudah pasti benar
+  const onPresenceCreated = async () => {
+    if (tab !== 0 || selectedMaterialIds.length === 0) return
+
+    try {
+      if (user.currentPosition?.type === 'GENERUS') {
+        await dispatch(
+          createCompletion({
+            data: { materialIds: selectedMaterialIds },
+            params: {
+              targetMaterialMonth: month,
+              targetMaterialYear: year,
+              targetGrade: user.grade,
+            },
+          }),
+        ).unwrap()
+      } else {
+        await dispatch(
+          createCompletionByAdmin({
+            userId: user.id,
+            materialIds: selectedMaterialIds,
+          }),
+        ).unwrap()
+      }
+      // muat ulang daftar supaya capaian yang baru tersimpan ikut terkunci
+      setChecklistKey((prevState) => prevState + 1)
+    } catch (error) {
+      toast.error(error)
+    }
+  }
+
   return (
     <>
       <BackHeader title='Kehadiran' />
@@ -102,7 +145,7 @@ function EventPresence() {
       {isSuccess && <>
         <PresenceForm event={event.data} user={user} />
 
-        {hasGrade && (
+        {showTargetSection && (
           <Box sx={{ mt: 3 }}>
             <Tabs
               value={tab}
@@ -121,6 +164,7 @@ function EventPresence() {
 
             {tab === 0 ? (
               <MonthlyTargetChecklist
+                key={checklistKey}
                 userId={user.id}
                 targetGrade={user.grade}
                 month={month}
@@ -142,8 +186,8 @@ function EventPresence() {
                 }}
               >
                 <RadioGroup
-                  value={noAdditionReason}
-                  onChange={onChangeNoAdditionReason}
+                  value={noMaterialAdditionReason}
+                  onChange={onChangeNoMaterialAdditionReason}
                 >
                   <FormControlLabel
                     value='ALREADY_COMPLETED'
@@ -168,6 +212,10 @@ function EventPresence() {
             event={event.data}
             validate={validateBeforePresence}
             errorMessage={presenceError}
+            extraPayload={
+              tab === 1 ? { noMaterialAdditionReason } : undefined
+            }
+            onPresenceCreated={onPresenceCreated}
           />
         </Box>
       </>}
