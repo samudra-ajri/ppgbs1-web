@@ -202,7 +202,7 @@ function EventCard(props) {
               ))}
             </Box>
             
-            {event.mustUpdateMaterialFirst && (
+            {event.mustUpdateMaterialFirst && user?.currentPosition?.type !== "GENERUS" && (
               <Box sx={{ mt: 1.5, display: "flex", gap: 1, flexWrap: "wrap" }}>
                 <Chip 
                   label="N.B. Generus wajib update capaian target sebelum konfirmasi kehadiran" 
