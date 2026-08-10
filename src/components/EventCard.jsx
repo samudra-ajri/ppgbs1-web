@@ -9,6 +9,7 @@ import {
   IconButton,
   Stack,
   Typography,
+  Chip,
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/DeleteOutlineRounded"
 import LayersIcon from "@mui/icons-material/LayersRounded"
@@ -78,6 +79,7 @@ function EventCard(props) {
   detailRows.push(...eventTime())
 
   detailRows.push({ label: "Lokasi", value: event.location })
+  
   if (event.description)
     detailRows.push({ label: "Keterangan", value: event.description })
 
@@ -199,6 +201,25 @@ function EventCard(props) {
                 </Box>
               ))}
             </Box>
+            
+            {event.mustUpdateMaterialFirst && (
+              <Box sx={{ mt: 1.5, display: "flex", gap: 1, flexWrap: "wrap" }}>
+                <Chip 
+                  label="N.B. Generus wajib update capaian target sebelum konfirmasi kehadiran" 
+                  size="small" 
+                  color="info" 
+                  variant="outlined" 
+                  sx={{ 
+                    height: 'auto', 
+                    '& .MuiChip-label': { 
+                      display: 'block', 
+                      whiteSpace: 'normal', 
+                      py: 0.5 
+                    } 
+                  }}
+                />
+              </Box>
+            )}
           </CardContent>
         </CardActionArea>
       </Card>

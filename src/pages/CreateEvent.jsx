@@ -312,8 +312,8 @@ function CreateEvent() {
                         id='must-update-material-first-label'
                         sx={{ fontSize: 14 }}
                       >
-                        Generus Wajib Update Capaian Target Sebelum Konfirmasi
-                        Kehadiran?
+                        Generus wajib update capaian target sebelum konfirmasi
+                        kehadiran?
                       </FormLabel>
                       <RadioGroup
                         row
