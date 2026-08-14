@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
-import { createEvent, reset } from "../features/event/eventSlice"
+import {
+  createEvent,
+  getLastEventByName,
+  reset,
+} from "../features/event/eventSlice"
 import {
   Button,
   Card,
@@ -51,6 +55,10 @@ function CreateEvent() {
   const { isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.events
   )
+
+  // nama kegiatan yang autofill-nya sudah dijalankan, supaya blur berulang
+  // tidak menimpa perubahan yang dilakukan user setelahnya
+  const autofilledName = useRef("")
 
   useEffect(() => {
     if (!user) navigate("/login")
@@ -161,6 +169,83 @@ function CreateEvent() {
     { title: "Pra Nikah 4", grade: 16 },
   ]
 
+  const fillGrades = (grades) => {
+    const gradeNumbers = (grades ?? []).map(Number)
+    const gradesGroupOptions = [
+      { title: "Cabe Rawit", options: caberawit },
+      { title: "Pra Remaja", options: praremaja },
+      { title: "Remaja", options: remaja },
+      { title: "Pra Nikah", options: pranikah },
+    ]
+
+    const fullGroups = gradesGroupOptions.filter((group) =>
+      group.options.every((option) => gradeNumbers.includes(option.grade))
+    )
+    const groupedGrades = fullGroups.flatMap((group) => group.options)
+
+    // rombongan belajar hanya bisa dipilih ulang bila tidak ada kelas sisa
+    if (gradeNumbers.length && groupedGrades.length === gradeNumbers.length) {
+      setSelectedGroupGrades(fullGroups.map(({ title }) => ({ title })))
+      setSelectedGrades(groupedGrades)
+      return
+    }
+
+    const allGrades = [...caberawit, ...praremaja, ...remaja, ...pranikah]
+    setSelectedGroupGrades(gradeNumbers.length ? [{ title: "CUSTOM" }] : [])
+    setSelectedGrades(
+      allGrades.filter((option) => gradeNumbers.includes(option.grade))
+    )
+  }
+
+  // tanggal mengikuti hari ini, jam mengikuti kegiatan terakhir
+  const fillDates = (lastStartDate, lastEndDate) => {
+    const todayAt = (value) => {
+      const time = moment(Number(value))
+      if (!value || !time.isValid()) return null
+      return moment().set({
+        hour: time.hour(),
+        minute: time.minute(),
+        second: 0,
+        millisecond: 0,
+      })
+    }
+
+    const start = todayAt(lastStartDate)
+    let end = todayAt(lastEndDate)
+    if (!start || !end) return
+
+    // kegiatan yang jam selesainya melewati tengah malam
+    if (!end.isAfter(start)) end = end.add(1, "days")
+
+    setStartTime(start)
+    setEndTime(end)
+  }
+
+  const onNameBlur = async () => {
+    const eventName = name.trim()
+    if (!eventName) return
+    if (eventName.toLowerCase() === autofilledName.current.toLowerCase()) return
+
+    try {
+      const { data } = await dispatch(getLastEventByName(eventName)).unwrap()
+      if (!data) return
+
+      autofilledName.current = eventName
+      setFormData((prevState) => ({
+        ...prevState,
+        passcode: data.passcode ?? "",
+        location: data.location ?? "",
+        description: data.description ?? "",
+      }))
+      setMustUpdateMaterialFirst(Boolean(data.mustUpdateMaterialFirst))
+      fillGrades(data.grades)
+      fillDates(data.startDate, data.endDate)
+      toast.info("Data diisi dari kegiatan terakhir dengan nama yang sama.")
+    } catch (error) {
+      // autofill hanya pelengkap, kegagalannya tidak perlu mengganggu user
+    }
+  }
+
   return (
     <>
       <BackHeader title='Kegiatan' />
@@ -189,6 +274,7 @@ function CreateEvent() {
                       placeholder='Nama'
                       value={name}
                       onChange={onChange}
+                      onBlur={onNameBlur}
                       variant='outlined'
                       fullWidth
                       required

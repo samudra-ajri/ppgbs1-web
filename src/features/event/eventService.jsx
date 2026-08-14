@@ -25,9 +25,24 @@ const getEvent = async (id, token) => {
   return response.data
 }
 
+// Get the last event with the same name created by the logged in user
+const getLastEventByName = async (name, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await API.get(
+    API_URL + `/last?name=${encodeURIComponent(name)}`,
+    config
+  )
+  return response.data
+}
+
 const authService = {
   createEvent,
-  getEvent
+  getEvent,
+  getLastEventByName
 }
 
 export default authService

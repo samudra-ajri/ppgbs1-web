@@ -3,6 +3,7 @@ import eventService from './eventService'
 
 const initialState = {
   event: null,
+  lastEvent: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -35,6 +36,25 @@ export const getEvent = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token
       return await eventService.getEvent(id, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Get the last event with the same name created by the logged in user
+export const getLastEventByName = createAsyncThunk(
+  'events/last',
+  async (name, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await eventService.getLastEventByName(name, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -85,6 +105,14 @@ export const eventSlice = createSlice({
         state.isLoading = false
         state.isError = true
         state.message = action.payload
+      })
+      // kept separate from isLoading/isSuccess so the autofill lookup
+      // does not put the create form into its loading/submitted state
+      .addCase(getLastEventByName.fulfilled, (state, action) => {
+        state.lastEvent = action.payload.data
+      })
+      .addCase(getLastEventByName.rejected, (state) => {
+        state.lastEvent = null
       })
   },
 })
