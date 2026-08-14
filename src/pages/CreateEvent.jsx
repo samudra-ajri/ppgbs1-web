@@ -240,7 +240,7 @@ function CreateEvent() {
       setMustUpdateMaterialFirst(Boolean(data.mustUpdateMaterialFirst))
       fillGrades(data.grades)
       fillDates(data.startDate, data.endDate)
-      toast.info("Data diisi dari kegiatan terakhir dengan nama yang sama.")
+      toast.info("Rencana kegiatan selesai diisikan oleh autofill, silakan periksa kembali.")
     } catch (error) {
       // autofill hanya pelengkap, kegagalannya tidak perlu mengganggu user
     }
