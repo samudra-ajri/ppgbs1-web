@@ -281,6 +281,19 @@ function CreateEvent() {
                     />
                   </Grid>
                   <Grid item xs={12}>
+                    <TextField
+                      name='location'
+                      label='Lokasi'
+                      placeholder='Lokasi'
+                      value={location}
+                      onChange={onChange}
+                      variant='outlined'
+                      fullWidth
+                      required
+                      multiline
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
                     <Autocomplete
                       multiple
                       options={gradesGroup}
@@ -349,20 +362,6 @@ function CreateEvent() {
                       required
                     />
                   </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      name='location'
-                      label='Lokasi'
-                      placeholder='Lokasi'
-                      value={location}
-                      onChange={onChange}
-                      variant='outlined'
-                      fullWidth
-                      required
-                      multiline
-                    />
-                  </Grid>
-
                   <Grid item xs={12}>
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                       <DateTimePicker
