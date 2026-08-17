@@ -56,7 +56,7 @@ function ProfileCard({ user, isLoading }) {
                 </Typography>
 
                 <Typography align='center' color='text.secondary' fontSize={12}>
-                  {user?.positions[0]?.type !== "ADMIN"
+                  {user?.positions?.[0]?.type !== "ADMIN"
                     ? (user?.sex === 1 ? "Laki-laki" : "Perempuan") +
                       ", " +
                       moment().diff(user?.birthdate, "years") +
@@ -76,7 +76,7 @@ function ProfileCard({ user, isLoading }) {
                 )}
               </Grid>
               {(user?.grade || user?.grade === 0) &&
-                currentPosition.type === "GENERUS" && (
+                currentPosition?.type === "GENERUS" && (
                   <Grid
                     container
                     item
