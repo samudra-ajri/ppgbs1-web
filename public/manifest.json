@@ -1,6 +1,8 @@
 {
-  "short_name": "Pigaru",
-  "name": "Pigaru - PPG BS1",
+  "short_name": "PIGARU",
+  "name": "PIGARU — Pusat Informasi Generus Bandung Selatan",
+  "description": "Aplikasi PPG Bandung Selatan untuk mendata generus, mencatat capaian materi, dan merekap kehadiran kegiatan.",
+  "lang": "id",
   "icons": [
     {
       "src": "favicon.ico",

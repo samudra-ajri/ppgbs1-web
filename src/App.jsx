@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import ChildLayout from './layouts/ChildLayout'
 import MainLayout from './layouts/MainLayout'
+import PageMeta from './components/PageMeta'
 
 const theme = createTheme({
   typography: {
@@ -27,6 +28,7 @@ function App() {
       <Router>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <PageMeta />
           <Routes>
             <Route path='/c/*' element={<ChildLayout />} />
             <Route path='/*' element={<MainLayout />} />

@@ -1,2 +1,19 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
+
+# Halaman internal: butuh login, isinya kosong bagi crawler.
+Disallow: /c/
+Disallow: /dashboard
+Disallow: /users
+Disallow: /completion
+Disallow: /profile
+Disallow: /user-completion
+Disallow: /group-completion
+Disallow: /material-target
+Disallow: /events
+Disallow: /reset-passwords
+Disallow: /decide-position
+Disallow: /references
+Disallow: /activities-logs
+
+Sitemap: https://pigaru.site/sitemap.xml
