@@ -47,7 +47,7 @@ function CreateEvent() {
   })
 
   const { name, passcode, location, description } = formData
-  const [mustUpdateMaterialFirst, setMustUpdateMaterialFirst] = useState(false)
+  const [mustUpdateMaterialFirst, setMustUpdateMaterialFirst] = useState(true)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
@@ -237,7 +237,6 @@ function CreateEvent() {
         location: data.location ?? "",
         description: data.description ?? "",
       }))
-      setMustUpdateMaterialFirst(Boolean(data.mustUpdateMaterialFirst))
       fillGrades(data.grades)
       fillDates(data.startDate, data.endDate)
       toast.info("Rencana kegiatan selesai diisikan oleh autofill, silakan periksa kembali.")
