@@ -22,7 +22,8 @@ function ProfileCard({ user, isLoading }) {
 
   const currentPosition =
     user?.currentPosition ||
-    user?.positions?.find((position) => position.type === "GENERUS")
+    user?.positions?.find((position) => position.type === "GENERUS") ||
+    user?.positions?.[0]
 
   return (
     <>

@@ -31,6 +31,7 @@ import MaterialTargetDetail from "../pages/MaterialTargetDetail"
 import MaterialTargetGroupDetail from "../pages/MaterialTargetGroupDetail"
 import MaterialTargetGroupInput from "../pages/MaterialTargetGroupInput"
 import CreateMaterialTarget from "../pages/CreateMaterialTarget"
+import TeacherDetail from "../pages/TeacherDetail"
 
 function ChildLayout() {
   return (
@@ -84,6 +85,7 @@ function ChildLayout() {
               </>
             }
           />
+          <Route path='/teacher-detail/*' element={<TeacherDetail />} />
           <Route path='/targets-completed/*' element={<CompletedTargets />} />
           <Route path='/details-completed/*' element={<CompletedDetails />} />
           <Route path='/register/*' element={<Register />} />

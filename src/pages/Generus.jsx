@@ -319,6 +319,17 @@ function Generus() {
     </Box>
   )
 
+  // Kartu pengajar mengarah ke halaman detail pengajar, kartu generus ke
+  // halaman capaian materi.
+  const peopleCardLink = (userDetail) => {
+    const positionType = userDetail.positions[0]?.type
+    if (positionType === "PENGAJAR") return `/c/teacher-detail/${userDetail.id}`
+    if (userDetail.positions.length === 1 && positionType === "GENERUS") {
+      return `/c/person-completion`
+    }
+    return ""
+  }
+
   const onClickCreateUser = () => {
     navigate("/c/register-by-admin")
   }
@@ -469,12 +480,7 @@ function Generus() {
               user?.currentPosition.type === "ADMIN" ||
               userDetail.createdBy === user.id
             }
-            link={
-              userDetail.positions.length === 1 &&
-              userDetail.positions[0].type === "GENERUS"
-                ? `/c/person-completion`
-                : ""
-            }
+            link={peopleCardLink(userDetail)}
           />
         ))}
       </InfiniteScroll>

@@ -26,6 +26,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment"
 import haditsOptions from "../constants/haditsOptions"
 import scopeOptions from "../constants/scopeOptions"
 import maritalStatusOptions from "../constants/maritalStatusOptions"
+import muballighStatusOptions from "../constants/muballighStatusOptions"
 
 function EditKemuballighan() {
   const dispatch = useDispatch()
@@ -161,11 +162,7 @@ function EditKemuballighan() {
           fullWidth
           required
         >
-          {[
-            { value: "MT", label: "Tugasan" },
-            { value: "MS", label: "Setempat" },
-            { value: "MSS", label: "Sukarela" },
-          ].map((option) => (
+          {muballighStatusOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
